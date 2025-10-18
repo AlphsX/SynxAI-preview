@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Optional
 import logging
 from .news_search_service import NewsSearchService
 from .news_sources import NewsSource, QueryComplexity
-from ..config import get_settings
+from ..config import settings
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/news", tags=["news"])

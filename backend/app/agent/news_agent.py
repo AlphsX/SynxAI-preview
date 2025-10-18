@@ -6,7 +6,7 @@ import logging
 from datetime import datetime
 from ..external_apis.news_search_service import NewsSearchService
 from ..external_apis.news_sources import SearchRouter, QueryComplexity
-from ..config import get_settings
+from ..config import settings
 
 logger = logging.getLogger(__name__)
 

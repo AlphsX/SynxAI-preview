@@ -6,8 +6,8 @@ Provides endpoints to interact with conversation memory
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
-from app.memory.langchain_memory_service import langchain_memory_service
-from app.auth.dependencies import get_current_user_optional
+from app.memory.simple_memory_service import simple_memory_service as langchain_memory_service
+from app.auth.middleware import get_optional_user
 from app.auth.schemas import UserResponse
 import logging
 
@@ -36,7 +36,7 @@ class SessionRequest(BaseModel):
 @router.post("/add-message")
 async def add_message(
     data: MessageInput,
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """Add a message to conversation history"""
     try:
@@ -66,7 +66,7 @@ async def add_message(
 @router.post("/invoke")
 async def invoke_with_memory(
     data: InvokeInput,
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """
     Invoke LLM with full conversation memory
@@ -102,7 +102,7 @@ async def invoke_with_memory(
 async def get_history(
     session_id: str,
     limit: Optional[int] = None,
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """Get conversation history for a session"""
     try:
@@ -125,7 +125,7 @@ async def get_history(
 @router.delete("/clear/{session_id}")
 async def clear_history(
     session_id: str,
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """Clear conversation history for a session"""
     try:
@@ -144,7 +144,7 @@ async def clear_history(
 @router.get("/stats/{session_id}")
 async def get_stats(
     session_id: str,
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """Get memory statistics for a session"""
     try:
@@ -161,7 +161,7 @@ async def get_stats(
 
 @router.post("/enable")
 async def enable_memory(
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """Enable LangChain memory for enhanced chat service"""
     try:
@@ -180,7 +180,7 @@ async def enable_memory(
 
 @router.post("/disable")
 async def disable_memory(
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """Disable LangChain memory for enhanced chat service"""
     try:
@@ -199,7 +199,7 @@ async def disable_memory(
 
 @router.get("/status")
 async def get_memory_status(
-    current_user: Optional[UserResponse] = Depends(get_current_user_optional)
+    current_user: Optional[UserResponse] = Depends(get_optional_user)
 ):
     """Get LangChain memory status"""
     try:

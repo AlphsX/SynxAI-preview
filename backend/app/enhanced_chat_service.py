@@ -19,9 +19,7 @@ from app.vector.service import vector_service
 from app.conversation_service import conversation_service
 from app.auth.schemas import UserResponse
 from app.enhanced_error_handler import error_handler, safe_async_generator, SafeDataHandler
-# Temporarily disable LangChain memory service due to dependency conflicts
-# from app.memory.langchain_memory_service import langchain_memory_service
-langchain_memory_service = None
+from app.memory.simple_memory_service import simple_memory_service
 
 logger = logging.getLogger(__name__)
 
@@ -36,9 +34,9 @@ class EnhancedChatService:
         self.groq_compound_service = groq_compound_service
         self.safe_data = SafeDataHandler()
         
-        # LangChain Memory Service for conversation memory (temporarily disabled)
-        self.memory_service = langchain_memory_service
-        self.use_langchain_memory = False  # Temporarily disable due to dependency conflicts
+        # Simple Memory Service for conversation memory (NO DEPENDENCIES!)
+        self.memory_service = simple_memory_service
+        self.use_langchain_memory = True  # Enable memory for conversation continuity
         self.use_langsmith_tracing = True  # Enable LangSmith tracing by default
         
         # Redis for conversation history caching
@@ -114,15 +112,23 @@ class EnhancedChatService:
                     "is_authenticated": False
                 }
             
-            # 🧠 USE LANGCHAIN MEMORY INSTEAD OF DATABASE
-            # Create session ID for LangChain memory
+            # 🧠 USE SIMPLE MEMORY SERVICE
+            # Create session ID for memory
             session_id = conversation_id or f"session_{user_context.get('user_id', 'anonymous')}"
             
-            # Check if we should use LangChain memory for this conversation
+            # Check if we should use memory for this conversation
             use_langchain_memory = self.use_langchain_memory
             
+            print(f"\n{'='*80}")
+            print(f"🔍 MEMORY DEBUG")
+            print(f"conversation_id: {conversation_id}")
+            print(f"session_id: {session_id}")
+            print(f"use_langchain_memory: {use_langchain_memory}")
+            print(f"memory_service type: {type(self.memory_service).__name__}")
+            print(f"{'='*80}\n")
+            
             if use_langchain_memory:
-                logger.info(f"🧠 Using LangChain Memory for session: {session_id}")
+                logger.info(f"🧠 Using Memory Service for session: {session_id}")
                 
                 # FIRST: Get conversation history from LangChain memory (BEFORE adding current message)
                 langchain_history = await self.memory_service.get_conversation_history(
@@ -161,6 +167,9 @@ class EnhancedChatService:
                         "timestamp": datetime.utcnow().isoformat()
                     }
                 )
+                
+                # Initialize enhanced_context early for memory queries
+                enhanced_context = {}
                 
                 # Check if this is a memory query (asking about conversation)
                 if self._is_memory_query(message):
@@ -209,7 +218,12 @@ class EnhancedChatService:
                     yield f"Proceeding with {model_id} using available information...\n\n"
             
             # Analyze message for external data needs with intelligent context detection
-            enhanced_context = await self._get_enhanced_context(message, user_context)
+            # Merge with existing enhanced_context if it exists (from memory queries)
+            additional_context = await self._get_enhanced_context(message, user_context)
+            if 'enhanced_context' not in locals():
+                enhanced_context = additional_context
+            else:
+                enhanced_context.update(additional_context)
             
             # Trace enhanced context gathering if enabled
             if self.use_langsmith_tracing and self.langsmith_tracer.is_enabled() and enhanced_context:
@@ -243,13 +257,24 @@ class EnhancedChatService:
                     # Prepare messages with conversation history for streaming
                     messages = [{"role": "system", "content": system_prompt}]
                     
-                    # Add conversation history for context
-                    if conversation_history and isinstance(conversation_history, list):
+                    # CRITICAL: Add conversation history for context
+                    history_added = 0
+                    if conversation_history and isinstance(conversation_history, list) and len(conversation_history) > 0:
                         history_to_add = conversation_history[-10:]  # Last 10 messages
-                        messages.extend(history_to_add)
-                        logger.info(f"📝 Adding {len(history_to_add)} history messages to context")
+                        
+                        # Validate each history message before adding
+                        for hist_msg in history_to_add:
+                            if isinstance(hist_msg, dict) and "role" in hist_msg and "content" in hist_msg:
+                                messages.append(hist_msg)
+                                history_added += 1
+                            else:
+                                logger.warning(f"⚠️ Invalid history message format: {hist_msg}")
+                        
+                        logger.info(f"📝 Adding {history_added} history messages to context")
+                        print(f"\n✅ HISTORY ADDED: {history_added} messages")
                     else:
                         logger.info("📝 No history to add - starting fresh conversation")
+                        print(f"\n⚠️ NO HISTORY: conversation_history = {conversation_history}")
                     
                     messages.append({"role": "user", "content": message})
                     
@@ -262,13 +287,24 @@ class EnhancedChatService:
                     # Debug: Print actual messages being sent
                     print(f"\n{'='*80}")
                     print(f"🔍 DEBUG: Messages being sent to AI")
+                    print(f"Total messages: {len(messages)}")
                     print(f"{'='*80}")
                     for i, msg in enumerate(messages, 1):
                         role = msg.get("role", "unknown")
                         content = msg.get("content", "")
-                        preview = content[:100] + "..." if len(content) > 100 else content
-                        print(f"{i}. [{role.upper()}]: {preview}")
-                    print(f"{'='*80}\n")
+                        preview = content[:200] + "..." if len(content) > 200 else content
+                        print(f"\n{i}. [{role.upper()}]:")
+                        print(f"   {preview}")
+                    print(f"\n{'='*80}\n")
+                    
+                    # Extra check: Count history messages
+                    history_count = sum(1 for m in messages if m.get("role") in ["user", "assistant"] and messages.index(m) > 0 and messages.index(m) < len(messages) - 1)
+                    print(f"📊 Message breakdown:")
+                    print(f"   - System messages: 1")
+                    print(f"   - History messages: {history_count}")
+                    print(f"   - Current user message: 1")
+                    print(f"   - Total: {len(messages)}")
+                    print()
                     
                     # Start LangSmith tracing if enabled
                     trace_run_id = None
@@ -813,49 +849,54 @@ class EnhancedChatService:
         """Build system message with conversation memory awareness"""
         base_message = self._build_enhanced_system_message(context, user_context)
         
-        # Add conversation memory instructions
-        memory_instructions = """
-
-🧠 CONVERSATION MEMORY (CRITICAL):
-• You MUST review the conversation history provided in the messages above
-• The conversation history contains ALL previous messages between you and the user
-• When asked "What are we talking about?" or similar questions, YOU MUST:
-  1. Review ALL previous messages in the conversation
-  2. Identify the main topics discussed
-  3. Provide a clear summary with specific details
-  4. Reference actual messages from the conversation
-
-• NEVER say "I don't know what we're talking about" if there is conversation history
-• ALWAYS reference specific topics and questions from previous messages
-• Maintain context and continuity throughout the conversation
-
-EXAMPLES OF CORRECT MEMORY-AWARE RESPONSES:
-User: "What are we talking about?"
-✅ CORRECT: "We've been discussing Bitcoin! You first asked me about Bitcoin in general, 
-   and then you asked about its current price. We covered topics like decentralization 
-   and market value. Would you like to explore any of these topics further?"
-
-❌ WRONG: "I'm not sure what you'd like to discuss" (when there IS conversation history)
-
-User: "What did I ask earlier?"
-✅ CORRECT: "Earlier you asked about Bitcoin and its current price. We discussed how 
-   Bitcoin is a decentralized digital currency and I provided information about its 
-   market value."
-
-User: "Continue from where we left off"
-✅ CORRECT: "Sure! We were discussing Bitcoin's price and market trends. Let me continue 
-   with more details about..."
-
-REMEMBER: The conversation history is RIGHT THERE in the messages. USE IT!
-"""
+        # Add conversation memory instructions - VERY EXPLICIT
+        memory_instructions = ""
         
         # Add conversation summary if available
         if conversation_history and len(conversation_history) > 0:
-            memory_instructions += f"""
+            # Extract topics from history
+            topics = []
+            for msg in conversation_history:
+                if msg.get("role") == "user":
+                    content = msg.get("content", "")[:100]
+                    if content:
+                        topics.append(content)
+            
+            topics_str = ", ".join([f'"{t}"' for t in topics[:3]]) if topics else "various topics"
+            
+            memory_instructions = f"""
 
-📚 CONVERSATION CONTEXT:
-You have {len(conversation_history)} previous messages in this conversation.
-Review them carefully before responding, especially if the user asks about the conversation.
+🧠 CRITICAL CONVERSATION MEMORY INSTRUCTIONS:
+
+YOU HAVE {len(conversation_history)} PREVIOUS MESSAGES IN THIS CONVERSATION!
+
+The messages above (before this current message) contain our ENTIRE conversation history.
+These are REAL messages that were exchanged between us.
+
+PREVIOUS TOPICS WE DISCUSSED: {topics_str}
+
+WHEN THE USER ASKS ABOUT OUR CONVERSATION:
+- "What are we talking about?" → Review the messages above and summarize the topics
+- "What did I ask?" → Look at the user messages above
+- "Continue" → Reference the last topic from the messages above
+
+CRITICAL RULES:
+1. The conversation history is in the messages array above - READ IT!
+2. NEVER say "we haven't started" or "no conversation yet" when there ARE previous messages
+3. ALWAYS reference specific topics from the actual messages above
+4. If you see previous messages, acknowledge them explicitly
+
+EXAMPLE:
+If you see messages about Bitcoin above, you MUST say:
+"We've been discussing Bitcoin! You asked about [specific question from messages above]..."
+
+NOT: "We haven't started a conversation yet" ❌
+"""
+        else:
+            memory_instructions = """
+
+📝 NEW CONVERSATION:
+This is the first message in our conversation. No previous history exists yet.
 """
         
         return base_message + memory_instructions

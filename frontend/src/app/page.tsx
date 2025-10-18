@@ -181,6 +181,9 @@ export default function Home() {
     setMessages([]);
     setInputText("");
     setShowWelcome(true);
+    // Clear conversation session to start fresh
+    sessionStorage.removeItem('conversation_id');
+    console.log('🗑️ Cleared conversation session - starting new chat');
     inputRef.current?.focus();
   }, []);
 
@@ -351,7 +354,15 @@ export default function Home() {
 
       try {
         // Use enhanced chat API with streaming
-        const conversationId = "default-conversation"; // In production, this would be managed properly
+        // Generate unique conversation ID per browser session for memory continuity
+        let conversationId = sessionStorage.getItem('conversation_id');
+        if (!conversationId) {
+          conversationId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          sessionStorage.setItem('conversation_id', conversationId);
+          console.log('🆕 Created new conversation session:', conversationId);
+        } else {
+          console.log('♻️ Using existing conversation session:', conversationId);
+        }
 
         await chatAPI.streamChat(
           conversationId,

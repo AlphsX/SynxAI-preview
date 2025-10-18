@@ -236,6 +236,16 @@ async def chat_with_enhanced_ai(
 ):
     """Stream AI response with enhanced capabilities using SSE"""
     
+    # CRITICAL: Log that this endpoint was called
+    print(f"\n{'='*80}")
+    print(f"🎯 ENHANCED CHAT ENDPOINT CALLED!")
+    print(f"conversation_id: {conversation_id}")
+    print(f"message: {message.content[:50]}...")
+    print(f"model_id: {message.model_id}")
+    print(f"{'='*80}\n")
+    
+    logger.info(f"🎯 Enhanced chat endpoint called for conversation {conversation_id}")
+    
     # Generate unique stream ID
     stream_id = f"chat_{conversation_id}_{uuid.uuid4().hex[:8]}"
     
