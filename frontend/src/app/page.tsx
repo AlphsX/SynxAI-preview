@@ -182,8 +182,8 @@ export default function Home() {
     setInputText("");
     setShowWelcome(true);
     // Clear conversation session to start fresh
-    sessionStorage.removeItem('conversation_id');
-    console.log('🗑️ Cleared conversation session - starting new chat');
+    sessionStorage.removeItem("conversation_id");
+    console.log("🗑️ Cleared conversation session - starting new chat");
     inputRef.current?.focus();
   }, []);
 
@@ -207,6 +207,7 @@ export default function Home() {
   const [mobileInfo, setMobileInfo] = useState<ReturnType<
     typeof detectMobileOS
   > | null>(null);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Voice recognition state variables
   const [isListening, setIsListening] = useState(false);
@@ -223,6 +224,7 @@ export default function Home() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null); // Added for sidebar click outside detection
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -262,6 +264,21 @@ export default function Home() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Check if user has scrolled up - show scroll to bottom button
+  useEffect(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShowScrollButton(!isNearBottom && messages.length > 0);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [messages.length]);
 
   // Hydration effect
   useEffect(() => {
@@ -355,13 +372,18 @@ export default function Home() {
       try {
         // Use enhanced chat API with streaming
         // Generate unique conversation ID per browser session for memory continuity
-        let conversationId = sessionStorage.getItem('conversation_id');
+        let conversationId = sessionStorage.getItem("conversation_id");
         if (!conversationId) {
-          conversationId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-          sessionStorage.setItem('conversation_id', conversationId);
-          console.log('🆕 Created new conversation session:', conversationId);
+          conversationId = `session_${Date.now()}_${Math.random()
+            .toString(36)
+            .substr(2, 9)}`;
+          sessionStorage.setItem("conversation_id", conversationId);
+          console.log("🆕 Created new conversation session:", conversationId);
         } else {
-          console.log('♻️ Using existing conversation session:', conversationId);
+          console.log(
+            "♻️ Using existing conversation session:",
+            conversationId
+          );
         }
 
         await chatAPI.streamChat(
@@ -1604,7 +1626,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col relative">
           {/* Top Bar - Apple Liquid Glass Effect */}
           <header className="relative">
             {/* Content */}
@@ -1647,7 +1669,10 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           </header>
 
           {/* Chat Container */}
-          <div className="flex-1 overflow-y-auto relative">
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto relative"
+          >
             {/* Voice Theme Notification */}
             <VoiceThemeNotification
               message={voiceThemeNotification.message}
@@ -1819,6 +1844,33 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               </div>
             )}
           </div>
+
+          {/* Scroll to Bottom Button */}
+          {showScrollButton && (
+            <div className="absolute left-1/2 -translate-x-1/2 z-30 bottom-24">
+              <button
+                onClick={scrollToBottom}
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium leading-[normal] cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-100 [&_svg]:shrink-0 select-none bg-surface-l2 text-fg-secondary hover:bg-surface-l4-hover dark:hover:bg-surface-l3 border border-border-l1 disabled:hover:bg-surface-l2 dark:disabled:hover:bg-surface-l2 h-8 w-8 rounded-full shadow-sm"
+                type="button"
+                aria-label="Scroll down"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="stroke-[2] -mb-0.5"
+                >
+                  <path
+                    d="M6 9L12 15L18 9"
+                    stroke="currentColor"
+                    strokeLinecap="square"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
 
           {/* Enhanced Input Area - Premium UX - Compact */}
           <div className="relative">

@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { SocialChatMessage } from './SocialChatMessage';
-import { SimpleMessageRenderer } from './SimpleMessageRenderer';
+import React, { useState, useRef, useEffect } from "react";
+import { SocialChatMessage } from "./SocialChatMessage";
+import { SimpleMessageRenderer } from "./SimpleMessageRenderer";
 
 interface Message {
   id: string;
   content: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   timestamp: Date;
   isStreaming?: boolean;
 }
@@ -21,22 +21,43 @@ interface SocialChatInterfaceProps {
 export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
   messages,
   onSendMessage,
-  isLoading = false
+  isLoading = false,
 }) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Check if user has scrolled up
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShowScrollButton(!isNearBottom && messages.length > 0);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [messages.length]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Auto-resize textarea
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = "auto";
       inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
     }
   }, [inputValue]);
@@ -44,13 +65,13 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
   const handleSend = () => {
     if (inputValue.trim() && !isLoading) {
       onSendMessage(inputValue.trim());
-      setInputValue('');
+      setInputValue("");
       setIsTyping(false);
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -62,8 +83,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950/30">
-      
+    <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950/30 relative">
       {/* Chat Header */}
       <div className="flex-shrink-0 px-6 py-5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50 shadow-sm">
         <div className="flex items-center space-x-4">
@@ -79,13 +99,19 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 <span className="flex items-center space-x-2">
                   <div className="flex space-x-1">
                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"></div>
-                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div
+                      className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
                   </div>
                   <span>Typing...</span>
                 </span>
               ) : (
-                'Ready to help you'
+                "Ready to help you"
               )}
             </p>
           </div>
@@ -93,7 +119,10 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-4 py-6 relative"
+      >
         <div className="max-w-4xl mx-auto">
           {messages.length === 0 ? (
             /* Welcome Message */
@@ -105,7 +134,8 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 Hello! Welcome
               </h3>
               <p className="text-gray-600 dark:text-gray-300 max-w-lg mx-auto text-lg leading-relaxed">
-                I'm ready to help answer your questions and chat with you. How can I assist you today? 😊
+                I&apos;m ready to help answer your questions and chat with you.
+                How can I assist you today? 😊
               </p>
             </div>
           ) : (
@@ -113,7 +143,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
             <div className="space-y-4">
               {messages.map((message) => (
                 <div key={message.id}>
-                  {message.role === 'assistant' ? (
+                  {message.role === "assistant" ? (
                     <div className="flex justify-start mb-4">
                       <div className="flex items-end space-x-2 max-w-[85%]">
                         <div className="flex-shrink-0 mb-1">
@@ -143,7 +173,9 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                         </div>
                         <div className="bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 rounded-2xl rounded-br-md px-5 py-4 shadow-xl border border-gray-200/50 dark:border-gray-700/50">
                           <div className="prose prose-sm max-w-none prose-gray dark:prose-invert">
-                            <p className="mb-0 leading-relaxed text-gray-800 dark:text-gray-200 font-medium">{message.content}</p>
+                            <p className="mb-0 leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
+                              {message.content}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -157,11 +189,32 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
         </div>
       </div>
 
+      {/* Scroll to Bottom Button */}
+      {showScrollButton && (
+        <div className="absolute left-1/2 -translate-x-1/2 z-30 bottom-32">
+          <button
+            onClick={scrollToBottom}
+            className="cursor-pointer rounded-full bg-clip-padding border text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 w-10 h-10 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
+            aria-label="Scroll to bottom"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              className="text-gray-700 dark:text-gray-200"
+            >
+              <path d="M9.33468 3.33333C9.33468 2.96617 9.6326 2.66847 9.99972 2.66829C10.367 2.66829 10.6648 2.96606 10.6648 3.33333V15.0609L15.363 10.3626L15.4675 10.2777C15.7255 10.1074 16.0762 10.1357 16.3034 10.3626C16.5631 10.6223 16.5631 11.0443 16.3034 11.304L10.4704 17.137C10.2108 17.3967 9.7897 17.3966 9.52999 17.137L3.69601 11.304L3.61105 11.1995C3.44054 10.9414 3.46874 10.5899 3.69601 10.3626C3.92328 10.1354 4.27479 10.1072 4.53292 10.2777L4.63741 10.3626L9.33468 15.0599V3.33333Z"></path>
+            </svg>
+          </button>
+        </div>
+      )}
+
       {/* Input Area */}
       <div className="flex-shrink-0 px-4 py-5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 shadow-lg">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-end space-x-3">
-            
             {/* Message Input */}
             <div className="flex-1 relative">
               <textarea
@@ -174,7 +227,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 className="w-full px-5 py-4 pr-12 bg-gray-50 dark:bg-gray-700/80 border border-gray-200 dark:border-gray-600 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed min-h-[52px] max-h-32 shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm"
                 rows={1}
               />
-              
+
               {/* Character count for long messages */}
               {inputValue.length > 100 && (
                 <div className="absolute bottom-1 right-12 text-xs text-gray-400">
@@ -192,8 +245,18 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                  />
                 </svg>
               )}
             </button>
@@ -204,8 +267,14 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
             <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-1">
               <div className="flex space-x-1">
                 <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div
+                  className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
               </div>
               <span>Typing...</span>
             </div>
