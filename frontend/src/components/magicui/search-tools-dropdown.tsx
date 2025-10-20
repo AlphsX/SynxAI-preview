@@ -12,6 +12,7 @@ import {
   Newspaper,
 } from "lucide-react";
 import { chatAPI } from "@/lib/api";
+import { useMediaQuery } from "@/hooks";
 
 type SearchTool = {
   id: string;
@@ -98,6 +99,7 @@ export const SearchToolsDropdown = ({
   const [error, setError] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const plusButtonRef = useRef<HTMLButtonElement>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Fetch search tools from enhanced backend
   useEffect(() => {
@@ -142,7 +144,7 @@ export const SearchToolsDropdown = ({
         setSearchTools([
           {
             id: "web_search",
-            name: "Search web",
+            name: "Web Search",
             description: "Search the web for current information",
             icon: <Globe className="h-5 w-5" />,
             color: "text-blue-500",
@@ -154,7 +156,7 @@ export const SearchToolsDropdown = ({
           },
           {
             id: "news_search",
-            name: "Search news",
+            name: "News Search",
             description: "Search for latest news and current events",
             icon: <Newspaper className="h-5 w-5" />,
             color: "text-orange-500",
@@ -166,7 +168,7 @@ export const SearchToolsDropdown = ({
           },
           {
             id: "crypto_data",
-            name: "Get crypto data",
+            name: "Crypto Data",
             description: "Get real-time cryptocurrency market data",
             icon: <TrendingUp className="h-5 w-5" />,
             color: "text-green-500",
@@ -337,7 +339,9 @@ export const SearchToolsDropdown = ({
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute bottom-full mb-2 w-48 rounded-2xl shadow-lg border border-gray-200/40 dark:border-gray-700/40 py-2 z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl animate-fadeInUp"
+          className={`absolute bottom-full mb-2 rounded-2xl shadow-lg border border-gray-200/40 dark:border-gray-700/40 py-2 z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl animate-fadeInUp ${
+            isMobile ? "w-56" : "w-48"
+          }`}
           style={{
             left: "0",
             bottom: "calc(100% + 0.5rem)",
@@ -357,7 +361,9 @@ export const SearchToolsDropdown = ({
               <button
                 key={tool.id}
                 type="button"
-                className={`w-full px-4 py-3 text-left text-sm transition-all duration-200 group rounded-xl mx-1 touch-manipulation ${
+                className={`w-full text-left transition-all duration-200 group rounded-xl mx-1 touch-manipulation ${
+                  isMobile ? "px-3 py-2.5" : "px-4 py-3"
+                } ${
                   tool.available
                     ? `text-gray-700 dark:text-gray-300 hover:${tool.bgColor} dark:hover:${tool.bgColor}`
                     : "text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-60"
@@ -387,23 +393,24 @@ export const SearchToolsDropdown = ({
                 }}
                 disabled={!tool.available}
                 style={{
-                  minHeight: "44px",
+                  minHeight: isMobile ? "48px" : "44px",
                   WebkitTapHighlightColor: "transparent",
                 }}
               >
-                <div className="flex items-start">
-                  <div
-                    className={`${
-                      tool.available
-                        ? tool.color
-                        : "text-gray-400 dark:text-gray-600"
-                    } mr-3 group-hover:scale-110 transition-transform duration-200 flex-shrink-0 mt-0.5`}
-                  >
-                    {tool.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="group-hover:translate-x-1 transition-transform duration-200 font-medium truncate">
+                {isMobile ? (
+                  // Mobile layout: Icon left, simple name right
+                  <div className="flex items-center">
+                    <div
+                      className={`${
+                        tool.available
+                          ? tool.color
+                          : "text-gray-400 dark:text-gray-600"
+                      } mr-3 group-hover:scale-110 transition-transform duration-200 flex-shrink-0`}
+                    >
+                      {tool.icon}
+                    </div>
+                    <div className="flex-1 min-w-0 flex items-center justify-between">
+                      <span className="group-hover:translate-x-1 transition-transform duration-200 font-medium text-sm">
                         {tool.name}
                       </span>
                       {!tool.available && (
@@ -412,18 +419,43 @@ export const SearchToolsDropdown = ({
                         </span>
                       )}
                     </div>
-                    {tool.description && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">
-                        {tool.description}
-                      </p>
-                    )}
-                    {tool.primary_provider && (
-                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                        via {tool.primary_provider}
-                      </p>
-                    )}
                   </div>
-                </div>
+                ) : (
+                  // Desktop layout: Keep original with descriptions
+                  <div className="flex items-start">
+                    <div
+                      className={`${
+                        tool.available
+                          ? tool.color
+                          : "text-gray-400 dark:text-gray-600"
+                      } mr-3 group-hover:scale-110 transition-transform duration-200 flex-shrink-0 mt-0.5`}
+                    >
+                      {tool.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="group-hover:translate-x-1 transition-transform duration-200 font-medium truncate text-sm">
+                          {tool.name}
+                        </span>
+                        {!tool.available && (
+                          <span className="text-xs text-red-500 dark:text-red-400 ml-2 flex-shrink-0">
+                            Unavailable
+                          </span>
+                        )}
+                      </div>
+                      {tool.description && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">
+                          {tool.description}
+                        </p>
+                      )}
+                      {tool.primary_provider && (
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                          via {tool.primary_provider}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </button>
             ))
           )}

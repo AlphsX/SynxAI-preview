@@ -23,6 +23,9 @@ export { useAppLoading } from './useAppLoading';
 // Export mobile detection hook
 export { useMobileDetection } from './useTouchInteractions';
 
+// Export media query hook
+export { useMediaQuery } from './useMediaQuery';
+
 // Hook for managing chat state
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
