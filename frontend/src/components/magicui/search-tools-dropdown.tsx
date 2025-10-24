@@ -33,6 +33,8 @@ type Props = {
   isDarkMode: boolean;
   className?: string;
   onDropdownStateChange?: (isOpen: boolean) => void;
+  externalOpen?: boolean; // Allow external control
+  showButton?: boolean; // Option to hide the plus button
 };
 
 const getIconForTool = (toolId: string) => {
@@ -91,6 +93,8 @@ export const SearchToolsDropdown = ({
   isDarkMode,
   className = "",
   onDropdownStateChange,
+  externalOpen,
+  showButton = true,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -223,6 +227,17 @@ export const SearchToolsDropdown = ({
     }, 300); // Match animation duration
   }, []);
 
+  // Sync with external control
+  useEffect(() => {
+    if (externalOpen !== undefined) {
+      if (externalOpen) {
+        openDropdown();
+      } else {
+        closeDropdown();
+      }
+    }
+  }, [externalOpen, openDropdown, closeDropdown]);
+
   // Handle tool selection
   const handleToolSelect = useCallback(
     (toolId: string) => {
@@ -291,7 +306,7 @@ export const SearchToolsDropdown = ({
     // Use capture phase to ensure we handle events before other components
     window.addEventListener("keydown", handleKeyDown, true);
     return () => window.removeEventListener("keydown", handleKeyDown, true);
-  }, [isOpen, highlightedIndex, searchTools, handleToolSelect]);
+  }, [isOpen, highlightedIndex, searchTools, handleToolSelect, closeDropdown]);
 
   // Focus management - only reset highlight when closed
   useEffect(() => {
@@ -303,7 +318,6 @@ export const SearchToolsDropdown = ({
 
   // Notify parent component about dropdown state changes
   useEffect(() => {
-    console.log("SearchToolsDropdown: Dropdown state changed to:", isOpen);
     onDropdownStateChange?.(isOpen || isAnimating);
   }, [isOpen, isAnimating, onDropdownStateChange]);
 
@@ -337,48 +351,46 @@ export const SearchToolsDropdown = ({
 
       <div className={`relative ${className}`}>
         {/* Plus Button */}
-        <button
-          ref={plusButtonRef}
-          type="button"
-          className={`w-full h-full flex items-center justify-center rounded-full transition-all duration-300 ease-out transform ${
-            isOpen || isAnimating ? "rotate-45 scale-110" : "rotate-0 scale-100"
-          } hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105 touch-manipulation relative z-[9999] ${
-            isOpen ? "shadow-lg" : ""
-          }`}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log(
-              "Plus button clicked, current isOpen:",
-              isOpen,
-              "-> will be:",
-              !isOpen
-            );
-            if (isOpen || isAnimating) {
-              closeDropdown();
-            } else {
-              openDropdown();
-            }
-          }}
-          onTouchStart={(e) => {
-            // Prevent iOS Safari from showing touch callout
-            e.preventDefault();
-          }}
-          style={{
-            color: getButtonColor(),
-            WebkitTapHighlightColor: "transparent",
-          }}
-          disabled={isLoading}
-          data-plus-button
-        >
-          {isLoading ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
-          ) : error ? (
-            <AlertCircle className="h-5 w-5" />
-          ) : (
-            <Plus className="h-5 w-5" />
-          )}
-        </button>
+        {showButton && (
+          <button
+            ref={plusButtonRef}
+            type="button"
+            className={`w-full h-full flex items-center justify-center rounded-full transition-all duration-300 ease-out transform ${
+              isOpen || isAnimating
+                ? "rotate-45 scale-110"
+                : "rotate-0 scale-100"
+            } hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105 touch-manipulation relative z-[9999] ${
+              isOpen ? "shadow-lg" : ""
+            }`}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (isOpen || isAnimating) {
+                closeDropdown();
+              } else {
+                openDropdown();
+              }
+            }}
+            onTouchStart={(e) => {
+              // Prevent iOS Safari from showing touch callout
+              e.preventDefault();
+            }}
+            style={{
+              color: getButtonColor(),
+              WebkitTapHighlightColor: "transparent",
+            }}
+            disabled={isLoading}
+            data-plus-button
+          >
+            {isLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : error ? (
+              <AlertCircle className="h-5 w-5" />
+            ) : (
+              <Plus className="h-5 w-5" />
+            )}
+          </button>
+        )}
 
         {/* Dropdown Menu - Professional smooth animations */}
         {shouldRender && (
@@ -420,17 +432,16 @@ export const SearchToolsDropdown = ({
                     highlightedIndex === index
                       ? `${tool.bgColor} dark:${tool.bgColor} shadow-md`
                       : ""
-                  } ${
-                    isOpen ? "animate-item-slide-in" : ""
-                  }`}
+                  } ${isOpen ? "animate-item-slide-in" : ""}`}
                   style={{
                     animationDelay: isOpen ? `${index * 50}ms` : "0ms",
+                    minHeight: isMobile ? "48px" : "44px",
+                    WebkitTapHighlightColor: "transparent",
                   }}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     if (tool.available) {
-                      console.log("Tool selected:", tool.id);
                       handleToolSelect(tool.id);
                     }
                   }}
@@ -446,10 +457,6 @@ export const SearchToolsDropdown = ({
                     e.preventDefault();
                   }}
                   disabled={!tool.available}
-                  style={{
-                    minHeight: isMobile ? "48px" : "44px",
-                    WebkitTapHighlightColor: "transparent",
-                  }}
                 >
                   {isMobile ? (
                     // Mobile layout: Icon left, simple name right

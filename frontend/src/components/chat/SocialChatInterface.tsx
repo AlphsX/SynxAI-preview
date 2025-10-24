@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { SocialChatMessage } from "./SocialChatMessage";
 import { SimpleMessageRenderer } from "./SimpleMessageRenderer";
+import { SearchToolsDropdown } from "../magicui/search-tools-dropdown";
 
 interface Message {
   id: string;
@@ -26,9 +26,26 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [showSearchTools, setShowSearchTools] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  // Detect dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    };
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -70,16 +87,41 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Don't send message if dropdown is open
+    if (e.key === "Enter" && !e.shiftKey && !showSearchTools) {
       e.preventDefault();
       handleSend();
+    }
+    
+    // Close dropdown on Escape
+    if (e.key === "Escape" && showSearchTools) {
+      e.preventDefault();
+      setShowSearchTools(false);
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
-    setIsTyping(e.target.value.length > 0);
+    const value = e.target.value;
+    setInputValue(value);
+    setIsTyping(value.length > 0);
+    
+    // Show search tools dropdown when "/" is typed as first character
+    if (value === "/") {
+      setShowSearchTools(true);
+    } else if (value === "") {
+      setShowSearchTools(false);
+    } else if (!value.startsWith("/")) {
+      setShowSearchTools(false);
+    }
+  };
+
+  const handleToolSelect = (toolId: string) => {
+    setSelectedTool(toolId);
+    setShowSearchTools(false);
+    // Replace "/" with the tool command
+    setInputValue(`/${toolId} `);
+    inputRef.current?.focus();
   };
 
   return (
@@ -221,12 +263,37 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 ref={inputRef}
                 value={inputValue}
                 onChange={handleInputChange}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message here..."
+                onKeyDown={handleKeyDown}
+                placeholder='Type your message here... (Type "/" for search tools)'
                 disabled={isLoading}
                 className="w-full px-5 py-4 pr-12 bg-gray-50 dark:bg-gray-700/80 border border-gray-200 dark:border-gray-600 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 disabled:opacity-50 disabled:cursor-not-allowed min-h-[52px] max-h-32 shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm"
                 rows={1}
               />
+
+              {/* Search Tools Dropdown */}
+              <div 
+                className="absolute bottom-full left-0 mb-2 z-[10000]"
+                style={{
+                  position: "absolute",
+                  bottom: "100%",
+                  left: "0",
+                  marginBottom: "0.5rem",
+                  zIndex: 10000,
+                }}
+              >
+                <SearchToolsDropdown
+                  onToolSelect={handleToolSelect}
+                  selectedTool={selectedTool}
+                  isDarkMode={isDarkMode}
+                  externalOpen={showSearchTools}
+                  showButton={false}
+                  onDropdownStateChange={(isOpen) => {
+                    if (!isOpen) {
+                      setShowSearchTools(false);
+                    }
+                  }}
+                />
+              </div>
 
               {/* Character count for long messages */}
               {inputValue.length > 100 && (
