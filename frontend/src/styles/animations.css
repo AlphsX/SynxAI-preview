@@ -685,4 +685,71 @@
 
 .ease-out-quint {
   transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}/* Inpu
+t Focus and Typing Animations */
+@keyframes inputFocusGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+@keyframes inputTypingPulse {
+  0%, 100% {
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    border-color: rgba(59, 130, 246, 0.6);
+  }
+}
+
+@keyframes welcomeInputHighlight {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: scale(1.02);
+    box-shadow: 0 8px 40px rgba(59, 130, 246, 0.15);
+  }
+}
+
+@keyframes placeholderShimmer {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+/* Utility classes for input animations */
+.animate-input-focus-glow {
+  animation: inputFocusGlow 0.3s ease-out forwards;
+}
+
+.animate-input-typing-pulse {
+  animation: inputTypingPulse 1.5s ease-in-out infinite;
+}
+
+.animate-welcome-input-highlight {
+  animation: welcomeInputHighlight 0.3s ease-out forwards;
+}
+
+.animate-placeholder-shimmer {
+  animation: placeholderShimmer 2s ease-in-out infinite;
+}
+
+/* Enhanced focus states */
+.input-focus-enhanced:focus-within {
+  animation: inputFocusGlow 0.3s ease-out forwards;
+}
+
+.input-typing-active {
+  animation: inputTypingPulse 1.5s ease-in-out infinite;
 }

@@ -9,7 +9,6 @@ import {
   Mic,
   ChevronLeft,
   ChevronRight,
-  Zap,
 } from "lucide-react";
 
 // Custom Logo Icon Component
@@ -72,9 +71,7 @@ import {
 } from "@/components/magicui";
 import { AIModelDropdown } from "@/components/magicui/ai-model-dropdown";
 import { chatAPI } from "@/lib/api";
-import { StreamingRenderer } from "@/components/chat/StreamingRenderer";
 import { ChatGPTStyleMessage } from "@/components/chat/ChatGPTStyleMessage";
-import { ChatGPTStyleInput } from "@/components/chat/ChatGPTStyleInput";
 import { EnhancedMessage, FormattingMetadata } from "@/types/markdown";
 import { analyzeMarkdownFeatures } from "@/lib/markdown-utils";
 import { IdleMeteorAnimation } from "@/components/ui/idle-meteor-animation";
@@ -174,7 +171,14 @@ export default function Home() {
   }, []);
 
   const focusInput = useCallback(() => {
-    inputRef.current?.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
+      // Scroll to input if it's not visible (especially on mobile)
+      inputRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
   }, []);
 
   const newChat = useCallback(() => {
@@ -661,10 +665,32 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     [isHydrated, lastClickTime, lastClickedPrompt, handleSubmit]
   );
 
-  // Auto-focus the input field when the component mounts
+  // Auto-focus the input field when the component mounts and when welcome screen is shown
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    // Add a small delay to ensure the component is fully rendered
+    const timer = setTimeout(() => {
+      if (inputRef.current && showWelcome) {
+        inputRef.current.focus();
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [showWelcome]);
+
+  // Also focus when the page becomes visible (user switches back to tab)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && showWelcome && inputRef.current) {
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [showWelcome]);
 
   // Fetch available models from enhanced backend
   useEffect(() => {
@@ -1150,16 +1176,23 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     }
   }, [browserInfo, mobileInfo]);
 
-  // Keyboard shortcut to focus input field (⌘+J on Mac, Ctrl+J on Windows/Linux)
-  // and to trigger voice recognition (Cmd+Enter on Mac, Ctrl+Enter on Windows/Linux)
+  // Enhanced keyboard shortcuts and global typing support
   useEffect(() => {
     let lastVoiceToggleTime = 0;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't interfere if user is typing in an input field, textarea, or contenteditable
+      const target = e.target as HTMLElement;
+      const isTypingInInput =
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.contentEditable === "true" ||
+        target.closest('[contenteditable="true"]');
+
       // Check if Cmd (Mac) or Ctrl (Windows/Linux) is pressed along with 'J'
       if ((e.metaKey || e.ctrlKey) && e.key === "j") {
         e.preventDefault();
-        inputRef.current?.focus();
+        focusInput();
       }
       // Check for Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux) for voice input
       else if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
@@ -1172,13 +1205,60 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           lastVoiceToggleTime = now;
         }
       }
+      // Global typing support - start typing anywhere to focus input
+      else if (
+        !isTypingInInput &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey &&
+        e.key.length === 1 &&
+        showWelcome &&
+        !isToolsDropdownOpen
+      ) {
+        // Only for printable characters and when on welcome screen
+        const isPrintable = e.key.match(
+          /^[a-zA-Z0-9\s\.,\?!@#\$%\^&\*\(\)_\+\-=\[\]\{\}\|\\:";'<>\?\/`~]$/
+        );
+        if (isPrintable) {
+          e.preventDefault();
+          // Focus input and add the typed character
+          if (inputRef.current) {
+            inputRef.current.focus();
+            // Add the character to the input
+            setInputText((prev) => prev + e.key);
+          }
+        }
+      }
+      // Handle Escape key to clear input or close tools dropdown
+      else if (e.key === "Escape") {
+        if (isToolsDropdownOpen) {
+          // Close tools dropdown
+          const plusButton = document.querySelector(
+            "[data-plus-button]"
+          ) as HTMLButtonElement;
+          if (plusButton) {
+            plusButton.click();
+          }
+        } else if (inputText.trim()) {
+          // Clear input if it has content
+          setInputText("");
+          inputRef.current?.focus();
+        }
+      }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isListening, toggleVoiceRecognition]);
+  }, [
+    isListening,
+    toggleVoiceRecognition,
+    showWelcome,
+    isToolsDropdownOpen,
+    inputText,
+    focusInput,
+  ]);
 
   // Setup swipe gestures for mobile sidebar with theme protection
   const { attachToElement } = useSwipeGesture({
@@ -1691,74 +1771,94 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             {/* Old notification system removed, using VoiceThemeNotification instead */}
 
             {showWelcome ? (
-              /* Welcome Screen */
-              <div className="flex-1 flex items-center justify-center p-8 animate-fade-in-up">
-                <div className="text-center max-w-2xl">
-                  <div className="mb-8">
-                    <div className="inline-flex items-center justify-center mb-6">
-                      <LogoIcon className="h-16 w-16 text-gray-800 dark:text-gray-200 mx-auto" />
-                    </div>
-                    <h1 className="text-4xl font-bold mb-4">
-                      <AuroraText>Hey there, I&apos;m Synx!</AuroraText>
-                    </h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 animate-fade-in">
-                      How can I help you?
-                    </p>
-                  </div>
-
-                  {/* Quick Action Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center">
-                      <Globe className="h-8 w-8 text-blue-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
-                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors text-center">
-                        Web Search
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                        Get real-time information from across the internet
+              /* Welcome Screen with Integrated Chat Input */
+              <div className="flex-1 flex flex-col">
+                {/* Welcome Content */}
+                <div className="flex-1 flex items-center justify-center p-8 animate-fade-in-up">
+                  <div className="text-center max-w-2xl w-full">
+                    <div className="mb-8">
+                      <div className="inline-flex items-center justify-center mb-6">
+                        <LogoIcon className="h-16 w-16 text-gray-800 dark:text-gray-200 mx-auto" />
+                      </div>
+                      <h1 className="text-4xl font-bold mb-4">
+                        <AuroraText>Hey there, I&apos;m Synx!</AuroraText>
+                      </h1>
+                      <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 animate-fade-in">
+                        How can I help you today?
                       </p>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center">
-                      <TrendingUp className="h-8 w-8 text-green-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
-                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors text-center">
-                        Crypto Data
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                        Live cryptocurrency prices and market analysis
-                      </p>
+                    {/* Quick Action Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                      <div
+                        className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center"
+                        onClick={() => {
+                          setSelectedTool("web_search");
+                          focusInput();
+                        }}
+                      >
+                        <Globe className="h-8 w-8 text-blue-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors text-center">
+                          Web Search
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                          Get real-time information from across the internet
+                        </p>
+                      </div>
+
+                      <div
+                        className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center"
+                        onClick={() => {
+                          setSelectedTool("crypto_data");
+                          focusInput();
+                        }}
+                      >
+                        <TrendingUp className="h-8 w-8 text-green-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors text-center">
+                          Crypto Data
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                          Live cryptocurrency prices and market analysis
+                        </p>
+                      </div>
+
+                      <div
+                        className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center"
+                        onClick={() => {
+                          focusInput();
+                        }}
+                      >
+                        <Sparkles className="h-8 w-8 text-purple-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors text-center">
+                          AI Chat
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                          Intelligent conversations about any topic
+                        </p>
+                      </div>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center">
-                      <Sparkles className="h-8 w-8 text-purple-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
-                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors text-center">
-                        AI Chat
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                        Intelligent conversations about any topic
+                    {/* Example Prompts */}
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Try asking:
                       </p>
-                    </div>
-                  </div>
-
-                  {/* Example Prompts */}
-                  <div className="space-y-3">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                      Try asking:
-                    </p>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {[
-                        "What's trending on the internet today?",
-                        "Explain quantum computing simply",
-                        "What's the current Bitcoin price?",
-                        "Latest news in AI development",
-                      ].map((prompt, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handlePromptClick(prompt)}
-                          className="px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/40 text-sm text-gray-700 dark:text-gray-300 transition-all duration-200 border border-gray-200/40 dark:border-gray-700/40 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm"
-                        >
-                          {prompt}
-                        </button>
-                      ))}
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {[
+                          "What's trending on the internet today?",
+                          "Explain quantum computing simply",
+                          "What's the current Bitcoin price?",
+                          "Latest news in AI development",
+                        ].map((prompt, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handlePromptClick(prompt)}
+                            className="px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/40 text-sm text-gray-700 dark:text-gray-300 transition-all duration-200 border border-gray-200/40 dark:border-gray-700/40 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-sm"
+                          >
+                            {prompt}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
