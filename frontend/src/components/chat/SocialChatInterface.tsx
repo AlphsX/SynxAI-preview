@@ -93,7 +93,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
       e.preventDefault();
       handleSend();
     }
-    
+
     // Close dropdown on Escape
     if (e.key === "Escape" && showSearchTools) {
       e.preventDefault();
@@ -105,13 +105,11 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
     const value = e.target.value;
     setInputValue(value);
     setIsTyping(value.length > 0);
-    
-    // Show search tools dropdown when "/" is typed as first character
+
+    // Show search tools dropdown ONLY when input is exactly "/"
     if (value === "/") {
       setShowSearchTools(true);
-    } else if (value === "") {
-      setShowSearchTools(false);
-    } else if (!value.startsWith("/")) {
+    } else {
       setShowSearchTools(false);
     }
   };
@@ -271,7 +269,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
               />
 
               {/* Search Tools Dropdown */}
-              <div 
+              <div
                 className="absolute bottom-full left-0 mb-2 z-[10000]"
                 style={{
                   position: "absolute",

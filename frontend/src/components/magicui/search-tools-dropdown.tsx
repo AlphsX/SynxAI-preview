@@ -227,16 +227,28 @@ export const SearchToolsDropdown = ({
     }, 300); // Match animation duration
   }, []);
 
-  // Sync with external control
+  // Sync with external control - CRITICAL: This must trigger immediately
   useEffect(() => {
     if (externalOpen !== undefined) {
-      if (externalOpen) {
-        openDropdown();
-      } else {
-        closeDropdown();
+      if (externalOpen && !isOpen) {
+        // Force immediate render
+        setShouldRender(true);
+        setIsAnimating(true);
+        // Use setTimeout with 0 to ensure state is set before animation
+        setTimeout(() => {
+          setIsOpen(true);
+        }, 0);
+      } else if (!externalOpen && isOpen) {
+        setIsOpen(false);
+        setIsAnimating(true);
+        setHighlightedIndex(-1);
+        setTimeout(() => {
+          setShouldRender(false);
+          setIsAnimating(false);
+        }, 300);
       }
     }
-  }, [externalOpen, openDropdown, closeDropdown]);
+  }, [externalOpen, isOpen]);
 
   // Handle tool selection
   const handleToolSelect = useCallback(

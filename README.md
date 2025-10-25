@@ -1,106 +1,111 @@
-# SynxAI - Production-Grade Conversational AI Platform
+# SynxAI - Enterprise Conversational AI Platform
 
-> **Enterprise-class AI orchestration platform engineered for scale, reliability, and intelligent multi-provider routing**
+> Production-grade AI orchestration platform with intelligent multi-provider routing, real-time search integration, and comprehensive observability
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
-[![Python](https://img.shields.io/badge/Python-3.11+-green.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.112+-teal.svg)](https://fastapi.tiangolo.com/)
-[![Next.js](https://img.shields.io/badge/Next.js-15.5-black.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.112+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Executive Summary
+---
 
-SynxAI represents a production-ready conversational AI infrastructure built on microservices architecture with intelligent orchestration, multi-provider AI routing, and comprehensive observability. The platform delivers ChatGPT-caliber user experiences while maintaining full control over data flow, cost optimization, and performance metrics.
+## Overview
 
-**Core Value Proposition:**
-- **Intelligent Orchestration**: Query-aware routing across search engines, AI providers, and data sources
-- **Production Reliability**: 99.9% uptime capability with automatic failover and graceful degradation
-- **Performance Engineering**: Sub-100ms cached responses with GPU-accelerated UI rendering
-- **Developer Experience**: Clean APIs, comprehensive TypeScript types, and full LangSmith observability
+SynxAI is an enterprise-grade conversational AI platform engineered for production environments. Built on modern microservices architecture, it delivers intelligent AI orchestration with automatic failover, real-time data integration, and comprehensive observability through LangSmith tracing.
+
+### Key Differentiators
+
+- **Intelligent AI Routing**: Automatic model selection based on query complexity, latency requirements, and cost optimization
+- **Dual-Engine Search**: Strategic routing between Brave Search and SerpAPI with automatic fallback
+- **Multi-Source News Agent**: Complexity-based source selection from Reuters, BBC, NYT, Washington Post, and WSJ
+- **Hybrid AI System**: URL-aware processing with specialized web extraction and flexible model selection
+- **Production-Ready**: Docker deployment, structured logging, health monitoring, and 99.9% uptime capability
+- **Mobile-First**: Native-app quality experience with touch gestures, voice input, and PWA support
 
 ---
 
-## 🎯 Architecture Overview
+## Architecture
 
-### System Design Philosophy
-
-SynxAI is architected around four foundational principles:
-
-1. **Intelligent Orchestration** - Dynamic routing based on query complexity, cost constraints, and latency requirements
-2. **Fault Tolerance** - Multi-layer fallback strategies with circuit breakers and exponential backoff
-3. **Performance Optimization** - Multi-tier caching, connection pooling, and async-first design patterns
-4. **Observability** - Structured logging, distributed tracing, and real-time performance metrics
-
-### High-Level Architecture
+### System Design
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                     Client Layer (Next.js 15)                   │
-│  React 19 • TypeScript • TailwindCSS • Framer Motion           │
-│  SSE Streaming • WebSocket • GPU Animations • PWA              │
-└────────────────────────┬────────────────────────────────────────┘
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                  API Gateway (Nginx + FastAPI)                  │
-│  SSL/TLS • Load Balancing • Rate Limiting • CORS               │
-└────────────────────────┬────────────────────────────────────────┘
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│              Intelligent Orchestration Layer                    │
-│                                                                 │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
-│  │ AI Router    │  │ Search Router│  │ News Agent   │        │
-│  │ Groq/OpenAI/ │  │ Brave/SerpAPI│  │ Multi-Source │        │
-│  │ Anthropic    │  │ Query Analyze│  │ Aggregation  │        │
-│  └──────────────┘  └──────────────┘  └──────────────┘        │
-│                                                                 │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
-│  │ Memory Svc   │  │ Vector Search│  │ Crypto Data  │        │
-│  │ LangChain +  │  │ PostgreSQL + │  │ Binance API  │        │
-│  │ PostgreSQL   │  │ pgvector     │  │              │        │
-│  └──────────────┘  └──────────────┘  └──────────────┘        │
-└────────────────────────┬────────────────────────────────────────┘
-                         ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                   External Services Layer                       │
-│                                                                 │
-│  AI Providers:      Search Engines:    Observability:          │
-│  • Groq             • Brave Search     • LangSmith             │
-│  • OpenAI           • SerpAPI          • Structured Logs       │
-│  • Anthropic        • Google (Serp)    • Health Checks         │
-│                                                                 │
-│  Data Storage:      Caching:           Real-Time:              │
-│  • PostgreSQL 15+   • Redis 7+         • WebSocket             │
-│  • pgvector         • In-Memory        • SSE Streaming         │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                    Frontend Layer (Next.js 15)                   │
+│   React 19 • TypeScript • TailwindCSS • Framer Motion           │
+│   SSE Streaming • WebSocket • GPU Animations • PWA              │
+└────────────────────────┬─────────────────────────────────────────┘
+                         │
+┌────────────────────────┴─────────────────────────────────────────┐
+│                   API Gateway (FastAPI)                          │
+│   Rate Limiting • CORS • Security Headers • Logging             │
+└────────────────────────┬─────────────────────────────────────────┘
+                         │
+┌────────────────────────┴─────────────────────────────────────────┐
+│              Intelligent Orchestration Layer                     │
+│                                                                  │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
+│  │ AI Router   │  │ Search      │  │ News Agent  │            │
+│  │ Groq/OpenAI │  │ Brave/Serp  │  │ Multi-Source│            │
+│  │ Anthropic   │  │ Auto-Fallbk │  │ Aggregation │            │
+│  └─────────────┘  └─────────────┘  └─────────────┘            │
+│                                                                  │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐            │
+│  │ Memory Svc  │  │ Vector DB   │  │ Crypto Data │            │
+│  │ LangChain   │  │ pgvector    │  │ Binance API │            │
+│  │ PostgreSQL  │  │ Semantic    │  │ Real-time   │            │
+│  └─────────────┘  └─────────────┘  └─────────────┘            │
+└────────────────────────┬─────────────────────────────────────────┘
+                         │
+┌────────────────────────┴─────────────────────────────────────────┐
+│                   External Services Layer                        │
+│                                                                  │
+│  AI Providers:      Search Engines:    Observability:           │
+│  • Groq             • Brave Search     • LangSmith              │
+│  • OpenAI           • SerpAPI          • Structured Logs        │
+│  • Anthropic        • Google Serp      • Health Checks          │
+│                                                                  │
+│  Data Storage:      Caching:           Real-Time:               │
+│  • PostgreSQL 15+   • Redis 7+         • WebSocket              │
+│  • pgvector         • In-Memory        • SSE Streaming          │
+└──────────────────────────────────────────────────────────────────┘
 ```
+
+### Core Principles
+
+1. **Intelligent Orchestration** - Query-aware routing for optimal performance and cost
+2. **Fault Tolerance** - Multi-layer fallback with circuit breakers and exponential backoff
+3. **Performance Optimization** - Multi-tier caching, connection pooling, async-first design
+4. **Observability** - Structured logging, distributed tracing, real-time metrics
 
 ---
 
-## 🚀 Key Features & Capabilities
+## Features
 
 ### 1. Multi-Provider AI Orchestration
 
-**Intelligent Model Selection with Automatic Failover**
+**Automatic Model Selection with Intelligent Failover**
 
 ```python
-# Automatic routing based on query characteristics
 Query Analysis → Complexity Detection
     ↓
-├─ Speed-Critical (<2s) → Groq (llama-3.1-8b-instant)
-├─ Complex Reasoning → OpenAI (GPT-4)
-├─ Safety-Critical → Anthropic (Claude-3)
-└─ Provider Unavailable → Automatic Failover Chain
+├─ Speed-Critical (<2s)    → Groq (llama-3.1-8b-instant)
+├─ Complex Reasoning       → OpenAI (GPT-4)
+├─ Safety-Critical         → Anthropic (Claude-3)
+└─ Provider Unavailable    → Automatic Failover Chain
 ```
 
-**Features:**
-- Dynamic model selection based on query complexity and latency requirements
-- Automatic failover chain: Groq → OpenAI → Anthropic → Graceful degradation
-- Real-time model availability checking with 5-minute cache TTL
-- Streaming response support with Server-Sent Events (SSE)
-- Cost optimization through intelligent provider routing
+**Capabilities:**
+
+- Dynamic model selection based on query characteristics
+- Automatic failover: Groq → OpenAI → Anthropic → Graceful degradation
+- Real-time model availability checking (5-minute cache TTL)
+- Streaming responses via Server-Sent Events (SSE)
+- Cost optimization through intelligent routing
 
 **Supported Models:**
+
 - **Groq**: llama-3.1-70b-versatile, llama-3.1-8b-instant, mixtral-8x7b-32768
 - **OpenAI**: gpt-4o, gpt-4o-mini, gpt-3.5-turbo, gpt-4
 - **Anthropic**: claude-3-5-sonnet, claude-3-5-haiku, claude-3-sonnet
@@ -112,52 +117,54 @@ Query Analysis → Complexity Detection
 ```python
 Query Analysis → Complexity Detection
     ↓
-├─ General/Real-time → Brave Search (primary)
+├─ General/Real-time       → Brave Search (primary)
 │  └─> SerpAPI (fallback if insufficient results)
 │
-├─ Structured/Deep Query → SerpAPI (primary)
+├─ Structured/Deep Query   → SerpAPI (primary)
 │  └─> Brave Search (fallback)
 │
-└─ Specialized (images/news/knowledge) → SerpAPI (exclusive)
+└─ Specialized (images/news) → SerpAPI (exclusive)
 ```
 
-**Brave Search (Primary Engine):**
-- Real-time information retrieval
-- Privacy-focused (no user tracking)
-- Clean results without ads
-- Excellent for current events and general queries
-- Fast response times (<500ms P95)
+**Brave Search:**
 
-**SerpAPI (Specialized Engine):**
+- Real-time information retrieval
+- Privacy-focused (no tracking)
+- Fast response times (<500ms P95)
+- Ideal for current events
+
+**SerpAPI:**
+
 - Google-level coverage with structured data
-- Featured snippets, Knowledge Graph, People Also Ask
-- Rich metadata with position, site links, ratings
-- Image/news/shopping search capabilities
-- Ideal for deep, specific queries (<800ms P95)
+- Featured snippets, Knowledge Graph
+- Rich metadata and position tracking
+- Image/news/shopping capabilities (<800ms P95)
 
 ### 3. Intelligent News Agent
 
-**Multi-Source News Aggregation with Complexity-Based Routing**
+**Multi-Source Aggregation with Complexity-Based Routing**
 
 ```python
 Query Complexity Analysis
     ↓
-├─ Breaking News → 2-3 sources, 10s timeout (speed priority)
-├─ Complex Analysis → 4-5 sources, 15s timeout (cross-checking)
-└─ General Queries → 1-2 sources, 8s timeout (efficiency)
+├─ Breaking News      → 2-3 sources, 10s timeout (speed)
+├─ Complex Analysis   → 4-5 sources, 15s timeout (depth)
+└─ General Queries    → 1-2 sources, 8s timeout (efficiency)
 ```
 
-**Supported News Sources:**
-- Reuters (breaking news, international coverage)
-- BBC (global perspective, in-depth analysis)
+**News Sources:**
+
+- Reuters (breaking news, international)
+- BBC (global perspective, analysis)
 - New York Times (investigative journalism)
 - Washington Post (political coverage)
 - Wall Street Journal (business, finance)
 
 **Features:**
+
 - Automatic source selection based on query complexity
 - Parallel fetching with configurable timeouts
-- Intelligent summarization with key points extraction
+- Intelligent summarization with key points
 - Cross-source verification for complex topics
 - Real-time breaking news detection
 
@@ -166,7 +173,6 @@ Query Complexity Analysis
 **Conversation Persistence with PostgreSQL Backend**
 
 ```python
-# Conversation memory architecture
 User Message → LangChain Memory Service
     ↓
 ├─ ConversationBufferMemory (short-term)
@@ -176,9 +182,10 @@ User Message → LangChain Memory Service
 LangSmith Tracing → Full observability
 ```
 
-**Features:**
+**Capabilities:**
+
 - Cross-session context retention
-- Natural conversation recall ("What did we discuss earlier?")
+- Natural conversation recall
 - Automatic summarization for long conversations
 - LangSmith integration for full tracing
 - Session-based memory management
@@ -189,17 +196,17 @@ LangSmith Tracing → Full observability
 **URL-Aware Processing with Specialized Web Extraction**
 
 ```python
-# Hybrid approach workflow
 User Message with URL → URL Detection
     ↓
 Groq Compound Model → Web Data Extraction
     ↓
-User's Chosen AI Model → Intelligent Response Generation
+User's Chosen AI Model → Intelligent Response
     ↓
 Combined Output → Web Data + AI Analysis
 ```
 
 **Benefits:**
+
 - Specialized web browsing with Groq compound model
 - Flexible primary AI model selection (GPT-4, Claude, etc.)
 - Automatic URL detection and processing
@@ -211,105 +218,109 @@ Combined Output → Web Data + AI Analysis
 **Native-App Quality on Mobile Devices**
 
 **Touch-Optimized Interface:**
-- Swipe gestures with haptic feedback (right: open sidebar, left: close)
-- Long-press actions for message options (copy, share, delete)
-- Pull-to-refresh for conversation updates
-- Minimum 44x44px touch targets (WCAG compliant)
+
+- Swipe gestures with haptic feedback
+- Long-press actions for message options
+- Pull-to-refresh for updates
+- 44x44px minimum touch targets (WCAG compliant)
 - Hardware-accelerated smooth scrolling
 
 **Voice Input System:**
+
 - Tap-and-hold microphone for voice commands
 - System commands: "System switch dark mode", "System clear", "System open/close sidebar"
 - Real-time speech recognition with interim results
 - iOS Safari and Chrome Mobile optimizations
 - Fallback for unsupported browsers
 
-**Mobile-Specific Features:**
-- Adaptive layout for portrait/landscape orientation
+**Mobile Features:**
+
+- Adaptive layout (portrait/landscape)
 - Mobile keyboard optimization (16px font prevents iOS zoom)
 - PWA support (add to home screen)
 - Offline functionality with service worker
 - Reduced motion support for accessibility
 
-**Performance Optimizations:**
+**Performance:**
+
 - Lazy loading with route-based code splitting
-- Next.js Image component with automatic WebP conversion
+- Next.js Image with automatic WebP conversion
 - GPU acceleration with transform3d
 - Skeleton screens and shimmer effects
 - Dynamic viewport height (dvh) for accurate sizing
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-### Frontend Architecture
+### Frontend
 
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| **Next.js** | 15.5.2 | React framework with App Router and Server Components |
-| **React** | 19.1.0 | Concurrent rendering and Suspense |
-| **TypeScript** | 5.0+ | Full type safety with strict mode |
-| **TailwindCSS** | 3.4+ | Utility-first CSS with JIT compilation |
-| **Framer Motion** | 12.23+ | GPU-accelerated animations |
-| **React Markdown** | 10.1+ | Real-time markdown rendering with syntax highlighting |
-| **Zustand** | 5.0+ | Lightweight state management |
+| Technology         | Version | Purpose                           |
+| ------------------ | ------- | --------------------------------- |
+| **Next.js**        | 15.5.2  | React framework with App Router   |
+| **React**          | 19.1.0  | Concurrent rendering and Suspense |
+| **TypeScript**     | 5.0+    | Full type safety with strict mode |
+| **TailwindCSS**    | 3.4+    | Utility-first CSS with JIT        |
+| **Framer Motion**  | 12.23+  | GPU-accelerated animations        |
+| **React Markdown** | 10.1+   | Real-time markdown rendering      |
+| **Zustand**        | 5.0+    | Lightweight state management      |
 
-### Backend Architecture
+### Backend
 
-| Technology | Version | Purpose |
-|-----------|---------|---------|
-| **FastAPI** | 0.112+ | High-performance async framework with automatic OpenAPI docs |
-| **Python** | 3.11+ | Latest Python with performance improvements |
-| **PostgreSQL** | 15+ | Production database with pgvector extension |
-| **Redis** | 7+ | Caching, session storage, and rate limiting |
-| **SQLAlchemy** | 2.0+ | Modern async ORM with type hints |
-| **Pydantic** | 2.8+ | Data validation and serialization |
-| **Uvicorn** | 0.24+ | ASGI server with WebSocket support |
+| Technology     | Version | Purpose                                     |
+| -------------- | ------- | ------------------------------------------- |
+| **FastAPI**    | 0.112+  | High-performance async framework            |
+| **Python**     | 3.11+   | Latest Python with performance improvements |
+| **PostgreSQL** | 15+     | Production database with pgvector           |
+| **Redis**      | 7+      | Caching, sessions, rate limiting            |
+| **SQLAlchemy** | 2.0+    | Modern async ORM with type hints            |
+| **Pydantic**   | 2.8+    | Data validation and serialization           |
+| **Uvicorn**    | 0.24+   | ASGI server with WebSocket support          |
 
-### AI & Search Layer
+### AI & Search
 
-| Service | Purpose | Performance |
-|---------|---------|-------------|
-| **Groq SDK** | Ultra-fast inference (llama-3.1-8b-instant) | <2s response time |
-| **LangChain** | AI orchestration and memory management | N/A |
-| **LangSmith** | Observability, tracing, and debugging | Real-time |
-| **OpenAI SDK** | GPT-4 models (optional) | 3-5s response time |
-| **Anthropic SDK** | Claude-3 models (optional) | 3-5s response time |
-| **Brave Search API** | Privacy-focused web search | <500ms P95 |
-| **SerpAPI** | Google search proxy with structured data | <800ms P95 |
-| **pgvector** | Vector similarity search | <200ms P95 |
+| Service           | Purpose                            | Performance   |
+| ----------------- | ---------------------------------- | ------------- |
+| **Groq SDK**      | Ultra-fast inference               | <2s response  |
+| **LangChain**     | AI orchestration and memory        | N/A           |
+| **LangSmith**     | Observability and tracing          | Real-time     |
+| **OpenAI SDK**    | GPT-4 models (optional)            | 3-5s response |
+| **Anthropic SDK** | Claude-3 models (optional)         | 3-5s response |
+| **Brave Search**  | Privacy-focused web search         | <500ms P95    |
+| **SerpAPI**       | Google search with structured data | <800ms P95    |
+| **pgvector**      | Vector similarity search           | <200ms P95    |
 
-### Infrastructure & DevOps
+### Infrastructure
 
 - **Docker** - Multi-stage builds with layer caching
-- **Docker Compose** - Service orchestration for development and production
-- **Nginx** - Reverse proxy, load balancing, SSL termination
-- **Structured Logging** - JSON logs with correlation IDs and request tracing
+- **Docker Compose** - Service orchestration
+- **Nginx** - Reverse proxy, load balancing, SSL
+- **Structured Logging** - JSON logs with correlation IDs
 
 ---
 
-## 📊 Performance Metrics
+## Performance Metrics
 
 ### Response Time Benchmarks (P95)
 
-| Operation | Target | Actual |
-|-----------|--------|--------|
-| Cached responses | <100ms | 85ms |
-| Brave Search | <500ms | 420ms |
-| SerpAPI | <800ms | 680ms |
-| Groq AI (llama-3.1-8b) | <2s | 1.8s |
-| OpenAI GPT-4 | <5s | 4.2s |
-| Vector search | <200ms | 180ms |
-| WebSocket latency | <50ms | 35ms |
-| News Agent (2-5 sources) | 2-15s | 3-12s |
+| Operation                | Target | Actual |
+| ------------------------ | ------ | ------ |
+| Cached responses         | <100ms | 85ms   |
+| Brave Search             | <500ms | 420ms  |
+| SerpAPI                  | <800ms | 680ms  |
+| Groq AI (llama-3.1-8b)   | <2s    | 1.8s   |
+| OpenAI GPT-4             | <5s    | 4.2s   |
+| Vector search            | <200ms | 180ms  |
+| WebSocket latency        | <50ms  | 35ms   |
+| News Agent (2-5 sources) | 2-15s  | 3-12s  |
 
-### Scalability Characteristics
+### Scalability
 
 - **Concurrent Connections**: 1000+ WebSocket connections per instance
-- **Horizontal Scaling**: Stateless backend design with load balancing
+- **Horizontal Scaling**: Stateless backend with load balancing
 - **Database**: Connection pooling (20 connections per instance)
 - **Caching**: Multi-layer strategy (Redis + in-memory)
-- **Search**: Automatic failover between providers (<100ms)
+- **Search**: Automatic failover (<100ms)
 
 ### Resource Utilization (Per Instance)
 
@@ -318,7 +329,7 @@ Combined Output → Web Data + AI Analysis
 - **Database**: Optimized indexes, query caching
 - **Network**: <100Mbps typical bandwidth
 
-### Reliability Metrics
+### Reliability
 
 - **Uptime**: 99.9% SLA capability
 - **Error Rate**: <0.1% with automatic retry
@@ -327,11 +338,12 @@ Combined Output → Web Data + AI Analysis
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
 **Required:**
+
 - Docker Engine 20.10+ and Docker Compose 2.0+
 - 4GB+ RAM, 20GB+ disk space
 - API Keys:
@@ -340,6 +352,7 @@ Combined Output → Web Data + AI Analysis
   - At least one of: `BRAVE_SEARCH_API_KEY` or `SERP_API_KEY`
 
 **Optional:**
+
 - `OPENAI_API_KEY` (for GPT-4 fallback)
 - `ANTHROPIC_API_KEY` (for Claude fallback)
 - `BINANCE_API_KEY` + `BINANCE_SECRET_KEY` (for crypto data)
@@ -363,6 +376,7 @@ curl http://localhost:8000/api/health
 ```
 
 **Service Endpoints:**
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
@@ -373,7 +387,7 @@ curl http://localhost:8000/api/health
 ```bash
 # Backend setup
 cd backend
-python -m venv .venv && source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 # Configure environment
@@ -390,20 +404,21 @@ npm run dev
 ```
 
 **Development URLs:**
+
 - Frontend: http://localhost:3000
 - Backend: http://localhost:8000
 - API Docs: http://localhost:8000/docs
-- LangSmith Dashboard: https://smith.langchain.com/
+- LangSmith: https://smith.langchain.com/
 
-### Verification & Testing
+### Verification
 
 ```bash
 # Test core integrations
 cd backend
-python test_simple_langsmith.py      # LangSmith + Search APIs
+python test_simple_langsmith.py      # LangSmith + Search
 python test_news_agent.py            # News Agent
-python test_memory_conversation.py   # Memory System
-python test_groq_compound.py         # Hybrid AI System
+python test_memory.py                # Memory System
+python test_groq_compound.py         # Hybrid AI
 
 # Check search service health
 curl http://localhost:8000/api/external/search/health
@@ -420,11 +435,11 @@ curl http://localhost:8000/api/external/search/health
 
 ---
 
-## 📡 API Reference
+## API Reference
 
 ### Core Endpoints
 
-#### System Health & Status
+#### System Health
 
 ```http
 GET  /api/health                    # System health check
@@ -432,7 +447,7 @@ GET  /api/status                    # Detailed system status
 GET  /api/external/search/health    # Search engines health
 ```
 
-#### Authentication & Authorization
+#### Authentication
 
 ```http
 POST /api/auth/register             # User registration
@@ -440,92 +455,90 @@ POST /api/auth/login                # User authentication
 GET  /api/auth/me                   # Current user profile
 ```
 
-#### AI Chat & Conversations
+#### AI Chat
 
 ```http
 GET  /api/ai/models                 # Available AI models
 POST /api/chat/conversations        # Create conversation
 POST /api/chat/conversations/{id}/messages  # Send message
 WS   /api/chat/ws/{id}              # WebSocket streaming
-GET  /api/chat/conversations/{id}/history   # Conversation history
+GET  /api/chat/conversations/{id}/history   # History
 ```
 
-#### Intelligent Search System
+#### Intelligent Search
 
 ```http
 POST /api/external/search           # Intelligent search (Brave → SerpAPI)
 POST /api/external/search/brave     # Brave Search (direct)
 POST /api/external/search/serpapi   # SerpAPI (direct)
-GET  /api/external/search/provider-status  # Search provider status
+GET  /api/external/search/provider-status  # Provider status
 ```
 
-#### News Agent System
+#### News Agent
 
 ```http
 POST /api/news/agent/search         # Intelligent news search
 POST /api/news/search               # Basic news search
 POST /api/news/search/custom        # Custom source selection
-GET  /api/news/sources              # Available news sources
-GET  /api/news/complexity-info      # Complexity level info
+GET  /api/news/sources              # Available sources
+GET  /api/news/complexity-info      # Complexity info
 ```
 
-#### LangChain Memory System
+#### Memory System
 
 ```http
-GET  /api/v1/memory/history/{session_id}    # Conversation history
-POST /api/v1/memory/add-message             # Add message to memory
+GET  /api/v1/memory/history/{session_id}    # History
+POST /api/v1/memory/add-message             # Add message
 DELETE /api/v1/memory/clear/{session_id}    # Clear session
-GET  /api/v1/memory/stats/{session_id}      # Memory statistics
+GET  /api/v1/memory/stats/{session_id}      # Statistics
 POST /api/v1/memory/enable                  # Enable memory
 POST /api/v1/memory/disable                 # Disable memory
-GET  /api/v1/memory/status                  # Memory status
+GET  /api/v1/memory/status                  # Status
 ```
 
-#### Hybrid AI System (URL Processing)
+#### Hybrid AI System
 
 ```http
 POST /api/v1/external/groq-compound/hybrid-chat         # Hybrid approach
 POST /api/v1/external/groq-compound/extract-website-data # Web extraction
 POST /api/v1/external/groq-compound/analyze-url         # URL analysis
-GET  /api/v1/external/groq-compound/status              # Service status
+GET  /api/v1/external/groq-compound/status              # Status
 ```
 
-### API Usage Examples
+### API Examples
 
-#### Intelligent Search with Automatic Routing
+#### Intelligent Search
 
 ```javascript
-// Automatic routing between Brave Search and SerpAPI
-const response = await fetch('/api/external/search', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const response = await fetch("/api/external/search", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    query: 'latest AI technology trends',
-    count: 10
-  })
+    query: "latest AI technology trends",
+    count: 10,
+  }),
 });
 
 const data = await response.json();
-console.log('Provider used:', data.provider); // 'brave' or 'serpapi'
-console.log('Results:', data.results);
+console.log("Provider:", data.provider); // 'brave' or 'serpapi'
+console.log("Results:", data.results);
 ```
 
-#### News Agent with Complexity-Based Routing
+#### News Agent
 
 ```javascript
-// Automatic source selection based on query complexity
-const newsResponse = await fetch('/api/news/agent/search', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const newsResponse = await fetch("/api/news/agent/search", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    query: 'breaking news about AI regulation'
-  })
+    query: "breaking news about AI regulation",
+  }),
 });
 
 const newsData = await newsResponse.json();
-console.log('Sources searched:', newsData.decision.sources_searched); // 2-5
-console.log('Summary:', newsData.summary.text);
-console.log('Key points:', newsData.summary.key_points);
+console.log("Sources:", newsData.decision.sources_searched);
+console.log("Summary:", newsData.summary.text);
+console.log("Key points:", newsData.summary.key_points);
 ```
 
 #### WebSocket Streaming
@@ -547,7 +560,7 @@ ws.onmessage = (event) => {
       updateUI(data.delta);
       break;
     case "context_data":
-      // External data enrichment (search results, crypto data)
+      // External data (search, crypto)
       displayContext(data);
       break;
     case "message_end":
@@ -556,7 +569,6 @@ ws.onmessage = (event) => {
   }
 };
 
-// Send message with tool selection
 ws.send(
   JSON.stringify({
     type: "message",
@@ -569,79 +581,143 @@ ws.send(
 #### Hybrid AI System
 
 ```javascript
-// Groq compound for web extraction + chosen AI for response
-const response = await fetch('/api/v1/external/groq-compound/hybrid-chat', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const response = await fetch("/api/v1/external/groq-compound/hybrid-chat", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    message: 'Analyze this article: https://groq.com/blog/inside-the-lpu',
-    primary_model: 'gpt-4o'  // Your preferred AI model
-  })
+    message: "Analyze this article: https://groq.com/blog/inside-the-lpu",
+    primary_model: "gpt-4o",
+  }),
 });
 
 const data = await response.json();
-console.log('Primary model:', data.metadata.primary_model);
-console.log('Used compound:', data.metadata.used_compound_for_data);
-console.log('URLs detected:', data.metadata.urls_detected);
-console.log('Response:', data.response);
-```
-
-#### Memory System
-
-```javascript
-// Add message to conversation memory
-await fetch('/api/v1/memory/add-message', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    session_id: 'user-123',
-    message: 'What is machine learning?',
-    is_user: true
-  })
-});
-
-// Retrieve conversation history
-const history = await fetch('/api/v1/memory/history/user-123');
-const messages = await history.json();
-console.log('Conversation history:', messages);
-
-// Get memory statistics
-const stats = await fetch('/api/v1/memory/stats/user-123');
-const memoryStats = await stats.json();
-console.log('Total messages:', memoryStats.total_messages);
-console.log('Storage type:', memoryStats.storage_type);
+console.log("Primary model:", data.metadata.primary_model);
+console.log("Used compound:", data.metadata.used_compound_for_data);
+console.log("URLs detected:", data.metadata.urls_detected);
+console.log("Response:", data.response);
 ```
 
 ---
 
-## 🔒 Security & Compliance
+## Environment Configuration
+
+```bash
+# AI Provider APIs (Required)
+GROQ_API_KEY=gsk_your_key_here                    # Primary AI
+OPENAI_API_KEY=sk_your_key_here                   # Optional (GPT-4)
+ANTHROPIC_API_KEY=sk-ant_your_key_here            # Optional (Claude)
+
+# LangSmith Observability (Required for production)
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_API_KEY=lsv2_pt_your_key_here
+LANGCHAIN_PROJECT=SynxAI-PROJECT
+LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
+
+# Search APIs (At least one required)
+BRAVE_SEARCH_API_KEY=your_brave_key               # Primary: Real-time
+SERP_API_KEY=your_serpapi_key                     # Secondary: Structured
+
+# Cryptocurrency Data (Optional)
+BINANCE_API_KEY=your_binance_key
+BINANCE_SECRET_KEY=your_binance_secret
+
+# Database Configuration
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/synxai
+REDIS_URL=redis://localhost:6379/0
+
+# Security Configuration
+SECRET_KEY=your-super-secret-key-minimum-32-characters
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Performance Configuration
+RATE_LIMIT_REQUESTS=100
+RATE_LIMIT_WINDOW=60
+EXTERNAL_API_TIMEOUT=30
+MAX_RETRIES=3
+```
+
+---
+
+## Monitoring & Observability
+
+### LangSmith Integration
+
+**Full AI Interaction Tracing:**
+
+1. Visit https://smith.langchain.com/
+2. Select project: `SynxAI-PROJECT`
+3. View real-time traces of AI interactions
+4. Monitor performance and debug issues
+
+**Metrics Tracked:**
+
+- Request/response latency
+- Token usage and costs
+- Error rates and types
+- Model performance comparison
+- Search API usage statistics
+
+### Structured Logging
+
+```json
+{
+  "timestamp": "2025-10-25T10:30:45.123Z",
+  "level": "INFO",
+  "logger": "app.agent.router",
+  "message": "Generating response with groq:llama-3.1-8b-instant",
+  "module": "router",
+  "function": "generate_response",
+  "correlation_id": "req-abc123",
+  "user_id": "user-456",
+  "model_id": "llama-3.1-8b-instant",
+  "provider": "groq"
+}
+```
+
+### Health Checks
+
+```bash
+# System health
+curl http://localhost:8000/api/health
+
+# Search service health
+curl http://localhost:8000/api/external/search/health
+
+# AI provider status
+curl http://localhost:8000/api/ai/models
+```
+
+---
+
+## Security
 
 ### Authentication & Authorization
 
-- **JWT-based authentication** with refresh tokens
-- **Role-based access control** (RBAC)
-- **API key management** with secure storage
-- **Session management** with Redis
+- JWT-based authentication with refresh tokens
+- Role-based access control (RBAC)
+- API key management with secure storage
+- Session management with Redis
 
 ### Protection Mechanisms
 
-- **Rate limiting** (per-user and per-endpoint)
-- **Input validation** with Pydantic schemas
-- **CORS configuration** for cross-origin requests
-- **Security headers** (OWASP compliant)
-- **SQL injection prevention** via SQLAlchemy ORM
-- **XSS protection** with content sanitization
+- Rate limiting (per-user and per-endpoint)
+- Input validation with Pydantic schemas
+- CORS configuration for cross-origin requests
+- Security headers (OWASP compliant)
+- SQL injection prevention via SQLAlchemy ORM
+- XSS protection with content sanitization
 
 ### Compliance
 
-- **GDPR-compliant** data handling
-- **Audit logging** for all user actions
-- **TLS 1.3** for data in transit
-- **AES-256** for data at rest
+- GDPR-compliant data handling
+- Audit logging for all user actions
+- TLS 1.3 for data in transit
+- AES-256 for data at rest
 
 ---
 
-## 🧪 Testing & Quality Assurance
+## Testing
 
 ### Integration Testing
 
@@ -670,9 +746,9 @@ mypy backend/app/ --strict
 ruff check backend/app/
 
 # Test specific components
-python backend/test_compound_debug.py       # Groq compound system
-python backend/test_real_integration.py     # Real API integration
-python backend/test_memory_conversation.py  # Conversation memory
+python backend/test_compound_debug.py
+python backend/test_real_integration.py
+python backend/test_memory.py
 ```
 
 ### Frontend Testing
@@ -686,9 +762,6 @@ npm run type-check
 
 # Linting
 npm run lint
-
-# E2E testing
-npm run test:e2e
 ```
 
 ### Mobile Testing
@@ -701,28 +774,15 @@ ip addr show | grep inet  # Linux
 # Start dev server with network access
 npm run dev -- --hostname 0.0.0.0
 
-# Access from mobile device: http://YOUR_IP:3000
+# Access from mobile: http://YOUR_IP:3000
 
 # Lighthouse mobile audit
 npx lighthouse http://localhost:3000 --preset=mobile --view
-
-# Expected scores:
-# Performance: >90
-# Accessibility: >95
-# Best Practices: >90
-# SEO: >90
 ```
-
-### Coverage Metrics
-
-- **Backend**: >90% code coverage
-- **Frontend**: >85% component coverage
-- **API**: 100% endpoint coverage
-- **Integration**: All major workflows tested
 
 ---
 
-## 🚢 Production Deployment
+## Production Deployment
 
 ### Docker Deployment
 
@@ -743,109 +803,24 @@ curl http://localhost:8000/api/health
 ### Infrastructure Requirements
 
 **Minimum:**
+
 - 4 CPU cores, 8GB RAM
 - 100GB SSD storage
 - 1Gbps network bandwidth
 
 **Recommended:**
+
 - 8 CPU cores, 16GB RAM
 - 500GB SSD storage
 - Load balancer (Nginx or AWS ALB)
 - Redis Cluster for high availability
 - Monitoring (Prometheus + Grafana)
 
-### Environment Configuration
-
-```bash
-# AI Provider APIs (Required)
-GROQ_API_KEY=gsk_your_key_here                    # Primary AI model
-OPENAI_API_KEY=sk_your_key_here                   # Optional (GPT-4 fallback)
-ANTHROPIC_API_KEY=sk-ant_your_key_here            # Optional (Claude fallback)
-
-# LangSmith Observability (Required for production)
-LANGCHAIN_TRACING_V2=true
-LANGCHAIN_API_KEY=lsv2_pt_your_key_here
-LANGCHAIN_PROJECT=SynxAI-PROJECT
-LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
-
-# Search APIs (At least one required)
-BRAVE_SEARCH_API_KEY=your_brave_key               # Primary: Real-time, privacy-focused
-SERP_API_KEY=your_serpapi_key                     # Secondary: Structured data
-
-# Cryptocurrency Data (Optional)
-BINANCE_API_KEY=your_binance_key
-BINANCE_SECRET_KEY=your_binance_secret
-
-# Database Configuration
-DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/synxai
-REDIS_URL=redis://localhost:6379/0
-
-# Security Configuration
-SECRET_KEY=your-super-secret-key-change-in-production-minimum-32-characters
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# Performance Configuration
-RATE_LIMIT_REQUESTS=100
-RATE_LIMIT_WINDOW=60
-EXTERNAL_API_TIMEOUT=30
-MAX_RETRIES=3
-```
-
 ---
 
-## 📈 Monitoring & Observability
+## Contributing
 
-### LangSmith Integration
-
-**Full AI Interaction Tracing:**
-1. Visit https://smith.langchain.com/
-2. Select project: `SynxAI-PROJECT`
-3. View real-time traces of AI interactions
-4. Monitor performance and debug issues
-
-**Metrics Tracked:**
-- Request/response latency
-- Token usage and costs
-- Error rates and types
-- Model performance comparison
-- Search API usage statistics
-
-### Structured Logging
-
-```json
-{
-  "timestamp": "2025-10-16T10:30:45.123Z",
-  "level": "INFO",
-  "logger": "app.agent.router",
-  "message": "Generating response with groq:llama-3.1-8b-instant",
-  "module": "router",
-  "function": "generate_response",
-  "correlation_id": "req-abc123",
-  "user_id": "user-456",
-  "model_id": "llama-3.1-8b-instant",
-  "provider": "groq"
-}
-```
-
-### Health Checks
-
-```bash
-# System health
-curl http://localhost:8000/api/health
-
-# Search service health
-curl http://localhost:8000/api/external/search/health
-
-# AI provider status
-curl http://localhost:8000/api/ai/models
-```
-
----
-
-## 🤝 Contributing
-
-We welcome contributions from the community! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
 
 ### Development Workflow
 
@@ -864,13 +839,13 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **LangChain** - AI orchestration framework
 - **Groq** - Ultra-fast AI inference
@@ -883,13 +858,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
+## Support
 
 - **Documentation**: [Full API Documentation](http://localhost:8000/docs)
 - **Issues**: [GitHub Issues](https://github.com/yourusername/synxai/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/yourusername/synxai/discussions)
-- **Email**: support@synxai.com
 
 ---
 
-**Built with ❤️ by Expert AI Engineers for Production-Grade AI Applications**
+**Built with precision by Expert Software Developers, Senior AI Engineers & Professional UX/UI Designers**
