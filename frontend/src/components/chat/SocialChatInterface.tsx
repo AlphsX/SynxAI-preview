@@ -229,25 +229,103 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
         </div>
       </div>
 
-      {/* Scroll to Bottom Button */}
+      {/* Magnifying Glass Scroll Button */}
       {showScrollButton && (
-        <div className="absolute left-1/2 -translate-x-1/2 z-30 bottom-32">
-          <button
-            onClick={scrollToBottom}
-            className="cursor-pointer rounded-full bg-clip-padding border text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 w-10 h-10 flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
-            aria-label="Scroll to bottom"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-gray-700 dark:text-gray-200"
+        <div className="absolute left-1/2 -translate-x-1/2 z-30 bottom-32 animate-luxury-enter">
+          {/* Magnified Content Area (Behind the button) */}
+          <div className="magnifying-glass-container pointer-events-none">
+            <button
+              onClick={scrollToBottom}
+              className="magnifying-glass-button group cursor-pointer rounded-full w-14 h-14 flex items-center justify-center transition-all duration-500 hover:scale-110 active:scale-95 pointer-events-auto"
+              aria-label="Scroll to bottom"
             >
-              <path d="M9.33468 3.33333C9.33468 2.96617 9.6326 2.66847 9.99972 2.66829C10.367 2.66829 10.6648 2.96606 10.6648 3.33333V15.0609L15.363 10.3626L15.4675 10.2777C15.7255 10.1074 16.0762 10.1357 16.3034 10.3626C16.5631 10.6223 16.5631 11.0443 16.3034 11.304L10.4704 17.137C10.2108 17.3967 9.7897 17.3966 9.52999 17.137L3.69601 11.304L3.61105 11.1995C3.44054 10.9414 3.46874 10.5899 3.69601 10.3626C3.92328 10.1354 4.27479 10.1072 4.53292 10.2777L4.63741 10.3626L9.33468 15.0599V3.33333Z"></path>
-            </svg>
-          </button>
+              {/* SVG Filter Definition for Magnification */}
+              <svg width="0" height="0" className="absolute">
+                <defs>
+                  <filter id="magnify-filter">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="0" />
+                    <feComponentTransfer>
+                      <feFuncA type="discrete" tableValues="1" />
+                    </feComponentTransfer>
+                  </filter>
+                </defs>
+              </svg>
+
+              <div className="relative w-full h-full rounded-full overflow-visible">
+                {/* Magnifying Glass Lens Effect */}
+                <div className="absolute inset-0 rounded-full magnifying-lens-effect"></div>
+
+                {/* Ultra Transparent Glass Base */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 via-white/10 to-white/5 dark:from-black/15 dark:via-black/8 dark:to-black/3 backdrop-blur-[25px] backdrop-saturate-[150%] backdrop-brightness-[105%] dark:backdrop-brightness-[110%] border border-white/30 dark:border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.15),0_4px_12px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(0,0,0,0.03)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5),0_4px_12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.08),inset_0_-1px_0_rgba(0,0,0,0.15)]"></div>
+
+                {/* Glass Reflection Highlight */}
+                <div className="absolute inset-[0.5px] rounded-full bg-gradient-to-br from-white/25 via-white/8 to-transparent dark:from-white/12 dark:via-white/4 dark:to-transparent opacity-80"></div>
+
+                {/* Inner Glass Shine */}
+                <div className="absolute inset-[1.5px] rounded-full bg-gradient-to-br from-white/30 via-transparent to-transparent dark:from-white/8 dark:via-transparent dark:to-transparent opacity-60"></div>
+
+                {/* Animated Liquid Shimmer */}
+                <div className="absolute inset-0 rounded-full animate-liquid-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                {/* Realistic Magnifying Glass Rim */}
+                <div
+                  className="absolute inset-[-3px] rounded-full border-[4px] border-transparent bg-gradient-to-br from-gray-400/60 via-gray-300/40 to-gray-400/60 dark:from-gray-500/50 dark:via-gray-600/30 dark:to-gray-500/50 opacity-70 group-hover:opacity-90 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] dark:shadow-[0_0_15px_rgba(0,0,0,0.4)]"
+                  style={{
+                    WebkitMaskImage:
+                      "radial-gradient(circle, transparent 48%, black 52%)",
+                    maskImage:
+                      "radial-gradient(circle, transparent 48%, black 52%)",
+                  }}
+                ></div>
+
+                {/* Inner Rim Reflection */}
+                <div
+                  className="absolute inset-[-1px] rounded-full border-[2px] border-transparent bg-gradient-to-br from-white/40 via-white/20 to-white/40 dark:from-white/20 dark:via-white/10 dark:to-white/20 opacity-50 group-hover:opacity-70 transition-opacity duration-300"
+                  style={{
+                    WebkitMaskImage:
+                      "radial-gradient(circle, transparent 49%, black 51%)",
+                    maskImage:
+                      "radial-gradient(circle, transparent 49%, black 51%)",
+                  }}
+                ></div>
+
+                {/* Icon Container with Glass Refraction */}
+                <div className="relative z-10 w-full h-full flex items-center justify-center">
+                  <div className="relative">
+                    {/* Icon Shadow for Depth */}
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="absolute top-[0.5px] left-[0.5px] text-black/25 dark:text-white/15"
+                    >
+                      <path d="M9.33468 3.33333C9.33468 2.96617 9.6326 2.66847 9.99972 2.66829C10.367 2.66829 10.6648 2.96606 10.6648 3.33333V15.0609L15.363 10.3626L15.4675 10.2777C15.7255 10.1074 16.0762 10.1357 16.3034 10.3626C16.5631 10.6223 16.5631 11.0443 16.3034 11.304L10.4704 17.137C10.2108 17.3967 9.7897 17.3966 9.52999 17.137L3.69601 11.304L3.61105 11.1995C3.44054 10.9414 3.46874 10.5899 3.69601 10.3626C3.92328 10.1354 4.27479 10.1072 4.53292 10.2777L4.63741 10.3626L9.33468 15.0599V3.33333Z"></path>
+                    </svg>
+
+                    {/* Main Icon */}
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="relative text-gray-800/95 dark:text-gray-100/95 group-hover:text-gray-900 dark:group-hover:text-white transition-all duration-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
+                    >
+                      <path d="M9.33468 3.33333C9.33468 2.96617 9.6326 2.66847 9.99972 2.66829C10.367 2.66829 10.6648 2.96606 10.6648 3.33333V15.0609L15.363 10.3626L15.4675 10.2777C15.7255 10.1074 16.0762 10.1357 16.3034 10.3626C16.5631 10.6223 16.5631 11.0443 16.3034 11.304L10.4704 17.137C10.2108 17.3967 9.7897 17.3966 9.52999 17.137L3.69601 11.304L3.61105 11.1995C3.44054 10.9414 3.46874 10.5899 3.69601 10.3626C3.92328 10.1354 4.27479 10.1072 4.53292 10.2777L4.63741 10.3626L9.33468 15.0599V3.33333Z"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Hover Aurora Glow Effect */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400/25 via-purple-400/15 to-pink-400/25 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-lg animate-aurora-btn"></div>
+
+                {/* Outer Glow Ring */}
+                <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-white/15 via-transparent to-white/10 dark:from-white/10 dark:via-transparent dark:to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md"></div>
+              </div>
+            </button>
+          </div>
         </div>
       )}
 

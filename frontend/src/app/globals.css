@@ -298,9 +298,8 @@ body {
     height: 1px !important;
     width: 1px !important;
     /* Enhanced shadow for better visibility */
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2), 
-                0 0 4px rgba(148, 163, 184, 0.5),
-                0 0 8px rgba(148, 163, 184, 0.3);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2),
+      0 0 4px rgba(148, 163, 184, 0.5), 0 0 8px rgba(148, 163, 184, 0.3);
   }
 }
 
@@ -729,26 +728,26 @@ select {
     -ms-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
-  
+
   /* Prevent horizontal overflow on mobile */
   body {
     overflow-x: hidden;
     max-width: 100vw;
   }
-  
+
   /* Ensure all content respects viewport width */
   * {
     max-width: 100%;
     box-sizing: border-box;
   }
-  
+
   /* Exception for meteor animation elements - allow overflow for proper animation */
   .animate-meteor-effect,
   .animate-meteor-effect * {
     max-width: none !important;
     overflow: visible !important;
   }
-  
+
   /* Allow specific elements to use full width */
   html,
   body,
@@ -756,7 +755,7 @@ select {
   main {
     max-width: 100vw !important;
   }
-  
+
   /* Ensure message containers don't overflow */
   .prose,
   .prose-sm,
@@ -766,7 +765,7 @@ select {
     word-wrap: break-word;
     word-break: break-word;
   }
-  
+
   /* Ensure tables scroll horizontally on mobile */
   table {
     display: block;
@@ -1109,10 +1108,8 @@ Swipe gesture animations */
   backdrop-filter: blur(20px) saturate(180%) brightness(110%);
   -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(110%);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .dark .glass-morphism {
@@ -1120,8 +1117,231 @@ Swipe gesture animations */
   backdrop-filter: blur(20px) saturate(180%) brightness(120%);
   -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Magnifying Glass Effect - Ultra Transparent Glass with Zoom */
+.magnifying-glass-container {
+  position: relative;
+  filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.25));
+}
+
+.magnifying-glass-button {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Ultra Transparent Magnifying Lens Effect with Extreme Zoom */
+.magnifying-lens-effect {
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.02) 50%,
+    transparent 100%
+  );
+  backdrop-filter: blur(0px) contrast(2.2) brightness(1.8) saturate(1.6)
+    hue-rotate(0deg);
+  -webkit-backdrop-filter: blur(0px) contrast(2.2) brightness(1.8) saturate(1.6)
+    hue-rotate(0deg);
+  transform: scale(1);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+  /* Enhanced glass refraction effect */
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.12),
+    inset 0 0 60px rgba(255, 255, 255, 0.06), 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.dark .magnifying-lens-effect {
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.025) 25%,
+    rgba(255, 255, 255, 0.01) 50%,
+    transparent 100%
+  );
+  backdrop-filter: blur(0px) contrast(2.5) brightness(2) saturate(1.8)
+    hue-rotate(0deg);
+  -webkit-backdrop-filter: blur(0px) contrast(2.5) brightness(2) saturate(1.8)
+    hue-rotate(0deg);
+  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.08),
+    inset 0 0 60px rgba(255, 255, 255, 0.04), 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+/* Extreme magnification with powerful zoom effect on hover */
+.magnifying-glass-button:hover .magnifying-lens-effect {
+  backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
+    hue-rotate(3deg);
+  -webkit-backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
+    hue-rotate(3deg);
+  transform: scale(1.15);
+  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.2),
+    inset 0 0 80px rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.15);
+}
+
+.dark .magnifying-glass-button:hover .magnifying-lens-effect {
+  backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
+    hue-rotate(3deg);
+  -webkit-backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
+    hue-rotate(3deg);
+  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(255, 255, 255, 0.06), 0 0 30px rgba(255, 255, 255, 0.08);
+}
+
+/* Liquid Glass Shimmer Animation */
+@keyframes liquidGlassShimmer {
+  0% {
+    background-position: -200% 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    background-position: 200% 0;
+    opacity: 0;
+  }
+}
+
+.animate-liquid-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: liquidGlassShimmer 2.5s ease-in-out infinite;
+}
+
+.dark .animate-liquid-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+}
+
+/* Radial gradient utility for glass effects */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Text magnification effect behind the button */
+@keyframes textMagnify {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  50% {
+    transform: scale(1.02);
+    filter: blur(0.2px);
+  }
+}
+
+/* Extreme Zoom Effect for Content Behind Button */
+.magnifying-glass-container::before {
+  content: "";
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  backdrop-filter: contrast(1.8) brightness(1.6) saturate(1.4);
+  -webkit-backdrop-filter: contrast(1.8) brightness(1.6) saturate(1.4);
+  opacity: 0.8;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1.02);
+}
+
+.magnifying-glass-container:hover::before {
+  backdrop-filter: contrast(2.4) brightness(2) saturate(1.8) hue-rotate(2deg);
+  -webkit-backdrop-filter: contrast(2.4) brightness(2) saturate(1.8)
+    hue-rotate(2deg);
+  opacity: 1;
+  transform: scale(1.12);
+  inset: -50px;
+}
+
+/* Dramatic Magnifying Glass Movement */
+@keyframes dramaticMagnification {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1.1) contrast(1.1)
+      drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+  }
+  25% {
+    transform: scale(1.03) rotate(0.8deg);
+    filter: brightness(1.15) contrast(1.15)
+      drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+  }
+  50% {
+    transform: scale(1.05) rotate(0deg);
+    filter: brightness(1.2) contrast(1.2)
+      drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
+  }
+  75% {
+    transform: scale(1.03) rotate(-0.8deg);
+    filter: brightness(1.15) contrast(1.15)
+      drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+  }
+}
+
+.magnifying-glass-button {
+  animation: dramaticMagnification 5s ease-in-out infinite;
+}
+
+/* Enhanced Glass Transparency with Stronger Hover */
+.magnifying-glass-button:hover {
+  animation-play-state: paused;
+  transform: scale(1.08) !important;
+  filter: brightness(1.3) contrast(1.3)
+    drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* Natural Magnifying Glass Breathing Effect */
+@keyframes naturalMagnification {
+  0%,
+  100% {
+    backdrop-filter: blur(0px) contrast(2.2) brightness(1.8) saturate(1.6);
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    backdrop-filter: blur(0.1px) contrast(2.3) brightness(1.85) saturate(1.65);
+    transform: scale(1.02) rotate(0.3deg);
+  }
+  50% {
+    backdrop-filter: blur(0px) contrast(2.4) brightness(1.9) saturate(1.7);
+    transform: scale(1.04) rotate(0deg);
+  }
+  75% {
+    backdrop-filter: blur(0.1px) contrast(2.3) brightness(1.85) saturate(1.65);
+    transform: scale(1.02) rotate(-0.3deg);
+  }
+}
+
+.magnifying-lens-effect {
+  animation: naturalMagnification 4s ease-in-out infinite;
+}
+
+.magnifying-glass-button:hover .magnifying-lens-effect {
+  animation-play-state: paused;
+  backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
+    hue-rotate(3deg) !important;
+  -webkit-backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
+    hue-rotate(3deg) !important;
+}
+
+.dark .magnifying-glass-button:hover .magnifying-lens-effect {
+  backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
+    hue-rotate(3deg) !important;
+  -webkit-backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
+    hue-rotate(3deg) !important;
 }
