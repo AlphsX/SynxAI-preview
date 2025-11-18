@@ -11,6 +11,6 @@
     "clean": "pkill -f 'python working_server.py' || true && pkill -f 'next-server' || true"
   },
   "keywords": ["ai", "agent", "chat", "synx"],
-  "author": "Your Name",
+  "author": "AlphsX",
   "license": "MIT"
 }
