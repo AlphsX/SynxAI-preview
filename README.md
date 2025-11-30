@@ -866,4 +866,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with precision by Expert Software Developers, Senior AI Engineers & Professional UX/UI Designers**
+**⭐ Star this repository if you find it helpful!**
+
+Made with ❣️ for the computer science education community
+
+© 2025 SynxAI, Inc.
