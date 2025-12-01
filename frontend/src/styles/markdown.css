@@ -592,50 +592,8 @@
 }
 
 /* Special callout boxes for notes, tips, warnings */
-.markdown-content blockquote:has(strong:first-child) {
-  position: relative;
-  padding-left: 3rem;
-}
-
-/* Note callout */
-.markdown-content blockquote:has(strong:first-child:contains("Note")) {
-  @apply border-l-4 border-blue-500 dark:border-blue-400;
-  background: linear-gradient(
-    135deg,
-    rgba(59, 130, 246, 0.08) 0%,
-    rgba(59, 130, 246, 0.03) 100%
-  );
-}
-
-/* Tip callout */
-.markdown-content blockquote:has(strong:first-child:contains("Tip")) {
-  @apply border-l-4 border-green-500 dark:border-green-400;
-  background: linear-gradient(
-    135deg,
-    rgba(34, 197, 94, 0.08) 0%,
-    rgba(34, 197, 94, 0.03) 100%
-  );
-}
-
-/* Warning callout */
-.markdown-content blockquote:has(strong:first-child:contains("Warning")) {
-  @apply border-l-4 border-yellow-500 dark:border-yellow-400;
-  background: linear-gradient(
-    135deg,
-    rgba(234, 179, 8, 0.08) 0%,
-    rgba(234, 179, 8, 0.03) 100%
-  );
-}
-
-/* Important callout */
-.markdown-content blockquote:has(strong:first-child:contains("Important")) {
-  @apply border-l-4 border-red-500 dark:border-red-400;
-  background: linear-gradient(
-    135deg,
-    rgba(239, 68, 68, 0.08) 0%,
-    rgba(239, 68, 68, 0.03) 100%
-  );
-}
+/* Note: :contains() is not a valid CSS selector, so these styles are removed.
+   If you need callout boxes, consider using data attributes or classes instead. */
 
 /* Code explanation sections */
 .markdown-content h3 + pre,
