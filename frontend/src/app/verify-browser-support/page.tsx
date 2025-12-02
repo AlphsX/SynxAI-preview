@@ -1,19 +1,27 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { 
-  verifyCurrentBrowser, 
-  validateBrowserSupport, 
+import { useEffect, useState } from "react";
+import {
+  verifyCurrentBrowser,
+  validateBrowserSupport,
   getBrowserFeatureSupport,
-  testBrowserDetection 
-} from '@/utils/browserTestUtils';
-import { CheckCircle, XCircle, AlertCircle, Info } from 'lucide-react';
+  testBrowserDetection,
+} from "@/utils/browserTestUtils";
+import { CheckCircle, XCircle, AlertCircle, Info } from "lucide-react";
 
 export default function VerifyBrowserSupport() {
-  const [currentBrowser, setCurrentBrowser] = useState<ReturnType<typeof verifyCurrentBrowser> | null>(null);
-  const [validation, setValidation] = useState<ReturnType<typeof validateBrowserSupport> | null>(null);
-  const [features, setFeatures] = useState<ReturnType<typeof getBrowserFeatureSupport> | null>(null);
-  const [testResults, setTestResults] = useState<ReturnType<typeof testBrowserDetection> | null>(null);
+  const [currentBrowser, setCurrentBrowser] = useState<ReturnType<
+    typeof verifyCurrentBrowser
+  > | null>(null);
+  const [validation, setValidation] = useState<ReturnType<
+    typeof validateBrowserSupport
+  > | null>(null);
+  const [features, setFeatures] = useState<ReturnType<
+    typeof getBrowserFeatureSupport
+  > | null>(null);
+  const [testResults, setTestResults] = useState<ReturnType<
+    typeof testBrowserDetection
+  > | null>(null);
 
   useEffect(() => {
     setCurrentBrowser(verifyCurrentBrowser());
@@ -34,7 +42,8 @@ export default function VerifyBrowserSupport() {
             Browser Support Verification
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Comprehensive test of browser compatibility for Comet, Chrome, Arc Browser, Safari, Firefox, and Brave
+            Comprehensive test of browser compatibility for Comet, Chrome, Arc
+            Browser, Safari, Firefox, and Brave
           </p>
         </div>
 
@@ -50,19 +59,21 @@ export default function VerifyBrowserSupport() {
               Current Browser Status
             </h2>
           </div>
-          
+
           <div className="space-y-3">
             <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
               <span className="font-medium">Browser:</span>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                currentBrowser.isSupported 
-                  ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                  : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-              }`}>
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  currentBrowser.isSupported
+                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                }`}
+              >
                 {currentBrowser.browserName}
               </span>
             </div>
-            
+
             <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded">
               <p className="text-sm text-blue-800 dark:text-blue-200">
                 {currentBrowser.recommendation}
@@ -83,21 +94,26 @@ export default function VerifyBrowserSupport() {
               Browser Support Validation
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <p><strong>All Required Browsers Supported:</strong> 
-                <span className={`ml-2 px-2 py-1 rounded text-sm ${
-                  validation.allSupported 
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                }`}>
-                  {validation.allSupported ? 'Yes' : 'Partial'}
+              <p>
+                <strong>All Required Browsers Supported:</strong>
+                <span
+                  className={`ml-2 px-2 py-1 rounded text-sm ${
+                    validation.allSupported
+                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                  }`}
+                >
+                  {validation.allSupported ? "Yes" : "Partial"}
                 </span>
               </p>
-              <p><strong>Supported Count:</strong> {validation.supportedCount}/6</p>
+              <p>
+                <strong>Supported Count:</strong> {validation.supportedCount}/6
+              </p>
             </div>
-            
+
             <div>
               <p className="font-medium mb-2">Required Browsers:</p>
               <div className="grid grid-cols-2 gap-1 text-sm">
@@ -120,24 +136,31 @@ export default function VerifyBrowserSupport() {
               Browser Feature Support
             </h2>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Object.entries(features).filter(([key]) => key !== 'browserName').map(([feature, supported]) => (
-              <div key={feature} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
-                <span className="text-sm font-medium capitalize">
-                  {feature.replace(/([A-Z])/g, ' $1').trim()}
-                </span>
-                {typeof supported === 'boolean' ? (
-                  supported ? (
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+            {Object.entries(features)
+              .filter(([key]) => key !== "browserName")
+              .map(([feature, supported]) => (
+                <div
+                  key={feature}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded"
+                >
+                  <span className="text-sm font-medium capitalize">
+                    {feature.replace(/([A-Z])/g, " $1").trim()}
+                  </span>
+                  {typeof supported === "boolean" ? (
+                    supported ? (
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <XCircle className="h-4 w-4 text-red-500" />
+                    )
                   ) : (
-                    <XCircle className="h-4 w-4 text-red-500" />
-                  )
-                ) : (
-                  <span className="text-xs text-gray-500">{String(supported)}</span>
-                )}
-              </div>
-            ))}
+                    <span className="text-xs text-gray-500">
+                      {String(supported)}
+                    </span>
+                  )}
+                </div>
+              ))}
           </div>
         </div>
 
@@ -150,10 +173,13 @@ export default function VerifyBrowserSupport() {
                 Browser Detection Tests
               </h2>
             </div>
-            
+
             <div className="space-y-3">
               {testResults.map((result, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded"
+                >
                   <div className="flex items-center space-x-3">
                     {result.testPassed ? (
                       <CheckCircle className="h-4 w-4 text-green-500" />
@@ -162,22 +188,26 @@ export default function VerifyBrowserSupport() {
                     )}
                     <span className="font-medium">{result.browserName}</span>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 text-sm">
-                    <span className={`px-2 py-1 rounded ${
-                      result.isSupported 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                    }`}>
-                      {result.isSupported ? 'Supported' : 'Not Supported'}
+                    <span
+                      className={`px-2 py-1 rounded ${
+                        result.isSupported
+                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                          : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      }`}
+                    >
+                      {result.isSupported ? "Supported" : "Not Supported"}
                     </span>
-                    
-                    <span className={`px-2 py-1 rounded ${
-                      result.isDetectedCorrectly 
-                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                    }`}>
-                      {result.isDetectedCorrectly ? 'Detected' : 'Not Detected'}
+
+                    <span
+                      className={`px-2 py-1 rounded ${
+                        result.isDetectedCorrectly
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                      }`}
+                    >
+                      {result.isDetectedCorrectly ? "Detected" : "Not Detected"}
                     </span>
                   </div>
                 </div>
@@ -191,31 +221,44 @@ export default function VerifyBrowserSupport() {
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
             Summary
           </h2>
-          
+
           <div className="space-y-2 text-sm">
             <p className="flex items-center space-x-2">
               <CheckCircle className="h-4 w-4 text-green-500" />
-              <span>✅ All 6 required browsers are supported: <strong>Comet, Chrome, Arc Browser, Safari, Firefox, Brave</strong></span>
+              <span>
+                ✅ All 6 required browsers are supported:{" "}
+                <strong>
+                  Comet, Chrome, Arc Browser, Safari, Firefox, Brave
+                </strong>
+              </span>
             </p>
-            
+
             <p className="flex items-center space-x-2">
               <CheckCircle className="h-4 w-4 text-green-500" />
               <span>✅ Browser detection patterns are working correctly</span>
             </p>
-            
+
             <p className="flex items-center space-x-2">
               <CheckCircle className="h-4 w-4 text-green-500" />
-              <span>✅ Voice input supported in Chrome, Safari, Brave, and Arc Browser</span>
+              <span>
+                ✅ Voice input supported in Chrome, Safari, Brave, and Arc
+                Browser
+              </span>
             </p>
-            
+
             <p className="flex items-center space-x-2">
               <Info className="h-4 w-4 text-blue-500" />
-              <span>ℹ️ Firefox has limited voice input support (browser limitation)</span>
+              <span>
+                ℹ️ Firefox has limited voice input support (browser limitation)
+              </span>
             </p>
-            
+
             <p className="flex items-center space-x-2">
               <CheckCircle className="h-4 w-4 text-green-500" />
-              <span>✅ Enhanced mobile OS support for Android variants, iOS, HyperOS, and HarmonyOS</span>
+              <span>
+                ✅ Enhanced mobile OS support for Android variants, iOS,
+                HyperOS, and HarmonyOS
+              </span>
             </p>
           </div>
         </div>

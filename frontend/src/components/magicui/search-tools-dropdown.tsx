@@ -139,7 +139,7 @@ export const SearchToolsDropdown = ({
               primary_provider: tool.primary_provider,
               ...colors,
             };
-          }
+          },
         );
 
         setSearchTools(transformedTools);
@@ -256,7 +256,7 @@ export const SearchToolsDropdown = ({
       onToolSelect(toolId);
       closeDropdown();
     },
-    [onToolSelect, closeDropdown]
+    [onToolSelect, closeDropdown],
   );
 
   // Close dropdown when clicking outside

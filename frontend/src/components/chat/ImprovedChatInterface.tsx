@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { SimpleMessageRenderer } from './SimpleMessageRenderer';
-import { SimpleStreamingRenderer } from './SimpleStreamingRenderer';
+import React, { useState, useRef, useEffect } from "react";
+import { SimpleMessageRenderer } from "./SimpleMessageRenderer";
+import { SimpleStreamingRenderer } from "./SimpleStreamingRenderer";
 
 interface Message {
   id: string;
   content: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   timestamp: Date;
   isStreaming?: boolean;
   model?: string;
@@ -24,21 +24,21 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
   messages,
   onSendMessage,
   isLoading = false,
-  className = ''
+  className = "",
 }) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-scroll to bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // Auto-resize textarea
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = "auto";
       inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
     }
   }, [inputValue]);
@@ -46,12 +46,12 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
   const handleSend = () => {
     if (inputValue.trim() && !isLoading) {
       onSendMessage(inputValue.trim());
-      setInputValue('');
+      setInputValue("");
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -59,7 +59,6 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
 
   return (
     <div className={`flex flex-col h-full ${className}`}>
-      
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto space-y-6">
@@ -73,24 +72,30 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
                 Hello! Welcome
               </h3>
               <p className="text-gray-600 dark:text-gray-300 max-w-lg mx-auto text-lg leading-relaxed">
-                I'm ready to help answer your questions and chat with you. How can I assist you today? 😊
+                I'm ready to help answer your questions and chat with you. How
+                can I assist you today? 😊
               </p>
             </div>
           ) : (
             /* Chat Messages */
             messages.map((message) => {
               // Don't render assistant messages with no content unless they're streaming
-              if (message.role === "assistant" && !message.content && !message.isStreaming) {
+              if (
+                message.role === "assistant" &&
+                !message.content &&
+                !message.isStreaming
+              ) {
                 return null;
               }
 
               // For assistant messages that are streaming but have no content, show just the loading indicator
-              if (message.role === "assistant" && !message.content && message.isStreaming) {
+              if (
+                message.role === "assistant" &&
+                !message.content &&
+                message.isStreaming
+              ) {
                 return (
-                  <div
-                    key={message.id}
-                    className="flex justify-start"
-                  >
+                  <div key={message.id} className="flex justify-start">
                     <div className="flex max-w-[85%] space-x-3">
                       {/* Avatar */}
                       <div className="flex-shrink-0">
@@ -103,8 +108,14 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
                       <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 py-2">
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                          <div
+                            className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                            style={{ animationDelay: "0.1s" }}
+                          ></div>
+                          <div
+                            className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                            style={{ animationDelay: "0.2s" }}
+                          ></div>
                         </div>
                         <span>Thinking...</span>
                       </div>
@@ -120,67 +131,68 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
                     message.role === "user" ? "justify-end" : "justify-start"
                   }`}
                 >
-                <div className="flex max-w-[85%] space-x-3">
-                  
-                  {/* Avatar */}
-                  {message.role === "assistant" && (
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20">
-                        <span className="text-lg">🤖</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Message Content */}
-                  <div className="flex-1">
-                    <div
-                      className={`rounded-2xl px-5 py-4 shadow-lg border transition-all duration-200 hover:shadow-xl ${
-                        message.role === "user"
-                          ? "bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-br-md ml-auto"
-                          : "bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-bl-md"
-                      }`}
-                    >
-                      {message.role === "assistant" ? (
-                        <SimpleStreamingRenderer
-                          content={message.content}
-                          isComplete={!message.isStreaming}
-                          onContentUpdate={(renderedContent) => {
-                            console.log("Content updated:", renderedContent);
-                          }}
-                        />
-                      ) : (
-                        <div className="prose prose-sm max-w-none prose-gray dark:prose-invert">
-                          <p className="mb-0 leading-relaxed text-gray-800 dark:text-gray-200 font-medium">{message.content}</p>
+                  <div className="flex max-w-[85%] space-x-3">
+                    {/* Avatar */}
+                    {message.role === "assistant" && (
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20">
+                          <span className="text-lg">🤖</span>
                         </div>
-                      )}
-                      
-                      {/* Model info for assistant messages */}
-                      {message.role === "assistant" && message.model && (
-                        <div className="mt-3 pt-3 border-t border-gray-200/30 dark:border-gray-700/30">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                              {message.model}
-                            </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                              {message.timestamp.toLocaleTimeString('th-TH', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
-                            </span>
+                      </div>
+                    )}
+
+                    {/* Message Content */}
+                    <div className="flex-1">
+                      <div
+                        className={`rounded-2xl px-5 py-4 shadow-lg border transition-all duration-200 hover:shadow-xl ${
+                          message.role === "user"
+                            ? "bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-br-md ml-auto"
+                            : "bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-bl-md"
+                        }`}
+                      >
+                        {message.role === "assistant" ? (
+                          <SimpleStreamingRenderer
+                            content={message.content}
+                            isComplete={!message.isStreaming}
+                            onContentUpdate={(renderedContent) => {
+                              console.log("Content updated:", renderedContent);
+                            }}
+                          />
+                        ) : (
+                          <div className="prose prose-sm max-w-none prose-gray dark:prose-invert">
+                            <p className="mb-0 leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
+                              {message.content}
+                            </p>
                           </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                        )}
 
-                  {/* User Avatar */}
-                  {message.role === "user" && (
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20">
-                        <span className="text-lg">👨‍💻</span>
+                        {/* Model info for assistant messages */}
+                        {message.role === "assistant" && message.model && (
+                          <div className="mt-3 pt-3 border-t border-gray-200/30 dark:border-gray-700/30">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                                {message.model}
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {message.timestamp.toLocaleTimeString("th-TH", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
+
+                    {/* User Avatar */}
+                    {message.role === "user" && (
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20">
+                          <span className="text-lg">👨‍💻</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -194,7 +206,6 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
       <div className="flex-shrink-0 p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-end space-x-3">
-            
             {/* Message Input */}
             <div className="flex-1 relative">
               <textarea
@@ -218,8 +229,18 @@ export const ImprovedChatInterface: React.FC<ImprovedChatInterfaceProps> = ({
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                  />
                 </svg>
               )}
             </button>

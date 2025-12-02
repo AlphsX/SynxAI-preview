@@ -441,7 +441,7 @@
   .assistant-message-container {
     max-width: 95% !important;
   }
-  
+
   /* Ensure messages don't overflow viewport */
   .message-bubble {
     max-width: 100%;

@@ -34,8 +34,8 @@ export const AnimatedThemeToggler = ({
         showSystemIcon
           ? "Using system theme preference"
           : isDarkMode
-          ? "Switch to light mode"
-          : "Switch to dark mode"
+            ? "Switch to light mode"
+            : "Switch to dark mode"
       }
     >
       <div className="relative w-5 h-5">

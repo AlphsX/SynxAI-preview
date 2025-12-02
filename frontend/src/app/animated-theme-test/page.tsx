@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useDarkMode } from '@/hooks/useDarkMode';
-import { useDynamicFavicon } from '@/hooks/useDynamicFavicon';
-import { AnimatedThemeToggler } from '@/components/magicui';
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { useDynamicFavicon } from "@/hooks/useDynamicFavicon";
+import { AnimatedThemeToggler } from "@/components/magicui";
 
 export default function AnimatedThemeTest() {
   const { isDarkMode, toggleDarkMode, isUsingSystemPreference } = useDarkMode();
-  
+
   // Dynamic favicon based on theme
   useDynamicFavicon(isDarkMode);
 
@@ -16,18 +16,18 @@ export default function AnimatedThemeTest() {
         Animated Theme Toggler Test
       </h1>
       <p className="text-gray-700 dark:text-gray-300 mb-4">
-        Current mode: {isDarkMode ? 'Dark' : 'Light'}
+        Current mode: {isDarkMode ? "Dark" : "Light"}
       </p>
-      
+
       <div className="mb-4">
-        <AnimatedThemeToggler 
+        <AnimatedThemeToggler
           isDarkMode={isDarkMode}
           toggleDarkMode={toggleDarkMode}
           isUsingSystemPreference={isUsingSystemPreference}
           className="p-4 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
         />
       </div>
-      
+
       <div className="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded">
         <p className="text-gray-800 dark:text-gray-200">
           This text should change color when dark mode is toggled.

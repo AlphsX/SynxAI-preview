@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { User, Bot, Clock, Copy, Check, AlertCircle } from 'lucide-react';
-import { StreamingRenderer } from '@/components/chat/StreamingRenderer';
-import { CopyButton } from '@/components/ui/CopyButton';
+import React from "react";
+import { User, Bot, Clock, Copy, Check, AlertCircle } from "lucide-react";
+import { StreamingRenderer } from "@/components/chat/StreamingRenderer";
+import { CopyButton } from "@/components/ui/CopyButton";
 
 export interface Message {
   id: string;
   content: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   timestamp: Date;
   model?: string;
   isStreaming?: boolean;
@@ -25,15 +25,15 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
   message,
   isStreaming = false,
   onCopyMessage,
-  className = '',
+  className = "",
 }) => {
-  const isUser = message.role === 'user';
-  const isAssistant = message.role === 'assistant';
+  const isUser = message.role === "user";
+  const isAssistant = message.role === "assistant";
 
   const formatTimestamp = (timestamp: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
       hour12: true,
     }).format(timestamp);
   };
@@ -45,15 +45,15 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
   return (
     <div
       className={`
-        flex ${isUser ? 'justify-end' : 'justify-start'} group 
-        ${isUser ? 'animate-message-slide-in-right' : 'animate-message-slide-in'}
+        flex ${isUser ? "justify-end" : "justify-start"} group 
+        ${isUser ? "animate-message-slide-in-right" : "animate-message-slide-in"}
         ${className}
       `}
     >
       <div
         className={`
           relative max-w-[85%] sm:max-w-[75%] md:max-w-[65%] lg:max-w-[60%]
-          ${isUser ? 'ml-auto' : 'mr-auto'}
+          ${isUser ? "ml-auto" : "mr-auto"}
           animate-message-bubble-grow
         `}
       >
@@ -92,8 +92,8 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
                 flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
                 ${
                   isUser
-                    ? 'bg-white/20 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+                    ? "bg-white/20 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
                 }
               `}
             >
@@ -113,14 +113,14 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
                     text-xs font-medium uppercase tracking-wide
                     ${
                       isUser
-                        ? 'text-white/80'
-                        : 'text-gray-500 dark:text-gray-400'
+                        ? "text-white/80"
+                        : "text-gray-500 dark:text-gray-400"
                     }
                   `}
                 >
-                  {isUser ? 'You' : 'Assistant'}
+                  {isUser ? "You" : "Assistant"}
                 </span>
-                
+
                 {/* Copy Button */}
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <CopyButton
@@ -131,8 +131,8 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
                     className={`
                       ${
                         isUser
-                          ? 'text-white/70 hover:text-white hover:bg-white/10'
-                          : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                          ? "text-white/70 hover:text-white hover:bg-white/10"
+                          : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                       }
                     `}
                     aria-label="Copy message"
@@ -189,24 +189,42 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
                   <div className="flex items-center space-x-3">
                     {/* Animated thinking dots */}
                     <div className="flex space-x-1">
-                      <div className="w-2.5 h-2.5 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2.5 h-2.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2.5 h-2.5 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      <div
+                        className="w-2.5 h-2.5 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full animate-bounce"
+                        style={{ animationDelay: "0ms" }}
+                      ></div>
+                      <div
+                        className="w-2.5 h-2.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full animate-bounce"
+                        style={{ animationDelay: "150ms" }}
+                      ></div>
+                      <div
+                        className="w-2.5 h-2.5 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full animate-bounce"
+                        style={{ animationDelay: "300ms" }}
+                      ></div>
                     </div>
-                    
+
                     {/* Animated thinking text */}
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium text-gray-600 dark:text-gray-400 animate-pulse">
                         Thinking
                       </span>
                       <div className="flex space-x-0.5">
-                        <div className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-pulse" style={{ animationDelay: '200ms' }}></div>
-                        <div className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-pulse" style={{ animationDelay: '400ms' }}></div>
+                        <div
+                          className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-pulse"
+                          style={{ animationDelay: "0ms" }}
+                        ></div>
+                        <div
+                          className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-pulse"
+                          style={{ animationDelay: "200ms" }}
+                        ></div>
+                        <div
+                          className="w-1 h-1 bg-gray-400 dark:bg-gray-500 rounded-full animate-pulse"
+                          style={{ animationDelay: "400ms" }}
+                        ></div>
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Streaming progress indicator */}
                   <div className="flex items-center space-x-2">
                     <div className="w-12 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -224,8 +242,8 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
                   border-t border-opacity-20
                   ${
                     isUser
-                      ? 'border-white/20'
-                      : 'border-gray-200 dark:border-gray-700/50'
+                      ? "border-white/20"
+                      : "border-gray-200 dark:border-gray-700/50"
                   }
                 `}
               >
@@ -237,8 +255,8 @@ export const EnhancedMessageBubble: React.FC<EnhancedMessageBubbleProps> = ({
                       text-xs opacity-75
                       ${
                         isUser
-                          ? 'text-white/70'
-                          : 'text-gray-500 dark:text-gray-400'
+                          ? "text-white/70"
+                          : "text-gray-500 dark:text-gray-400"
                       }
                     `}
                   >

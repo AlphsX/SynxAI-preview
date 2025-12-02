@@ -52,9 +52,9 @@ export const IdleMeteorAnimation: React.FC<IdleMeteorAnimationProps> = ({
       aria-hidden="true"
       style={{
         // Ensure meteor animation can extend beyond viewport on mobile
-        maxWidth: 'none',
-        width: '100vw',
-        height: '100vh'
+        maxWidth: "none",
+        width: "100vw",
+        height: "100vh",
       }}
     >
       <Meteors number={30} />

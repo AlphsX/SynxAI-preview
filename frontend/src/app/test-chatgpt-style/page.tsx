@@ -77,17 +77,18 @@ async fn fetch_url(client: &Client, url: &str) -> Result<String> {
 
   const handleSubmit = () => {
     if (!input.trim()) return;
-    
+
     setMessages([...messages, { role: "user", content: input }]);
     setInput("");
-    
+
     // Simulate AI response
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: "This is a simulated response. The ChatGPT-style UI is working!",
+          content:
+            "This is a simulated response. The ChatGPT-style UI is working!",
         },
       ]);
     }, 1000);

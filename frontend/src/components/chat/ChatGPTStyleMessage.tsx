@@ -53,7 +53,7 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
             dangerouslySetInnerHTML={{
               __html: formatText(textContent),
             }}
-          />
+          />,
         );
       }
 
@@ -103,7 +103,7 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
               {code}
             </SyntaxHighlighter>
           </div>
-        </div>
+        </div>,
       );
 
       lastIndex = match.index + match[0].length;
@@ -120,7 +120,7 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
           dangerouslySetInnerHTML={{
             __html: formatText(textContent),
           }}
-        />
+        />,
       );
     }
 
@@ -135,14 +135,14 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
   // Format text with inline code, bold, etc.
   const formatText = (text: string): string => {
     // Handle inline code
-    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-    
+    text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+
     // Handle bold text
-    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    
+    text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+
     // Handle line breaks
-    text = text.replace(/\n/g, '<br />');
-    
+    text = text.replace(/\n/g, "<br />");
+
     return text;
   };
 

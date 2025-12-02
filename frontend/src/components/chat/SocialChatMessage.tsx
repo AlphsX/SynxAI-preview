@@ -31,7 +31,9 @@ export const SocialChatMessage: React.FC<SocialChatMessageProps> = memo(
       >
         <div
           className={`flex items-end space-x-2 ${
-            role === "user" ? "max-w-[70%] flex-row-reverse space-x-reverse" : "max-w-[85%]"
+            role === "user"
+              ? "max-w-[70%] flex-row-reverse space-x-reverse"
+              : "max-w-[85%]"
           }`}
         >
           {/* Avatar */}
@@ -124,7 +126,7 @@ export const SocialChatMessage: React.FC<SocialChatMessageProps> = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 SocialChatMessage.displayName = "SocialChatMessage";

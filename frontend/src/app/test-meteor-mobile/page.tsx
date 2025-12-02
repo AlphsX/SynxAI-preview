@@ -12,7 +12,7 @@ export default function TestMeteorMobile() {
         <h1 className="text-4xl font-bold text-white mb-8 text-center">
           Meteor Animation Test - Mobile Version
         </h1>
-        
+
         <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 mb-8">
           <h2 className="text-2xl font-semibold text-white mb-4">
             Test Controls
@@ -30,7 +30,9 @@ export default function TestMeteorMobile() {
             Expected Behavior
           </h2>
           <ul className="text-white/80 space-y-2">
-            <li>• Meteors should appear as streaking lights with visible tails</li>
+            <li>
+              • Meteors should appear as streaking lights with visible tails
+            </li>
             <li>• Animation should work smoothly on mobile devices</li>
             <li>• Meteors should not appear as just white dots</li>
             <li>• Gradient tails should be visible and not clipped</li>

@@ -152,7 +152,7 @@ export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
           </em>
         ),
       }),
-      []
+      [],
     );
 
     // Show only loading indicator when streaming with no content
@@ -194,7 +194,7 @@ export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 SimpleMessageRenderer.displayName = "SimpleMessageRenderer";

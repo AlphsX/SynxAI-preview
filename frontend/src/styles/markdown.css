@@ -3,7 +3,9 @@
 /* Base markdown container */
 .markdown-content {
   @apply text-gray-900 dark:text-gray-100 leading-relaxed;
-  font-feature-settings: "liga" 1, "kern" 1;
+  font-feature-settings:
+    "liga" 1,
+    "kern" 1;
   text-rendering: optimizeLegibility;
   max-width: 100%;
   overflow-wrap: break-word;

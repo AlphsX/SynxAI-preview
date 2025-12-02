@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { performanceUtils } from '@/lib/markdown-utils';
+import { useEffect, useRef, useState, useCallback } from "react";
+import { performanceUtils } from "@/lib/markdown-utils";
 
 export interface PerformanceMetrics {
   renderTimes: number[];
@@ -18,11 +18,13 @@ export interface UsePerformanceMonitoringOptions {
   maxMetricsHistory?: number;
 }
 
-export function usePerformanceMonitoring(options: UsePerformanceMonitoringOptions = {}) {
+export function usePerformanceMonitoring(
+  options: UsePerformanceMonitoringOptions = {},
+) {
   const {
-    enabled = process.env.NODE_ENV === 'development',
+    enabled = process.env.NODE_ENV === "development",
     reportInterval = 30000, // 30 seconds
-    maxMetricsHistory = 100
+    maxMetricsHistory = 100,
   } = options;
 
   const monitorRef = useRef(performanceUtils.createPerformanceMonitor());
@@ -32,7 +34,7 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
     cacheHitRate: 0,
     errorCount: 0,
     peakMemoryUsage: 0,
-    totalRenders: 0
+    totalRenders: 0,
   });
 
   // Performance monitoring functions
@@ -41,14 +43,17 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
     return monitorRef.current.startRender();
   }, [enabled]);
 
-  const endRender = useCallback((startTime: number, contentLength: number = 0) => {
-    if (!enabled || startTime === 0) return 0;
-    
-    const renderTime = monitorRef.current.endRender(startTime, contentLength);
-    monitorRef.current.recordMemoryUsage();
-    
-    return renderTime;
-  }, [enabled]);
+  const endRender = useCallback(
+    (startTime: number, contentLength: number = 0) => {
+      if (!enabled || startTime === 0) return 0;
+
+      const renderTime = monitorRef.current.endRender(startTime, contentLength);
+      monitorRef.current.recordMemoryUsage();
+
+      return renderTime;
+    },
+    [enabled],
+  );
 
   const recordCacheHit = useCallback(() => {
     if (!enabled) return;
@@ -77,7 +82,7 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
         cacheHitRate: currentMetrics.cacheHitRate,
         errorCount: currentMetrics.errorCount,
         peakMemoryUsage: currentMetrics.peakMemoryUsage,
-        totalRenders: currentMetrics.renderTimes.length
+        totalRenders: currentMetrics.renderTimes.length,
       });
     };
 
@@ -96,22 +101,31 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
 
     // Report slow average render times
     if (metrics.averageRenderTime > 50) {
-      console.warn(`Performance Warning: Average render time is ${metrics.averageRenderTime.toFixed(2)}ms`);
+      console.warn(
+        `Performance Warning: Average render time is ${metrics.averageRenderTime.toFixed(2)}ms`,
+      );
     }
 
     // Report low cache hit rates
     if (metrics.cacheHitRate < 0.7 && metrics.totalRenders > 20) {
-      console.warn(`Performance Warning: Low cache hit rate: ${(metrics.cacheHitRate * 100).toFixed(1)}%`);
+      console.warn(
+        `Performance Warning: Low cache hit rate: ${(metrics.cacheHitRate * 100).toFixed(1)}%`,
+      );
     }
 
     // Report high error rates
     if (metrics.errorCount > metrics.totalRenders * 0.1) {
-      console.warn(`Performance Warning: High error rate: ${metrics.errorCount} errors in ${metrics.totalRenders} renders`);
+      console.warn(
+        `Performance Warning: High error rate: ${metrics.errorCount} errors in ${metrics.totalRenders} renders`,
+      );
     }
 
     // Report high memory usage (if available)
-    if (metrics.peakMemoryUsage > 50 * 1024 * 1024) { // 50MB
-      console.warn(`Performance Warning: High memory usage: ${(metrics.peakMemoryUsage / 1024 / 1024).toFixed(2)}MB`);
+    if (metrics.peakMemoryUsage > 50 * 1024 * 1024) {
+      // 50MB
+      console.warn(
+        `Performance Warning: High memory usage: ${(metrics.peakMemoryUsage / 1024 / 1024).toFixed(2)}MB`,
+      );
     }
   }, [enabled, metrics]);
 
@@ -125,7 +139,7 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
       cacheHitRate: 0,
       errorCount: 0,
       peakMemoryUsage: 0,
-      totalRenders: 0
+      totalRenders: 0,
     });
   }, [enabled]);
 
@@ -140,8 +154,14 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
       rendering: {
         totalRenders: currentMetrics.renderTimes.length,
         averageRenderTime: currentMetrics.averageRenderTime,
-        slowestRender: currentMetrics.renderTimes.length > 0 ? Math.max(...currentMetrics.renderTimes) : 0,
-        fastestRender: currentMetrics.renderTimes.length > 0 ? Math.min(...currentMetrics.renderTimes) : 0
+        slowestRender:
+          currentMetrics.renderTimes.length > 0
+            ? Math.max(...currentMetrics.renderTimes)
+            : 0,
+        fastestRender:
+          currentMetrics.renderTimes.length > 0
+            ? Math.min(...currentMetrics.renderTimes)
+            : 0,
       },
       caching: {
         hitRate: currentMetrics.cacheHitRate,
@@ -150,23 +170,30 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
         cacheUtilization: {
           featureAnalysis: `${cacheStats.featureAnalysis.size}/${cacheStats.featureAnalysis.maxSize}`,
           codeBlocks: `${cacheStats.codeBlocks.size}/${cacheStats.codeBlocks.maxSize}`,
-          validation: `${cacheStats.validation.size}/${cacheStats.validation.maxSize}`
-        }
+          validation: `${cacheStats.validation.size}/${cacheStats.validation.maxSize}`,
+        },
       },
       errors: {
         totalErrors: currentMetrics.errorCount,
-        errorRate: currentMetrics.renderTimes.length > 0 
-          ? (currentMetrics.errorCount / currentMetrics.renderTimes.length * 100).toFixed(2) + '%'
-          : '0%'
+        errorRate:
+          currentMetrics.renderTimes.length > 0
+            ? (
+                (currentMetrics.errorCount /
+                  currentMetrics.renderTimes.length) *
+                100
+              ).toFixed(2) + "%"
+            : "0%",
       },
       memory: {
-        peakUsage: currentMetrics.peakMemoryUsage > 0 
-          ? `${(currentMetrics.peakMemoryUsage / 1024 / 1024).toFixed(2)}MB`
-          : 'N/A',
-        currentUsage: 'memory' in performance 
-          ? `${((performance as any).memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`
-          : 'N/A'
-      }
+        peakUsage:
+          currentMetrics.peakMemoryUsage > 0
+            ? `${(currentMetrics.peakMemoryUsage / 1024 / 1024).toFixed(2)}MB`
+            : "N/A",
+        currentUsage:
+          "memory" in performance
+            ? `${((performance as any).memory.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`
+            : "N/A",
+      },
     };
   }, [enabled]);
 
@@ -179,7 +206,7 @@ export function usePerformanceMonitoring(options: UsePerformanceMonitoringOption
     recordError,
     resetMetrics,
     getPerformanceReport,
-    enabled
+    enabled,
   };
 }
 
@@ -192,31 +219,38 @@ export function useComponentPerformanceMonitoring(componentName: string) {
     renderStartRef.current = startRender();
   }, [startRender]);
 
-  const endComponentRender = useCallback((contentLength?: number) => {
-    if (renderStartRef.current > 0) {
-      const renderTime = endRender(renderStartRef.current, contentLength);
-      
-      if (process.env.NODE_ENV === 'development' && renderTime > 16) { // 60fps threshold
-        console.log(`${componentName} render: ${renderTime.toFixed(2)}ms`);
-      }
-      
-      renderStartRef.current = 0;
-      return renderTime;
-    }
-    return 0;
-  }, [endRender, componentName]);
+  const endComponentRender = useCallback(
+    (contentLength?: number) => {
+      if (renderStartRef.current > 0) {
+        const renderTime = endRender(renderStartRef.current, contentLength);
 
-  const recordComponentError = useCallback((error: Error) => {
-    recordError();
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.error(`${componentName} error:`, error);
-    }
-  }, [recordError, componentName]);
+        if (process.env.NODE_ENV === "development" && renderTime > 16) {
+          // 60fps threshold
+          console.log(`${componentName} render: ${renderTime.toFixed(2)}ms`);
+        }
+
+        renderStartRef.current = 0;
+        return renderTime;
+      }
+      return 0;
+    },
+    [endRender, componentName],
+  );
+
+  const recordComponentError = useCallback(
+    (error: Error) => {
+      recordError();
+
+      if (process.env.NODE_ENV === "development") {
+        console.error(`${componentName} error:`, error);
+      }
+    },
+    [recordError, componentName],
+  );
 
   return {
     startComponentRender,
     endComponentRender,
-    recordComponentError
+    recordComponentError,
   };
 }

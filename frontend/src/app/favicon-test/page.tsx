@@ -1,16 +1,16 @@
 "use client";
 
-import { useDarkMode } from '@/hooks/useDarkMode';
-import { useDynamicFavicon } from '@/hooks/useDynamicFavicon';
-import { AnimatedThemeToggler } from '@/components/magicui/animated-theme-toggler';
+import { useDarkMode } from "@/hooks/useDarkMode";
+import { useDynamicFavicon } from "@/hooks/useDynamicFavicon";
+import { AnimatedThemeToggler } from "@/components/magicui/animated-theme-toggler";
 
 export default function FaviconTest() {
-  const { 
-    isDarkMode, 
-    toggleDarkMode, 
+  const {
+    isDarkMode,
+    toggleDarkMode,
     isUsingSystemPreference,
     systemPreference,
-    isHydrated 
+    isHydrated,
   } = useDarkMode();
 
   // Dynamic favicon based on theme
@@ -31,16 +31,19 @@ export default function FaviconTest() {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
             Dynamic Favicon Test
           </h1>
-          
+
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
-              <div className="text-yellow-600 dark:text-yellow-400 text-xl">💡</div>
+              <div className="text-yellow-600 dark:text-yellow-400 text-xl">
+                💡
+              </div>
               <div>
                 <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-1">
                   How to Test
                 </h3>
                 <p className="text-yellow-700 dark:text-yellow-300 text-sm">
-                  Look at your browser tab! The favicon should change between light and dark versions when you toggle the theme.
+                  Look at your browser tab! The favicon should change between
+                  light and dark versions when you toggle the theme.
                 </p>
               </div>
             </div>
@@ -70,29 +73,37 @@ export default function FaviconTest() {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Theme:</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Theme:
+                  </span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    {isDarkMode ? 'Dark' : 'Light'}
+                    {isDarkMode ? "Dark" : "Light"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Using System:</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Using System:
+                  </span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    {isUsingSystemPreference ? 'Yes' : 'No'}
+                    {isUsingSystemPreference ? "Yes" : "No"}
                   </span>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">System Pref:</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    System Pref:
+                  </span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    {systemPreference ? 'Dark' : 'Light'}
+                    {systemPreference ? "Dark" : "Light"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Favicon:</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    Favicon:
+                  </span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    {isDarkMode ? 'icon-dark.png' : 'icon-light.png'}
+                    {isDarkMode ? "icon-dark.png" : "icon-light.png"}
                   </span>
                 </div>
               </div>
@@ -106,19 +117,28 @@ export default function FaviconTest() {
             <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
               <div className="flex items-start gap-2">
                 <span className="text-green-500 font-bold">✓</span>
-                <span>Toggle theme manually - favicon should change instantly</span>
+                <span>
+                  Toggle theme manually - favicon should change instantly
+                </span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-green-500 font-bold">✓</span>
-                <span>Change system theme in OS - favicon should follow (if using system mode)</span>
+                <span>
+                  Change system theme in OS - favicon should follow (if using
+                  system mode)
+                </span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-green-500 font-bold">✓</span>
-                <span>Refresh page - favicon should match current theme immediately</span>
+                <span>
+                  Refresh page - favicon should match current theme immediately
+                </span>
               </div>
               <div className="flex items-start gap-2">
                 <span className="text-green-500 font-bold">✓</span>
-                <span>Open in new tab - favicon should be correct from the start</span>
+                <span>
+                  Open in new tab - favicon should be correct from the start
+                </span>
               </div>
             </div>
           </div>
@@ -131,8 +151,12 @@ export default function FaviconTest() {
                   Technical Details
                 </h3>
                 <ul className="text-blue-700 dark:text-blue-300 text-sm space-y-1">
-                  <li>• Favicon changes are handled by useDynamicFavicon hook</li>
-                  <li>• Initial favicon is set in layout.tsx with inline script</li>
+                  <li>
+                    • Favicon changes are handled by useDynamicFavicon hook
+                  </li>
+                  <li>
+                    • Initial favicon is set in layout.tsx with inline script
+                  </li>
                   <li>• Works with both manual and system theme preferences</li>
                   <li>• SSR-safe and prevents favicon flashing</li>
                 </ul>

@@ -248,7 +248,7 @@ export default function Home() {
     if (!inputText.trim() || inputText.trim() === "/") {
       if (typeof document !== "undefined") {
         const plusButton = document.querySelector(
-          "[data-plus-button]"
+          "[data-plus-button]",
         ) as HTMLButtonElement;
         if (plusButton) {
           plusButton.click();
@@ -386,7 +386,7 @@ export default function Home() {
         } else {
           console.log(
             "♻️ Using existing conversation session:",
-            conversationId
+            conversationId,
           );
         }
 
@@ -417,7 +417,7 @@ export default function Home() {
                   };
                 }
                 return msg;
-              })
+              }),
             );
           },
           // onComplete - finalize the response
@@ -441,7 +441,7 @@ export default function Home() {
                   };
                 }
                 return msg;
-              })
+              }),
             );
             setIsLoading(false);
           },
@@ -512,10 +512,10 @@ export default function Home() {
                   };
                 }
                 return msg;
-              })
+              }),
             );
             setIsLoading(false);
-          }
+          },
         );
       } catch (error) {
         console.error("Failed to send message to enhanced backend:", error);
@@ -561,7 +561,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               };
             }
             return msg;
-          })
+          }),
         );
         setIsLoading(false);
       }
@@ -573,7 +573,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       availableModels,
       selectedTool,
       generateMessageId,
-    ]
+    ],
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -662,7 +662,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         setLastClickedPrompt(prompt);
       }
     },
-    [isHydrated, lastClickTime, lastClickedPrompt, handleSubmit]
+    [isHydrated, lastClickTime, lastClickedPrompt, handleSubmit],
   );
 
   // Auto-focus the input field when the component mounts and when welcome screen is shown
@@ -746,7 +746,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
   useEffect(() => {
     console.log(
       "Page.tsx: isToolsDropdownOpen changed to:",
-      isToolsDropdownOpen
+      isToolsDropdownOpen,
     );
   }, [isToolsDropdownOpen]);
 
@@ -1217,7 +1217,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       ) {
         // Only for printable characters and when on welcome screen
         const isPrintable = e.key.match(
-          /^[a-zA-Z0-9\s\.,\?!@#\$%\^&\*\(\)_\+\-=\[\]\{\}\|\\:";'<>\?\/`~]$/
+          /^[a-zA-Z0-9\s\.,\?!@#\$%\^&\*\(\)_\+\-=\[\]\{\}\|\\:";'<>\?\/`~]$/,
         );
         if (isPrintable) {
           e.preventDefault();
@@ -1234,7 +1234,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         if (isToolsDropdownOpen) {
           // Close tools dropdown
           const plusButton = document.querySelector(
-            "[data-plus-button]"
+            "[data-plus-button]",
           ) as HTMLButtonElement;
           if (plusButton) {
             plusButton.click();
@@ -1478,7 +1478,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             // Prevent toggle when clicking on interactive elements
             const target = e.target as HTMLElement;
             const isInteractiveElement = target.closest(
-              "button, a, input, textarea, select"
+              "button, a, input, textarea, select",
             );
 
             if (!isInteractiveElement) {
@@ -1893,12 +1893,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                       selectedTool === "web_search"
                                         ? "#60a5fa"
                                         : selectedTool === "news_search"
-                                        ? "#fb923c"
-                                        : selectedTool === "crypto_data"
-                                        ? "#4ade80"
-                                        : selectedTool === "vector_search"
-                                        ? "#a78bfa"
-                                        : "#60a5fa",
+                                          ? "#fb923c"
+                                          : selectedTool === "crypto_data"
+                                            ? "#4ade80"
+                                            : selectedTool === "vector_search"
+                                              ? "#a78bfa"
+                                              : "#60a5fa",
                                   }}
                                 ></div>
                                 <div
@@ -1909,12 +1909,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                       selectedTool === "web_search"
                                         ? "#3b82f6"
                                         : selectedTool === "news_search"
-                                        ? "#f97316"
-                                        : selectedTool === "crypto_data"
-                                        ? "#22c55e"
-                                        : selectedTool === "vector_search"
-                                        ? "#8b5cf6"
-                                        : "#3b82f6",
+                                          ? "#f97316"
+                                          : selectedTool === "crypto_data"
+                                            ? "#22c55e"
+                                            : selectedTool === "vector_search"
+                                              ? "#8b5cf6"
+                                              : "#3b82f6",
                                   }}
                                 ></div>
                                 <div
@@ -1924,12 +1924,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                       selectedTool === "web_search"
                                         ? "#2563eb"
                                         : selectedTool === "news_search"
-                                        ? "#ea580c"
-                                        : selectedTool === "crypto_data"
-                                        ? "#16a34a"
-                                        : selectedTool === "vector_search"
-                                        ? "#7c3aed"
-                                        : "#2563eb",
+                                          ? "#ea580c"
+                                          : selectedTool === "crypto_data"
+                                            ? "#16a34a"
+                                            : selectedTool === "vector_search"
+                                              ? "#7c3aed"
+                                              : "#2563eb",
                                   }}
                                 ></div>
                               </div>
@@ -2026,12 +2026,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                 selectedTool === "web_search"
                                   ? "bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 dark:hover:bg-blue-500/30"
                                   : selectedTool === "news_search"
-                                  ? "bg-orange-500/10 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 dark:hover:bg-orange-500/30"
-                                  : selectedTool === "crypto_data"
-                                  ? "bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 dark:hover:bg-green-500/30"
-                                  : selectedTool === "vector_search"
-                                  ? "bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 dark:hover:bg-purple-500/30"
-                                  : "bg-gray-500/10 dark:bg-gray-500/20 text-gray-600 dark:text-gray-400"
+                                    ? "bg-orange-500/10 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 dark:hover:bg-orange-500/30"
+                                    : selectedTool === "crypto_data"
+                                      ? "bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 dark:hover:bg-green-500/30"
+                                      : selectedTool === "vector_search"
+                                        ? "bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 dark:hover:bg-purple-500/30"
+                                        : "bg-gray-500/10 dark:bg-gray-500/20 text-gray-600 dark:text-gray-400"
                               }`}
                               onClick={() => setSelectedTool(null)}
                               title="Click to remove tool"
@@ -2078,12 +2078,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                 {selectedTool === "web_search"
                                   ? "Web Search"
                                   : selectedTool === "news_search"
-                                  ? "News"
-                                  : selectedTool === "crypto_data"
-                                  ? "Crypto"
-                                  : selectedTool === "vector_search"
-                                  ? "Knowledge"
-                                  : selectedTool}
+                                    ? "News"
+                                    : selectedTool === "crypto_data"
+                                      ? "Crypto"
+                                      : selectedTool === "vector_search"
+                                        ? "Knowledge"
+                                        : selectedTool}
                               </span>
 
                               {/* Close button - always visible on mobile, shows on hover on desktop */}
@@ -2128,11 +2128,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                               !isToolsDropdownOpen
                             ) {
                               console.log(
-                                "Opening dropdown - typed single slash"
+                                "Opening dropdown - typed single slash",
                               );
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]"
+                                  "[data-plus-button]",
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2146,11 +2146,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                               isToolsDropdownOpen
                             ) {
                               console.log(
-                                "Closing dropdown - deleted slash completely"
+                                "Closing dropdown - deleted slash completely",
                               );
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]"
+                                  "[data-plus-button]",
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2164,11 +2164,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                               isToolsDropdownOpen
                             ) {
                               console.log(
-                                "Closing dropdown - typed after slash"
+                                "Closing dropdown - typed after slash",
                               );
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]"
+                                  "[data-plus-button]",
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2182,11 +2182,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                               !isToolsDropdownOpen
                             ) {
                               console.log(
-                                "Opening dropdown - deleted back to single slash"
+                                "Opening dropdown - deleted back to single slash",
                               );
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]"
+                                  "[data-plus-button]",
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2199,18 +2199,18 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             isToolsDropdownOpen && inputText === "/"
                               ? "Select a tool from dropdown..."
                               : selectedTool
-                              ? `${
-                                  selectedTool === "web_search"
-                                    ? "Search the web..."
-                                    : selectedTool === "news_search"
-                                    ? "Search latest news..."
-                                    : selectedTool === "crypto_data"
-                                    ? "Get crypto data..."
-                                    : selectedTool === "vector_search"
-                                    ? "Search knowledge base..."
-                                    : "Ask me anything..."
-                                }`
-                              : "Ask me anything..."
+                                ? `${
+                                    selectedTool === "web_search"
+                                      ? "Search the web..."
+                                      : selectedTool === "news_search"
+                                        ? "Search latest news..."
+                                        : selectedTool === "crypto_data"
+                                          ? "Get crypto data..."
+                                          : selectedTool === "vector_search"
+                                            ? "Search knowledge base..."
+                                            : "Ask me anything..."
+                                  }`
+                                : "Ask me anything..."
                           }
                           className={`w-full resize-none bg-transparent px-14 pr-14 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none leading-relaxed font-medium chat-input ${
                             isMobile ? "text-base" : "text-sm"

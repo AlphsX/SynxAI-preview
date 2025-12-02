@@ -10,7 +10,12 @@
     "install-all": "cd frontend && npm install && cd ../backend && pip install -r requirements.txt",
     "clean": "pkill -f 'python working_server.py' || true && pkill -f 'next-server' || true"
   },
-  "keywords": ["ai", "agent", "chat", "synx"],
+  "keywords": [
+    "ai",
+    "agent",
+    "chat",
+    "synx"
+  ],
   "author": "AlphsX",
   "license": "MIT"
 }

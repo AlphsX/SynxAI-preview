@@ -29,8 +29,13 @@
 }
 
 body {
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  transition:
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -298,8 +303,10 @@ body {
     height: 1px !important;
     width: 1px !important;
     /* Enhanced shadow for better visibility */
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2),
-      0 0 4px rgba(148, 163, 184, 0.5), 0 0 8px rgba(148, 163, 184, 0.3);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.2),
+      0 0 4px rgba(148, 163, 184, 0.5),
+      0 0 8px rgba(148, 163, 184, 0.3);
   }
 }
 
@@ -339,7 +346,8 @@ body {
   );
   backdrop-filter: blur(60px) saturate(180%) brightness(115%);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.15),
     inset 0 1px 2px rgba(255, 255, 255, 0.8),
     inset 0 -1px 1px rgba(0, 0, 0, 0.05);
 }
@@ -352,7 +360,8 @@ body {
   );
   backdrop-filter: blur(60px) saturate(180%) brightness(130%);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 2px rgba(255, 255, 255, 0.2),
     inset 0 -1px 1px rgba(0, 0, 0, 0.2);
 }
@@ -364,9 +373,9 @@ body {
 
 /* Smooth transitions for all interactive elements */
 * {
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter;
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke,
+    opacity, box-shadow, transform, filter, backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -583,85 +592,109 @@ body {
   background: linear-gradient(135deg, #4c1d95 0%, #312e81 50%, #1e1b4b 100%);
   color: white;
   border: 1px solid rgba(139, 92, 246, 0.5);
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 25px rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .luxury-gradient-info-light {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
   color: #374151;
   border: 1px solid rgba(251, 191, 36, 0.5);
-  box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 25px rgba(251, 191, 36, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .luxury-gradient-success-dark {
   background: linear-gradient(135deg, #065f46 0%, #047857 50%, #064e3b 100%);
   color: white;
   border: 1px solid rgba(16, 185, 129, 0.5);
-  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 25px rgba(16, 185, 129, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .luxury-gradient-success-light {
   background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
   color: #374151;
   border: 1px solid rgba(16, 185, 129, 0.5);
-  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 25px rgba(16, 185, 129, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .luxury-gradient-error-dark {
   background: linear-gradient(135deg, #991b1b 0%, #b91c1c 50%, #7f1d1d 100%);
   color: white;
   border: 1px solid rgba(239, 68, 68, 0.5);
-  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 25px rgba(239, 68, 68, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .luxury-gradient-error-light {
   background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #fca5a5 100%);
   color: #374151;
   border: 1px solid rgba(239, 68, 68, 0.5);
-  box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 25px rgba(239, 68, 68, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .luxury-gradient-warning-dark {
   background: linear-gradient(135deg, #92400e 0%, #c2410c 50%, #7c2d12 100%);
   color: white;
   border: 1px solid rgba(245, 158, 11, 0.5);
-  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 25px rgba(245, 158, 11, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .luxury-gradient-warning-light {
   background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%);
   color: #374151;
   border: 1px solid rgba(245, 158, 11, 0.5);
-  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 25px rgba(245, 158, 11, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Luxury shadow effects for depth and elegance */
 .luxury-shadow-info {
-  box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4),
-    0 5px 15px rgba(139, 92, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 15px 30px rgba(139, 92, 246, 0.4),
+    0 5px 15px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .luxury-shadow-success {
-  box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4),
-    0 5px 15px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 15px 30px rgba(16, 185, 129, 0.4),
+    0 5px 15px rgba(16, 185, 129, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .luxury-shadow-error {
-  box-shadow: 0 15px 30px rgba(239, 68, 68, 0.4),
-    0 5px 15px rgba(239, 68, 68, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 15px 30px rgba(239, 68, 68, 0.4),
+    0 5px 15px rgba(239, 68, 68, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .luxury-shadow-warning {
-  box-shadow: 0 15px 30px rgba(245, 158, 11, 0.4),
-    0 5px 15px rgba(245, 158, 11, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 15px 30px rgba(245, 158, 11, 0.4),
+    0 5px 15px rgba(245, 158, 11, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Luxury text and icon glow effects */
@@ -844,7 +877,9 @@ Swipe gesture animations */
 
   /* Ensure dark mode transitions work properly on mobile */
   .dark {
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   /* Force hardware acceleration for smooth theme transitions */
@@ -1108,8 +1143,10 @@ Swipe gesture animations */
   backdrop-filter: blur(20px) saturate(180%) brightness(110%);
   -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(110%);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .dark .glass-morphism {
@@ -1117,8 +1154,10 @@ Swipe gesture animations */
   backdrop-filter: blur(20px) saturate(180%) brightness(120%);
   -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Magnifying Glass Effect - Ultra Transparent Glass with Zoom */
@@ -1152,8 +1191,10 @@ Swipe gesture animations */
   z-index: 1;
   border-radius: 50%;
   /* Enhanced glass refraction effect */
-  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.12),
-    inset 0 0 60px rgba(255, 255, 255, 0.06), 0 0 20px rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 0 30px rgba(255, 255, 255, 0.12),
+    inset 0 0 60px rgba(255, 255, 255, 0.06),
+    0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .dark .magnifying-lens-effect {
@@ -1168,8 +1209,10 @@ Swipe gesture animations */
     hue-rotate(0deg);
   -webkit-backdrop-filter: blur(0px) contrast(2.5) brightness(2) saturate(1.8)
     hue-rotate(0deg);
-  box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.08),
-    inset 0 0 60px rgba(255, 255, 255, 0.04), 0 0 20px rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 0 30px rgba(255, 255, 255, 0.08),
+    inset 0 0 60px rgba(255, 255, 255, 0.04),
+    0 0 20px rgba(255, 255, 255, 0.05);
 }
 
 /* Extreme magnification with powerful zoom effect on hover */
@@ -1179,8 +1222,10 @@ Swipe gesture animations */
   -webkit-backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
     hue-rotate(3deg);
   transform: scale(1.15);
-  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.2),
-    inset 0 0 80px rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 0 40px rgba(255, 255, 255, 0.2),
+    inset 0 0 80px rgba(255, 255, 255, 0.1),
+    0 0 30px rgba(255, 255, 255, 0.15);
 }
 
 .dark .magnifying-glass-button:hover .magnifying-lens-effect {
@@ -1188,8 +1233,10 @@ Swipe gesture animations */
     hue-rotate(3deg);
   -webkit-backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
     hue-rotate(3deg);
-  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.12),
-    inset 0 0 80px rgba(255, 255, 255, 0.06), 0 0 30px rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 0 40px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(255, 255, 255, 0.06),
+    0 0 30px rgba(255, 255, 255, 0.08);
 }
 
 /* Liquid Glass Shimmer Animation */

@@ -545,7 +545,7 @@ console.log("Key points:", newsData.summary.key_points);
 
 ```javascript
 const ws = new WebSocket(
-  `ws://localhost:8000/api/chat/ws/${conversationId}?token=${token}`
+  `ws://localhost:8000/api/chat/ws/${conversationId}?token=${token}`,
 );
 
 ws.onmessage = (event) => {
@@ -574,7 +574,7 @@ ws.send(
     type: "message",
     content: "What's the latest news about AI?",
     tools: ["web_search", "news_agent"],
-  })
+  }),
 );
 ```
 

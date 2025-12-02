@@ -25,7 +25,7 @@ import { JSX } from "react/jsx-runtime";
 
 // Lazy load heavy components for better performance
 const LazyCodeBlock = lazy(() =>
-  import("./CodeBlock").then((module) => ({ default: module.CodeBlock }))
+  import("./CodeBlock").then((module) => ({ default: module.CodeBlock })),
 );
 
 // Custom heading component
@@ -273,7 +273,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
           });
         }
       },
-      [recordComponentError]
+      [recordComponentError],
     );
 
     // Memoized content parsing with enhanced error handling
@@ -318,7 +318,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
           onCopyCode(code);
         }
       },
-      [onCopyCode]
+      [onCopyCode],
     );
 
     // Memoized custom components for react-markdown with performance optimizations
@@ -547,7 +547,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
         </div>
       </MarkdownErrorBoundary>
     );
-  }
+  },
 );
 
 export default MessageRenderer;

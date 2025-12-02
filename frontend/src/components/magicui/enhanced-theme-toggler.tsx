@@ -12,27 +12,30 @@ type Props = {
   className?: string;
 };
 
-export const EnhancedThemeToggler = ({ 
-  isDarkMode, 
+export const EnhancedThemeToggler = ({
+  isDarkMode,
   isUsingSystemPreference,
   systemPreference,
-  toggleDarkMode, 
+  toggleDarkMode,
   resetToSystemPreference,
-  className 
+  className,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -60,9 +63,9 @@ export const EnhancedThemeToggler = ({
 
   const getCurrentLabel = () => {
     if (isUsingSystemPreference) {
-      return `System (${systemPreference ? 'Dark' : 'Light'})`;
+      return `System (${systemPreference ? "Dark" : "Light"})`;
     }
-    return isDarkMode ? 'Dark' : 'Light';
+    return isDarkMode ? "Dark" : "Light";
   };
 
   return (
@@ -79,12 +82,17 @@ export const EnhancedThemeToggler = ({
           {getCurrentLabel()}
         </span>
         <svg
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 
@@ -94,7 +102,9 @@ export const EnhancedThemeToggler = ({
             <button
               onClick={handleSystemMode}
               className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                isUsingSystemPreference ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+                isUsingSystemPreference
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                  : "text-gray-700 dark:text-gray-300"
               }`}
             >
               <Monitor size={16} />
@@ -106,7 +116,9 @@ export const EnhancedThemeToggler = ({
             <button
               onClick={handleLightMode}
               className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                !isUsingSystemPreference && !isDarkMode ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+                !isUsingSystemPreference && !isDarkMode
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                  : "text-gray-700 dark:text-gray-300"
               }`}
             >
               <Sun size={16} />
@@ -118,7 +130,9 @@ export const EnhancedThemeToggler = ({
             <button
               onClick={handleDarkMode}
               className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                !isUsingSystemPreference && isDarkMode ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+                !isUsingSystemPreference && isDarkMode
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                  : "text-gray-700 dark:text-gray-300"
               }`}
             >
               <Moon size={16} />

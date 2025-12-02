@@ -214,8 +214,8 @@ export default function MemoryIndicator({
               {isLoading
                 ? "Processing..."
                 : memoryEnabled
-                ? "Disable Memory"
-                : "Enable Memory"}
+                  ? "Disable Memory"
+                  : "Enable Memory"}
             </button>
           </div>
         )}

@@ -28,20 +28,25 @@ export function useKeyboardShortcuts(config: KeyboardShortcutsConfig) {
       if (event.key === "/" && !isModifierPressed && onToggleTools) {
         // Check if the active element is an input, textarea, or contenteditable
         const activeElement = document.activeElement;
-        const isInputFocused = activeElement && (
-          activeElement.tagName === 'INPUT' ||
-          activeElement.tagName === 'TEXTAREA' ||
-          activeElement.getAttribute('contenteditable') === 'true'
-        );
-        
+        const isInputFocused =
+          activeElement &&
+          (activeElement.tagName === "INPUT" ||
+            activeElement.tagName === "TEXTAREA" ||
+            activeElement.getAttribute("contenteditable") === "true");
+
         if (isInputFocused) {
           // Check if this is the first character in the input
-          const inputElement = activeElement as HTMLInputElement | HTMLTextAreaElement;
-          const currentValue = inputElement.value || '';
+          const inputElement = activeElement as
+            | HTMLInputElement
+            | HTMLTextAreaElement;
+          const currentValue = inputElement.value || "";
           const cursorPosition = inputElement.selectionStart || 0;
-          
+
           // If input is empty or cursor is at the beginning and input is empty
-          if (currentValue.length === 0 || (cursorPosition === 0 && currentValue.trim().length === 0)) {
+          if (
+            currentValue.length === 0 ||
+            (cursorPosition === 0 && currentValue.trim().length === 0)
+          ) {
             // Don't prevent default - let "/" be typed in input
             // Use setTimeout to trigger tools after the character is typed
             setTimeout(() => {
@@ -95,7 +100,7 @@ export function useKeyboardShortcuts(config: KeyboardShortcutsConfig) {
           break;
       }
     },
-    [onToggleSidebar, onToggleTheme, onFocusInput, onNewChat, onToggleTools]
+    [onToggleSidebar, onToggleTheme, onFocusInput, onNewChat, onToggleTools],
   );
 
   useEffect(() => {

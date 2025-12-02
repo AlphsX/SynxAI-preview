@@ -116,25 +116,33 @@ export default function CompareStyles() {
             <div>
               <div className="h-20 bg-[#1a1a1a] rounded-lg mb-2"></div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Background<br />#1a1a1a
+                Background
+                <br />
+                #1a1a1a
               </p>
             </div>
             <div>
               <div className="h-20 bg-[#3f3f46] rounded-lg mb-2"></div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                User Bubble<br />#3f3f46
+                User Bubble
+                <br />
+                #3f3f46
               </p>
             </div>
             <div>
               <div className="h-20 bg-[#2f2f2f] rounded-lg mb-2"></div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Input Area<br />#2f2f2f
+                Input Area
+                <br />
+                #2f2f2f
               </p>
             </div>
             <div>
               <div className="h-20 bg-[#1e1e1e] rounded-lg mb-2"></div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Code Block<br />#1e1e1e
+                Code Block
+                <br />
+                #1e1e1e
               </p>
             </div>
           </div>

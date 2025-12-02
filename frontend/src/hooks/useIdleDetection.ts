@@ -15,7 +15,7 @@ interface UseIdleDetectionReturn {
  * @returns Object containing isIdle state
  */
 export function useIdleDetection(
-  options: UseIdleDetectionOptions = {}
+  options: UseIdleDetectionOptions = {},
 ): UseIdleDetectionReturn {
   const {
     idleTime = 3000,
@@ -86,7 +86,7 @@ export function useIdleDetection(
       } catch (error) {
         console.error(
           "Failed to attach idle detection event listeners:",
-          error
+          error,
         );
       }
     };

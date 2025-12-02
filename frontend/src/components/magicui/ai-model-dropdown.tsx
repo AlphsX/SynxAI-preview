@@ -346,7 +346,7 @@ export const AIModelDropdown = ({
 
   const selectedModelInfo = getModelInfo(
     selectedModelData.id,
-    selectedModelData.name
+    selectedModelData.name,
   );
 
   return (
