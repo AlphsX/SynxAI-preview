@@ -419,8 +419,39 @@ CRYPTO_PRICE_TOOL = {
     },
 }
 
-# Available tools
-AVAILABLE_TOOLS = [WEB_SEARCH_TOOL, CRYPTO_PRICE_TOOL]
+# News Search Tool
+NEWS_SEARCH_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "news_search",
+        "description": "Search for latest news and current events. Use this for questions about news, current events, or what's happening.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "The search query to find news articles",
+                }
+            },
+            "required": ["query"],
+        },
+    },
+}
+
+# Available tools - Add all tools
+AVAILABLE_TOOLS = [WEB_SEARCH_TOOL, CRYPTO_PRICE_TOOL, NEWS_SEARCH_TOOL]
+
+
+def parse_tool_prefix(message: str) -> tuple:
+    """Parse [TOOL: xxx] prefix from message and return (tool_type, clean_message)"""
+    import re
+    tool_pattern = r'^\[TOOL:\s*([^\]]+)\]\s*(.*)$'
+    match = re.match(tool_pattern, message, re.IGNORECASE | re.DOTALL)
+    if match:
+        tool_type = match.group(1).strip().lower()
+        clean_message = match.group(2).strip()
+        return tool_type, clean_message
+    return None, message
 
 
 async def execute_tool(tool_name: str, arguments: dict) -> str:
@@ -432,39 +463,72 @@ async def execute_tool(tool_name: str, arguments: dict) -> str:
         if SEARCH_AVAILABLE:
             try:
                 web_results = await search_service.search_web(query, count=5)
-                news_results = await search_service.search_news(query, count=3)
                 
                 results = []
                 if web_results:
-                    results.append("=== WEB RESULTS ===")
-                    for i, r in enumerate(web_results[:3], 1):
+                    results.append("=== WEB SEARCH RESULTS ===")
+                    for i, r in enumerate(web_results[:5], 1):
                         results.append(f"{i}. {r.get('title', 'No title')}")
                         if r.get('description'):
                             results.append(f"   {r.get('description')}")
                         if r.get('url'):
                             results.append(f"   URL: {r.get('url')}")
                 
+                return "\n".join(results) if results else "No search results found."
+            except Exception as e:
+                print(f"❌ Web search error: {e}")
+                return f"Web search temporarily unavailable: {e}"
+        else:
+            return "Search service not configured."
+    
+    elif tool_name == "news_search":
+        query = arguments.get("query", "")
+        print(f"📰 Executing news_search: {query}")
+        
+        if SEARCH_AVAILABLE:
+            try:
+                news_results = await search_service.search_news(query, count=5)
+                
+                results = []
                 if news_results:
-                    results.append("\n=== NEWS RESULTS ===")
-                    for i, r in enumerate(news_results[:3], 1):
+                    results.append("=== NEWS SEARCH RESULTS ===")
+                    for i, r in enumerate(news_results[:5], 1):
                         results.append(f"{i}. {r.get('title', 'No title')}")
                         if r.get('description'):
                             results.append(f"   {r.get('description')}")
                         if r.get('published'):
                             results.append(f"   Published: {r.get('published')}")
+                        if r.get('url'):
+                            results.append(f"   URL: {r.get('url')}")
                 
-                return "\n".join(results) if results else "No search results found."
+                return "\n".join(results) if results else "No news results found."
             except Exception as e:
-                print(f"❌ Search error: {e}")
-                return f"Search temporarily unavailable: {e}"
+                print(f"❌ News search error: {e}")
+                return f"News search temporarily unavailable: {e}"
         else:
             return "Search service not configured."
     
-    elif tool_name == "get_crypto_price":
+    elif tool_name == "get_crypto_price" or tool_name == "crypto_data":
         symbol = arguments.get("symbol", "BTCUSDT")
+        # Handle common crypto names
+        symbol_map = {
+            "bitcoin": "BTCUSDT", "btc": "BTCUSDT",
+            "ethereum": "ETHUSDT", "eth": "ETHUSDT",
+            "solana": "SOLUSDT", "sol": "SOLUSDT",
+            "dogecoin": "DOGEUSDT", "doge": "DOGEUSDT",
+        }
+        symbol = symbol_map.get(symbol.lower(), symbol)
+        if not symbol.endswith("USDT"):
+            symbol = symbol.upper() + "USDT"
         print(f"💰 Executing get_crypto_price: {symbol}")
         result = await get_crypto_price(symbol)
         return result
+    
+    elif tool_name == "vector_search" or tool_name == "knowledge_search":
+        query = arguments.get("query", "")
+        print(f"🔮 Executing vector_search: {query}")
+        # For now, return a placeholder - can integrate with pgvector later
+        return f"Knowledge search for '{query}' - This feature requires PostgreSQL + pgvector setup."
     
     return "Unknown tool"
 
@@ -481,6 +545,56 @@ async def generate_groq_response(message: str, model_id: str):
         print(f"🚀 Processing with model: {model_id}")
         print(f"📝 Message: {message}")
 
+        # Check for [TOOL: xxx] prefix from frontend
+        forced_tool, clean_message = parse_tool_prefix(message)
+        
+        if forced_tool:
+            print(f"🔧 Forced tool selected: {forced_tool}")
+            print(f"📝 Clean message: {clean_message}")
+            
+            # Map frontend tool names to backend tool names
+            tool_map = {
+                "web search": "web_search",
+                "news search": "news_search",
+                "cryptocurrency data": "crypto_data",
+                "knowledge search": "vector_search",
+            }
+            tool_name = tool_map.get(forced_tool, forced_tool.replace(" ", "_"))
+            
+            # Execute the forced tool directly
+            tool_result = await execute_tool(tool_name, {"query": clean_message, "symbol": clean_message})
+            
+            # Now send to AI with the tool results
+            enhanced_prompt = f"""{SYNX_SYSTEM_PROMPT}
+
+=== TOOL RESULTS ({tool_name.upper()}) ===
+{tool_result}
+
+IMPORTANT: Use the above tool results to answer the user's question. Present the information in a natural, conversational way with emojis and warmth."""
+
+            messages = [
+                {"role": "system", "content": enhanced_prompt},
+                {"role": "user", "content": clean_message},
+            ]
+            
+            # Stream the response
+            stream = groq_client.chat.completions.create(
+                model=model_id,
+                messages=messages,
+                temperature=0.5,
+                max_tokens=2048,
+                stream=True,
+            )
+            
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    content = chunk.choices[0].delta.content
+                    yield f"data: {json.dumps({'content': content})}\n\n"
+            
+            yield f"data: {json.dumps({'type': 'done'})}\n\n"
+            return
+
+        # Normal flow (no forced tool)
         messages = [
             {"role": "system", "content": SYNX_SYSTEM_PROMPT},
             {"role": "user", "content": message},
