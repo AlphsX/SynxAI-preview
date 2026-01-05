@@ -545,58 +545,24 @@ async def generate_groq_response(message: str, model_id: str):
         print(f"🚀 Processing with model: {model_id}")
         print(f"📝 Message: {message}")
 
-        # Check for [TOOL: xxx] prefix from frontend
-        forced_tool, clean_message = parse_tool_prefix(message)
+        # Check for [TOOL: xxx] prefix from frontend (user suggested tool)
+        suggested_tool, clean_message = parse_tool_prefix(message)
         
-        if forced_tool:
-            print(f"🔧 Forced tool selected: {forced_tool}")
-            print(f"📝 Clean message: {clean_message}")
-            
-            # Map frontend tool names to backend tool names
-            tool_map = {
-                "web search": "web_search",
-                "news search": "news_search",
-                "cryptocurrency data": "crypto_data",
-                "knowledge search": "vector_search",
-            }
-            tool_name = tool_map.get(forced_tool, forced_tool.replace(" ", "_"))
-            
-            # Execute the forced tool directly
-            tool_result = await execute_tool(tool_name, {"query": clean_message, "symbol": clean_message})
-            
-            # Now send to AI with the tool results
-            enhanced_prompt = f"""{SYNX_SYSTEM_PROMPT}
+        # Build system prompt with tool suggestions if user selected one
+        system_prompt = SYNX_SYSTEM_PROMPT
+        if suggested_tool:
+            print(f"💡 User suggested tool: {suggested_tool}")
+            system_prompt += f"""
 
-=== TOOL RESULTS ({tool_name.upper()}) ===
-{tool_result}
+=== USER'S TOOL SUGGESTION ===
+The user has suggested using: {suggested_tool}
+Consider prioritizing this tool, but you have full autonomy to use any tools you think are best for answering their question accurately.
+You can use multiple tools if needed to give the most complete answer."""
+            # Use clean message without the tool prefix
+            message = clean_message
 
-IMPORTANT: Use the above tool results to answer the user's question. Present the information in a natural, conversational way with emojis and warmth."""
-
-            messages = [
-                {"role": "system", "content": enhanced_prompt},
-                {"role": "user", "content": clean_message},
-            ]
-            
-            # Stream the response
-            stream = groq_client.chat.completions.create(
-                model=model_id,
-                messages=messages,
-                temperature=0.5,
-                max_tokens=2048,
-                stream=True,
-            )
-            
-            for chunk in stream:
-                if chunk.choices[0].delta.content:
-                    content = chunk.choices[0].delta.content
-                    yield f"data: {json.dumps({'content': content})}\n\n"
-            
-            yield f"data: {json.dumps({'type': 'done'})}\n\n"
-            return
-
-        # Normal flow (no forced tool)
         messages = [
-            {"role": "system", "content": SYNX_SYSTEM_PROMPT},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": message},
         ]
 
