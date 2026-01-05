@@ -219,16 +219,31 @@ export default function Home() {
   }, [isHydrated, messages.length]);
 
   const toggleTools = useCallback(() => {
-    // Trigger if input is empty or contains only "/"
-    if (!inputText.trim() || inputText.trim() === '/') {
-      if (typeof document !== 'undefined') {
-        const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
-        if (plusButton) {
-          plusButton.click();
+    // This function is triggered by the global '/' shortcut when input is NOT focused
+    
+    // Always focus input first
+    inputRef.current?.focus();
+
+    if (!inputText) {
+      // Case: Empty input -> set to "/" and ensure dropdown is OPEN
+      setInputText('/');
+      if (!isToolsDropdownOpen) {
+        if (typeof document !== 'undefined') {
+          const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
+          if (plusButton) plusButton.click();
+        }
+      }
+    } else {
+      // Case: Not empty -> append "/" and ensure dropdown is CLOSED (strict rules)
+      setInputText(prev => prev + '/');
+      if (isToolsDropdownOpen) {
+        if (typeof document !== 'undefined') {
+          const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
+          if (plusButton) plusButton.click();
         }
       }
     }
-  }, [inputText]);
+  }, [inputText, isToolsDropdownOpen]);
 
   useKeyboardShortcuts({
     onToggleSidebar: toggleSidebar,
@@ -1997,61 +2012,29 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                               isToolsDropdownOpen,
                             });
 
-                            // Case 1: Just typed "/" as the only character
-                            if (newValue === '/' && oldValue !== '/' && !isToolsDropdownOpen) {
-                              console.log('Opening dropdown - typed single slash');
-                              setTimeout(() => {
-                                const plusButton = document.querySelector(
-                                  '[data-plus-button]'
-                                ) as HTMLButtonElement;
-                                if (plusButton) {
-                                  plusButton.click();
-                                }
-                              }, 50);
-                            }
-                            // Case 2: Deleted everything, leaving empty string
-                            else if (newValue === '' && oldValue === '/' && isToolsDropdownOpen) {
-                              console.log('Closing dropdown - deleted slash completely');
-                              setTimeout(() => {
-                                const plusButton = document.querySelector(
-                                  '[data-plus-button]'
-                                ) as HTMLButtonElement;
-                                if (plusButton) {
-                                  plusButton.click();
-                                }
-                              }, 50);
-                            }
-                            // Case 3: Typed something after "/" (like "//" or "/ " or "/abc")
-                            else if (
-                              oldValue === '/' &&
-                              newValue.length > 1 &&
-                              isToolsDropdownOpen
-                            ) {
-                              console.log('Closing dropdown - typed after slash');
-                              setTimeout(() => {
-                                const plusButton = document.querySelector(
-                                  '[data-plus-button]'
-                                ) as HTMLButtonElement;
-                                if (plusButton) {
-                                  plusButton.click();
-                                }
-                              }, 50);
-                            }
-                            // Case 4: Deleted back to just "/" from longer text
-                            else if (
-                              newValue === '/' &&
-                              oldValue.length > 1 &&
-                              !isToolsDropdownOpen
-                            ) {
-                              console.log('Opening dropdown - deleted back to single slash');
-                              setTimeout(() => {
-                                const plusButton = document.querySelector(
-                                  '[data-plus-button]'
-                                ) as HTMLButtonElement;
-                                if (plusButton) {
-                                  plusButton.click();
-                                }
-                              }, 50);
+                            // Strict Dropdown Logic:
+                            // 1. If text is exactly "/", show dropdown (unless already open)
+                            // 2. If text is NOT "/", hide dropdown (unless already closed)
+                            
+                            if (newValue === '/') {
+                              if (!isToolsDropdownOpen) {
+                                console.log('Opening dropdown - input is single slash');
+                                setTimeout(() => {
+                                  // Click the plus button to open
+                                  const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
+                                  if (plusButton) plusButton.click();
+                                }, 50);
+                              }
+                            } else {
+                              // If text is NOT "/", ensure dropdown is closed
+                              if (isToolsDropdownOpen) {
+                                console.log('Closing dropdown - input is not single slash');
+                                setTimeout(() => {
+                                  // Click the plus button to close
+                                  const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
+                                  if (plusButton) plusButton.click();
+                                }, 50);
+                              }
                             }
                           }}
                           onKeyDown={handleKeyDown}

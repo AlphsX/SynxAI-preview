@@ -40,10 +40,7 @@ export function useKeyboardShortcuts(config: KeyboardShortcutsConfig) {
             (cursorPosition === 0 && currentValue.trim().length === 0)
           ) {
             // Don't prevent default - let "/" be typed in input
-            // Use setTimeout to trigger tools after the character is typed
-            setTimeout(() => {
-              onToggleTools();
-            }, 0);
+            // Handled by onChange in page.tsx to prevent double-toggle
             return;
           }
           // Otherwise, let the "/" character be typed normally
