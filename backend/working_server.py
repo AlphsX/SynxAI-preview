@@ -381,85 +381,202 @@ async def get_capabilities():
     }
 
 
+# Tool definitions for local function calling
+# All models will use these tools via Groq's local tool calling
+WEB_SEARCH_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "web_search",
+        "description": "Search the web for current, real-time information. Use this for any questions about recent events, news, current data, dates, or anything that requires up-to-date information.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "The search query to find information on the web",
+                }
+            },
+            "required": ["query"],
+        },
+    },
+}
+
+CRYPTO_PRICE_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "get_crypto_price",
+        "description": "Get the current price of a cryptocurrency. Use for questions about Bitcoin, Ethereum, or other crypto prices.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "description": "The cryptocurrency symbol (e.g., BTCUSDT, ETHUSDT, SOLUSDT)",
+                }
+            },
+            "required": ["symbol"],
+        },
+    },
+}
+
+# Available tools
+AVAILABLE_TOOLS = [WEB_SEARCH_TOOL, CRYPTO_PRICE_TOOL]
+
+
+async def execute_tool(tool_name: str, arguments: dict) -> str:
+    """Execute a tool and return results"""
+    if tool_name == "web_search":
+        query = arguments.get("query", "")
+        print(f"🔍 Executing web_search: {query}")
+        
+        if SEARCH_AVAILABLE:
+            try:
+                web_results = await search_service.search_web(query, count=5)
+                news_results = await search_service.search_news(query, count=3)
+                
+                results = []
+                if web_results:
+                    results.append("=== WEB RESULTS ===")
+                    for i, r in enumerate(web_results[:3], 1):
+                        results.append(f"{i}. {r.get('title', 'No title')}")
+                        if r.get('description'):
+                            results.append(f"   {r.get('description')}")
+                        if r.get('url'):
+                            results.append(f"   URL: {r.get('url')}")
+                
+                if news_results:
+                    results.append("\n=== NEWS RESULTS ===")
+                    for i, r in enumerate(news_results[:3], 1):
+                        results.append(f"{i}. {r.get('title', 'No title')}")
+                        if r.get('description'):
+                            results.append(f"   {r.get('description')}")
+                        if r.get('published'):
+                            results.append(f"   Published: {r.get('published')}")
+                
+                return "\n".join(results) if results else "No search results found."
+            except Exception as e:
+                print(f"❌ Search error: {e}")
+                return f"Search temporarily unavailable: {e}"
+        else:
+            return "Search service not configured."
+    
+    elif tool_name == "get_crypto_price":
+        symbol = arguments.get("symbol", "BTCUSDT")
+        print(f"💰 Executing get_crypto_price: {symbol}")
+        result = await get_crypto_price(symbol)
+        return result
+    
+    return "Unknown tool"
+
+
 async def generate_groq_response(message: str, model_id: str):
-    """Generate enhanced response using Groq API with Synx personality"""
+    """Generate enhanced response using Groq API with local tool calling for ALL models"""
     if not groq_client:
-        # Fallback response when Groq is not available
-        fallback_message = f"Sorry, I'm not fully connected right now! 😔 The AI service needs to be configured. You asked: \"{message}\" - I'd love to help once everything's set up! 🌙✨"
+        fallback_message = f'Sorry, I\'m not fully connected right now! 😔 The AI service needs to be configured. You asked: "{message}" - I\'d love to help once everything\'s set up! 🌙✨'
         yield f"data: {json.dumps({'content': fallback_message})}\n\n"
         yield f"data: {json.dumps({'type': 'done'})}\n\n"
         return
 
     try:
-        # Check if this is a crypto price query
-        crypto_symbol = detect_crypto_query(message)
-        enhanced_prompt = SYNX_SYSTEM_PROMPT
+        print(f"🚀 Processing with model: {model_id}")
+        print(f"📝 Message: {message}")
 
-        # Check if user is asking for current/latest information
-        needs_search = needs_current_data(message)
+        messages = [
+            {"role": "system", "content": SYNX_SYSTEM_PROMPT},
+            {"role": "user", "content": message},
+        ]
 
-        print(f"DEBUG: Processing message: {message}")
-        print(f"DEBUG: Crypto symbol detected: {crypto_symbol}")
-        print(f"DEBUG: Needs current data: {needs_search}")
-        print(f"DEBUG: Model ID: {model_id}")
-
-        # Get current data if needed
-        current_data = None
-        if needs_search:
-            current_data = await get_current_data(message)
-            if current_data:
-                enhanced_prompt += f"\n\n=== CURRENT INFORMATION ===\n{current_data}\n\nIMPORTANT: Use this current information to answer the user's question. This data is from recent web searches and news sources. Present the information in a natural, conversational way."
-                print("✅ Added current data to prompt")
-            else:
-                enhanced_prompt += f"\n\nNote: I tried to get current information but couldn't access real-time data right now. I'll provide general information instead."
-                print("⚠️ Could not get current data")
-
-        if crypto_symbol:
-            # Get crypto price data
-            crypto_data = await get_crypto_price(crypto_symbol)
-            enhanced_prompt += f"\n\nCurrent Cryptocurrency Price Data:\n{crypto_data}\n\nUse this data to answer the user's question about cryptocurrency prices in your natural, warm style."
-
-        # Create chat completion with streaming
-        # Configure tools based on model type
-        # Reference: https://console.groq.com/docs/tool-use/built-in-tools
-
-        # Determine if this model supports built-in tools
-        is_compound_model = model_id.startswith("groq/compound")
+        # Determine if this model uses built-in tools (GPT-OSS) or local tools
         is_gpt_oss_model = model_id.startswith("openai/gpt-oss")
 
-        # Build API call parameters
-        api_params = {
-            "messages": [
-                {"role": "system", "content": enhanced_prompt},
-                {"role": "user", "content": message},
-            ],
-            "model": model_id,
-            "temperature": 0.5,
-            "max_tokens": 2048,
-            "stream": True,
-        }
-
-        # Add browser_search tool for GPT-OSS models
-        # Compound models automatically have all tools enabled
         if is_gpt_oss_model:
-            api_params["tools"] = [{"type": "browser_search"}]
-            print(f"✅ Enabled browser_search for {model_id}")
-        elif is_compound_model:
-            print(f"✅ Using {model_id} with built-in tools (web_search, code_interpreter, etc.)")
+            # GPT-OSS uses Groq's built-in browser_search
+            print(f"✅ Using GPT-OSS built-in browser_search for {model_id}")
+            api_params = {
+                "messages": messages,
+                "model": model_id,
+                "tools": [{"type": "browser_search"}],
+                "temperature": 0.5,
+                "max_tokens": 2048,
+                "stream": True,
+            }
+            stream = groq_client.chat.completions.create(**api_params)
+            
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    content = chunk.choices[0].delta.content
+                    yield f"data: {json.dumps({'content': content})}\n\n"
+            
+            yield f"data: {json.dumps({'type': 'done'})}\n\n"
+        else:
+            # Other models use local tool calling with BraveSearch/SerpAPI
+            print(f"🔧 Using local tool calling for {model_id}")
+            
+            # Step 1: Initial request with tool definitions
+            response = groq_client.chat.completions.create(
+                model=model_id,
+                messages=messages,
+                tools=AVAILABLE_TOOLS,
+                tool_choice="auto",
+                temperature=0.5,
+                max_tokens=2048,
+            )
 
-        stream = groq_client.chat.completions.create(**api_params)
+            response_message = response.choices[0].message
+            tool_calls = response_message.tool_calls
 
-        for chunk in stream:
-            if chunk.choices[0].delta.content:
-                content = chunk.choices[0].delta.content
-                yield f"data: {json.dumps({'content': content})}\n\n"
+            # Step 2: If model wants to use tools, execute them
+            if tool_calls:
+                print(f"🛠️ Model requested {len(tool_calls)} tool call(s)")
+                messages.append(response_message)
 
-        yield f"data: {json.dumps({'type': 'done'})}\n\n"
+                for tool_call in tool_calls:
+                    function_name = tool_call.function.name
+                    function_args = json.loads(tool_call.function.arguments)
+                    print(f"  → {function_name}({function_args})")
+
+                    # Execute the tool
+                    tool_result = await execute_tool(function_name, function_args)
+                    print(f"  ← Got result ({len(tool_result)} chars)")
+
+                    # Add tool result to conversation
+                    messages.append({
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "name": function_name,
+                        "content": tool_result,
+                    })
+
+                # Step 3: Get final response with tool results (streaming)
+                final_stream = groq_client.chat.completions.create(
+                    model=model_id,
+                    messages=messages,
+                    temperature=0.5,
+                    max_tokens=2048,
+                    stream=True,
+                )
+
+                for chunk in final_stream:
+                    if chunk.choices[0].delta.content:
+                        content = chunk.choices[0].delta.content
+                        yield f"data: {json.dumps({'content': content})}\n\n"
+            else:
+                # No tool calls needed, stream the direct response
+                if response_message.content:
+                    # For non-streaming response, chunk it for streaming effect
+                    content = response_message.content
+                    # Send in small chunks for smooth streaming
+                    chunk_size = 20
+                    for i in range(0, len(content), chunk_size):
+                        chunk = content[i:i+chunk_size]
+                        yield f"data: {json.dumps({'content': chunk})}\n\n"
+                        await asyncio.sleep(0.01)  # Small delay for smooth streaming
+
+            yield f"data: {json.dumps({'type': 'done'})}\n\n"
 
     except Exception as e:
-        error_msg = (
-            f"Oops! Something went wrong on my end: {str(e)} 😅 Let me try to help you anyway! 💫"
-        )
+        error_msg = f"Oops! Something went wrong on my end: {str(e)} 😅 Let me try to help you anyway! 💫"
+        print(f"❌ Error: {e}")
         yield f"data: {json.dumps({'type': 'error', 'content': error_msg})}\n\n"
 
 
