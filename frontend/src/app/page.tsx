@@ -2055,7 +2055,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                   }`
                                 : 'Ask me anything...'
                           }
-                          className={`w-full resize-none bg-transparent px-14 pr-14 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none leading-relaxed font-medium chat-input ${
+                          className={`w-full resize-none bg-transparent px-14 pr-14 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none leading-relaxed font-medium chat-input transition-elastic ${
                             isMobile ? 'text-base' : 'text-sm'
                           } ${selectedTool ? 'pt-9 pb-3' : 'py-3'}`}
                           rows={1}

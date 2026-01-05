@@ -369,9 +369,7 @@ export const SearchToolsDropdown = ({
             type="button"
             className={`w-full h-full flex items-center justify-center rounded-full transition-all duration-300 ease-out transform ${
               isOpen || isAnimating ? 'rotate-45 scale-110' : 'rotate-0 scale-100'
-            } hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105 touch-manipulation relative z-[9999] ${
-              isOpen ? 'shadow-lg' : ''
-            }`}
+            } liquid-glass-lens hover:scale-105 touch-manipulation relative z-[9999]`}
             onClick={e => {
               e.preventDefault();
               e.stopPropagation();
