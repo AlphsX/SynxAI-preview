@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ChatGPTStyleMessage } from "@/components/chat/ChatGPTStyleMessage";
-import { MessageRenderer } from "@/components/chat/MessageRenderer";
+import React from 'react';
+import { ChatGPTStyleMessage } from '@/components/chat/ChatGPTStyleMessage';
+import { MessageRenderer } from '@/components/chat/MessageRenderer';
 
 const exampleMessage = `Absolutely 😎 — here's a clean, **expert-level async Rust example** demonstrating async/await, concurrency with \`tokio\`, error handling, and structured design.
 
@@ -48,19 +48,11 @@ export default function CompareStyles() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* ChatGPT Style */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              ChatGPT Style
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">ChatGPT Style</h2>
             <div className="bg-[#1a1a1a] rounded-lg p-6 min-h-[600px]">
               <div className="space-y-6">
-                <ChatGPTStyleMessage
-                  role="user"
-                  content="Gimme Async Rust Code example"
-                />
-                <ChatGPTStyleMessage
-                  role="assistant"
-                  content={exampleMessage}
-                />
+                <ChatGPTStyleMessage role="user" content="Gimme Async Rust Code example" />
+                <ChatGPTStyleMessage role="assistant" content={exampleMessage} />
               </div>
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -77,9 +69,7 @@ export default function CompareStyles() {
 
           {/* Default Style */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Default Style
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Default Style</h2>
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 min-h-[600px]">
               <div className="space-y-6">
                 <div className="flex justify-end">

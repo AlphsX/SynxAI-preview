@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface UseIdleDetectionOptions {
   idleTime?: number; // milliseconds, default 3000
@@ -14,12 +14,10 @@ interface UseIdleDetectionReturn {
  * @param options Configuration options for idle detection
  * @returns Object containing isIdle state
  */
-export function useIdleDetection(
-  options: UseIdleDetectionOptions = {},
-): UseIdleDetectionReturn {
+export function useIdleDetection(options: UseIdleDetectionOptions = {}): UseIdleDetectionReturn {
   const {
     idleTime = 3000,
-    events = ["mousemove", "mousedown", "keydown", "scroll", "touchstart"],
+    events = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'],
   } = options;
 
   const [isIdle, setIsIdle] = useState(false);
@@ -58,7 +56,7 @@ export function useIdleDetection(
     // Debounce state updates to prevent excessive re-renders
     debounceTimerRef.current = setTimeout(() => {
       // If currently idle, immediately set to not idle
-      setIsIdle((prevIdle) => {
+      setIsIdle(prevIdle => {
         if (prevIdle) {
           return false;
         }
@@ -72,7 +70,7 @@ export function useIdleDetection(
 
   useEffect(() => {
     // Only run on client-side
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     // Start initial timer
     startTimer();
@@ -80,14 +78,11 @@ export function useIdleDetection(
     // Attach event listeners
     const attachListeners = () => {
       try {
-        events.forEach((event) => {
+        events.forEach(event => {
           window.addEventListener(event, handleActivity, { passive: true });
         });
       } catch (error) {
-        console.error(
-          "Failed to attach idle detection event listeners:",
-          error,
-        );
+        console.error('Failed to attach idle detection event listeners:', error);
       }
     };
 
@@ -99,8 +94,8 @@ export function useIdleDetection(
       clearDebounceTimer();
 
       // Remove event listeners only if window exists
-      if (typeof window !== "undefined") {
-        events.forEach((event) => {
+      if (typeof window !== 'undefined') {
+        events.forEach(event => {
           window.removeEventListener(event, handleActivity);
         });
       }

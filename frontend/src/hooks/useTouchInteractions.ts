@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useCallback, useRef, useState, useEffect } from "react";
+import { useCallback, useRef, useState, useEffect } from 'react';
 
 export interface TouchInteractionConfig {
   enableHapticFeedback?: boolean;
@@ -14,13 +14,13 @@ export interface TouchInteractionConfig {
 export interface TouchState {
   isPressed: boolean;
   isSwiping: boolean;
-  swipeDirection: "left" | "right" | "up" | "down" | null;
+  swipeDirection: 'left' | 'right' | 'up' | 'down' | null;
   isLongPress: boolean;
   touchPosition: { x: number; y: number } | null;
 }
 
 export interface SwipeGesture {
-  direction: "left" | "right" | "up" | "down";
+  direction: 'left' | 'right' | 'up' | 'down';
   distance: number;
   velocity: number;
   duration: number;
@@ -30,7 +30,7 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
   const {
     enableHapticFeedback = true,
     enableRippleEffect = true,
-    rippleColor = "rgba(255, 255, 255, 0.3)",
+    rippleColor = 'rgba(255, 255, 255, 0.3)',
     touchFeedbackDuration = 150,
     swipeThreshold = 50,
     longPressDelay = 500,
@@ -44,18 +44,16 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
     touchPosition: null,
   });
 
-  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(
-    null,
-  );
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
   const longPressTimerRef = useRef<NodeJS.Timeout | null>(null);
   const rippleElementRef = useRef<HTMLDivElement | null>(null);
 
   // Haptic feedback utility
   const triggerHapticFeedback = useCallback(
-    (type: "light" | "medium" | "heavy" = "light") => {
+    (type: 'light' | 'medium' | 'heavy' = 'light') => {
       if (!enableHapticFeedback) return;
 
-      if ("vibrate" in navigator) {
+      if ('vibrate' in navigator) {
         const patterns = {
           light: 10,
           medium: 50,
@@ -64,7 +62,7 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
         navigator.vibrate(patterns[type]);
       }
     },
-    [enableHapticFeedback],
+    [enableHapticFeedback]
   );
 
   // Create ripple effect
@@ -73,7 +71,7 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
       if (!enableRippleEffect) return;
 
       const rect = element.getBoundingClientRect();
-      const ripple = document.createElement("div");
+      const ripple = document.createElement('div');
       const size = Math.max(rect.width, rect.height) * 2;
 
       ripple.style.cssText = `
@@ -92,9 +90,9 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
     `;
 
       // Add ripple animation keyframes if not already present
-      if (!document.querySelector("#ripple-styles")) {
-        const style = document.createElement("style");
-        style.id = "ripple-styles";
+      if (!document.querySelector('#ripple-styles')) {
+        const style = document.createElement('style');
+        style.id = 'ripple-styles';
         style.textContent = `
         @keyframes ripple-animation {
           0% {
@@ -110,8 +108,8 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
         document.head.appendChild(style);
       }
 
-      element.style.position = element.style.position || "relative";
-      element.style.overflow = "hidden";
+      element.style.position = element.style.position || 'relative';
+      element.style.overflow = 'hidden';
       element.appendChild(ripple);
 
       // Remove ripple after animation
@@ -121,7 +119,7 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
         }
       }, 600);
     },
-    [enableRippleEffect, rippleColor],
+    [enableRippleEffect, rippleColor]
   );
 
   // Touch start handler
@@ -136,7 +134,7 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
         time: Date.now(),
       };
 
-      setTouchState((prev) => ({
+      setTouchState(prev => ({
         ...prev,
         isPressed: true,
         touchPosition: { x: touch.clientX, y: touch.clientY },
@@ -146,15 +144,15 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
       createRippleEffect(target, touch.clientX, touch.clientY);
 
       // Light haptic feedback on touch start
-      triggerHapticFeedback("light");
+      triggerHapticFeedback('light');
 
       // Start long press timer
       longPressTimerRef.current = setTimeout(() => {
-        setTouchState((prev) => ({ ...prev, isLongPress: true }));
-        triggerHapticFeedback("medium");
+        setTouchState(prev => ({ ...prev, isLongPress: true }));
+        triggerHapticFeedback('medium');
       }, longPressDelay);
     },
-    [createRippleEffect, triggerHapticFeedback, longPressDelay],
+    [createRippleEffect, triggerHapticFeedback, longPressDelay]
   );
 
   // Touch move handler
@@ -171,22 +169,22 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
       if (longPressTimerRef.current && distance > 10) {
         clearTimeout(longPressTimerRef.current);
         longPressTimerRef.current = null;
-        setTouchState((prev) => ({ ...prev, isLongPress: false }));
+        setTouchState(prev => ({ ...prev, isLongPress: false }));
       }
 
       // Detect swipe direction
       if (distance > swipeThreshold) {
         const absX = Math.abs(deltaX);
         const absY = Math.abs(deltaY);
-        let direction: "left" | "right" | "up" | "down";
+        let direction: 'left' | 'right' | 'up' | 'down';
 
         if (absX > absY) {
-          direction = deltaX > 0 ? "right" : "left";
+          direction = deltaX > 0 ? 'right' : 'left';
         } else {
-          direction = deltaY > 0 ? "down" : "up";
+          direction = deltaY > 0 ? 'down' : 'up';
         }
 
-        setTouchState((prev) => ({
+        setTouchState(prev => ({
           ...prev,
           isSwiping: true,
           swipeDirection: direction,
@@ -194,7 +192,7 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
         }));
       }
     },
-    [swipeThreshold],
+    [swipeThreshold]
   );
 
   // Touch end handler
@@ -241,7 +239,7 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
 
       return swipeGesture;
     },
-    [touchState.isSwiping, touchState.swipeDirection],
+    [touchState.isSwiping, touchState.swipeDirection]
   );
 
   // Touch cancel handler
@@ -297,24 +295,18 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
         },
       };
     },
-    [
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
-      handleTouchCancel,
-      touchState,
-    ],
+    [handleTouchStart, handleTouchMove, handleTouchEnd, handleTouchCancel, touchState]
   );
 
   // Get touch feedback styles
   const getTouchFeedbackStyles = useCallback(() => {
     return {
-      transform: touchState.isPressed ? "scale(0.98)" : "scale(1)",
+      transform: touchState.isPressed ? 'scale(0.98)' : 'scale(1)',
       transition: `transform ${touchFeedbackDuration}ms ease-out`,
-      userSelect: "none" as const,
-      WebkitUserSelect: "none" as const,
-      WebkitTouchCallout: "none" as const,
-      WebkitTapHighlightColor: "transparent",
+      userSelect: 'none' as const,
+      WebkitUserSelect: 'none' as const,
+      WebkitTouchCallout: 'none' as const,
+      WebkitTapHighlightColor: 'transparent',
     };
   }, [touchState.isPressed, touchFeedbackDuration]);
 
@@ -340,62 +332,56 @@ export const useTouchInteractions = (config: TouchInteractionConfig = {}) => {
 export const useMobileDetection = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [hasTouch, setHasTouch] = useState(false);
-  const [orientation, setOrientation] = useState<"portrait" | "landscape">(
-    "portrait",
-  );
+  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>('portrait');
 
   useEffect(() => {
     const checkMobile = () => {
       const userAgent = navigator.userAgent.toLowerCase();
       const mobileKeywords = [
-        "mobile",
-        "android",
-        "iphone",
-        "ipad",
-        "ipod",
-        "blackberry",
-        "windows phone",
-        "miui",
-        "harmonyos",
-        "hyperos",
-        "emui",
-        "funtouch",
-        "coloros",
-        "oxygenos",
-        "oneui",
-        "samsung",
-        "xiaomi",
-        "huawei",
-        "oppo",
-        "vivo",
-        "oneplus",
-        "realme",
+        'mobile',
+        'android',
+        'iphone',
+        'ipad',
+        'ipod',
+        'blackberry',
+        'windows phone',
+        'miui',
+        'harmonyos',
+        'hyperos',
+        'emui',
+        'funtouch',
+        'coloros',
+        'oxygenos',
+        'oneui',
+        'samsung',
+        'xiaomi',
+        'huawei',
+        'oppo',
+        'vivo',
+        'oneplus',
+        'realme',
       ];
-      const isMobileDevice = mobileKeywords.some((keyword) =>
-        userAgent.includes(keyword),
-      );
+      const isMobileDevice = mobileKeywords.some(keyword => userAgent.includes(keyword));
 
       setIsMobile(isMobileDevice || window.innerWidth <= 768);
-      setHasTouch("ontouchstart" in window || navigator.maxTouchPoints > 0);
+      setHasTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
     };
 
     const checkOrientation = () => {
-      setOrientation(
-        window.innerHeight > window.innerWidth ? "portrait" : "landscape",
-      );
+      setOrientation(window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
     };
 
     checkMobile();
     checkOrientation();
 
-    window.addEventListener("resize", checkMobile);
-    window.addEventListener("resize", checkOrientation);
-    window.addEventListener("orientationchange", checkOrientation);
+    window.addEventListener('resize', checkMobile);
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
-      window.removeEventListener("resize", checkOrientation);
-      window.removeEventListener("orientationchange", checkOrientation);
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
     };
   }, []);
 

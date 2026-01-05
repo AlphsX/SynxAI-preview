@@ -1,41 +1,41 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Check, Copy, AlertCircle } from "lucide-react";
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Check, Copy, AlertCircle } from 'lucide-react';
 import {
   createScaleAnimation,
   createBounceAnimation,
   useOptimizedAnimation,
-} from "@/lib/animation-utils";
+} from '@/lib/animation-utils';
 
 export interface CopyButtonProps {
   text: string;
   className?: string;
-  size?: "sm" | "md" | "lg";
-  variant?: "default" | "ghost" | "outline";
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'ghost' | 'outline';
   onCopy?: (text: string) => void;
   onError?: (error: Error) => void;
   disabled?: boolean;
-  "aria-label"?: string;
+  'aria-label'?: string;
   showTooltip?: boolean;
   enableHapticFeedback?: boolean;
 }
 
-export type CopyState = "idle" | "copying" | "success" | "error";
+export type CopyState = 'idle' | 'copying' | 'success' | 'error';
 
 export const CopyButton: React.FC<CopyButtonProps> = ({
   text,
-  className = "",
-  size = "md",
-  variant = "default",
+  className = '',
+  size = 'md',
+  variant = 'default',
   onCopy,
   onError,
   disabled = false,
-  "aria-label": ariaLabel = "Copy to clipboard",
+  'aria-label': ariaLabel = 'Copy to clipboard',
   showTooltip = true,
   enableHapticFeedback = true,
 }) => {
-  const [copyState, setCopyState] = useState<CopyState>("idle");
+  const [copyState, setCopyState] = useState<CopyState>('idle');
   const [isHovered, setIsHovered] = useState(false);
   const [showRipple, setShowRipple] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -44,7 +44,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
   // Haptic feedback for mobile devices
   const triggerHapticFeedback = useCallback(() => {
-    if (enableHapticFeedback && "vibrate" in navigator) {
+    if (enableHapticFeedback && 'vibrate' in navigator) {
       navigator.vibrate(50);
     }
   }, [enableHapticFeedback]);
@@ -52,7 +52,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   // Enhanced copy functionality with animations
   const handleCopy = useCallback(
     async (event?: React.MouseEvent) => {
-      if (disabled || copyState === "copying") return;
+      if (disabled || copyState === 'copying') return;
 
       // Trigger haptic feedback
       triggerHapticFeedback();
@@ -71,7 +71,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         }
       }
 
-      setCopyState("copying");
+      setCopyState('copying');
 
       try {
         // Try modern clipboard API first
@@ -79,53 +79,52 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           await navigator.clipboard.writeText(text);
         } else {
           // Fallback for older browsers or non-secure contexts
-          const textArea = document.createElement("textarea");
+          const textArea = document.createElement('textarea');
           textArea.value = text;
-          textArea.style.position = "fixed";
-          textArea.style.left = "-999999px";
-          textArea.style.top = "-999999px";
+          textArea.style.position = 'fixed';
+          textArea.style.left = '-999999px';
+          textArea.style.top = '-999999px';
           document.body.appendChild(textArea);
           textArea.focus();
           textArea.select();
 
-          const successful = document.execCommand("copy");
+          const successful = document.execCommand('copy');
           document.body.removeChild(textArea);
 
           if (!successful) {
-            throw new Error("Copy command failed");
+            throw new Error('Copy command failed');
           }
         }
 
-        setCopyState("success");
+        setCopyState('success');
         onCopy?.(text);
 
         // Reset to idle after 2 seconds with smooth transition
         setTimeout(() => {
-          setCopyState("idle");
+          setCopyState('idle');
         }, 2000);
       } catch (error) {
-        setCopyState("error");
-        const copyError =
-          error instanceof Error ? error : new Error("Copy failed");
+        setCopyState('error');
+        const copyError = error instanceof Error ? error : new Error('Copy failed');
         onError?.(copyError);
 
         // Reset to idle after 3 seconds for error state
         setTimeout(() => {
-          setCopyState("idle");
+          setCopyState('idle');
         }, 3000);
       }
     },
-    [text, disabled, copyState, onCopy, onError, triggerHapticFeedback],
+    [text, disabled, copyState, onCopy, onError, triggerHapticFeedback]
   );
 
   const handleKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.key === "Enter" || event.key === " ") {
+      if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         handleCopy();
       }
     },
-    [handleCopy],
+    [handleCopy]
   );
 
   const handleMouseEnter = useCallback(() => {
@@ -138,9 +137,9 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
   // Size classes with enhanced spacing
   const sizeClasses = {
-    sm: "h-7 w-7 p-1.5",
-    md: "h-9 w-9 p-2",
-    lg: "h-11 w-11 p-2.5",
+    sm: 'h-7 w-7 p-1.5',
+    md: 'h-9 w-9 p-2',
+    lg: 'h-11 w-11 p-2.5',
   };
 
   // Enhanced variant classes with better visual hierarchy
@@ -163,8 +162,8 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
   // Enhanced state-specific classes with smooth transitions
   const stateClasses = {
-    idle: "",
-    copying: "opacity-75 cursor-wait scale-95",
+    idle: '',
+    copying: 'opacity-75 cursor-wait scale-95',
     success: `
       bg-green-100/90 hover:bg-green-200/90 dark:bg-green-900/80 dark:hover:bg-green-800/90 
       text-green-700 dark:text-green-300 border-green-300/60 dark:border-green-600/60
@@ -180,20 +179,20 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
   // Icon size classes
   const iconSizeClasses = {
-    sm: "w-3.5 h-3.5",
-    md: "w-4 h-4",
-    lg: "w-5 h-5",
+    sm: 'w-3.5 h-3.5',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5',
   };
 
   const getIcon = () => {
     const iconClass = `${iconSizeClasses[size]} transition-all duration-200`;
 
     switch (copyState) {
-      case "copying":
+      case 'copying':
         return <Copy className={`${iconClass} animate-pulse`} />;
-      case "success":
+      case 'success':
         return <Check className={`${iconClass} animate-bounce-in`} />;
-      case "error":
+      case 'error':
         return <AlertCircle className={`${iconClass} animate-bounce-in`} />;
       default:
         return <Copy className={iconClass} />;
@@ -202,12 +201,12 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
   const getAriaLabel = () => {
     switch (copyState) {
-      case "copying":
-        return "Copying to clipboard...";
-      case "success":
-        return "Copied to clipboard successfully";
-      case "error":
-        return "Failed to copy to clipboard";
+      case 'copying':
+        return 'Copying to clipboard...';
+      case 'success':
+        return 'Copied to clipboard successfully';
+      case 'error':
+        return 'Failed to copy to clipboard';
       default:
         return ariaLabel;
     }
@@ -215,14 +214,14 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
 
   const getTooltipText = () => {
     switch (copyState) {
-      case "copying":
-        return "Copying...";
-      case "success":
-        return "Copied!";
-      case "error":
-        return "Copy failed";
+      case 'copying':
+        return 'Copying...';
+      case 'success':
+        return 'Copied!';
+      case 'error':
+        return 'Copy failed';
       default:
-        return "Copy to clipboard";
+        return 'Copy to clipboard';
     }
   };
 
@@ -235,7 +234,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         onKeyDown={handleKeyDown}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        disabled={disabled || copyState === "copying"}
+        disabled={disabled || copyState === 'copying'}
         className={`
           relative inline-flex items-center justify-center
           rounded-lg overflow-hidden
@@ -247,8 +246,8 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
           ${sizeClasses[size]}
           ${variantClasses[variant]}
           ${stateClasses[copyState]}
-          ${isHovered && copyState === "idle" ? "scale-105 shadow-lg" : ""}
-          ${shouldAnimate ? "gpu-accelerated" : ""}
+          ${isHovered && copyState === 'idle' ? 'scale-105 shadow-lg' : ''}
+          ${shouldAnimate ? 'gpu-accelerated' : ''}
           ${className}
         `}
         aria-label={getAriaLabel()}
@@ -262,7 +261,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
             absolute w-0 h-0 rounded-full pointer-events-none
             bg-white/30 dark:bg-gray-300/30
             transition-all duration-600 ease-out
-            ${showRipple ? "w-20 h-20 -translate-x-10 -translate-y-10" : ""}
+            ${showRipple ? 'w-20 h-20 -translate-x-10 -translate-y-10' : ''}
           `}
         />
 
@@ -270,7 +269,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
         <div className="relative z-10">{getIcon()}</div>
 
         {/* Glow effect for success state */}
-        {copyState === "success" && shouldAnimate && (
+        {copyState === 'success' && shouldAnimate && (
           <div className="absolute inset-0 rounded-lg animate-glow-pulse bg-green-400/20 dark:bg-green-500/20" />
         )}
       </button>
@@ -285,7 +284,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
             rounded-lg shadow-lg backdrop-blur-sm
             pointer-events-none z-50
             transition-all duration-200 ease-out
-            ${shouldAnimate ? "animate-fade-in-up" : ""}
+            ${shouldAnimate ? 'animate-fade-in-up' : ''}
           `}
         >
           {getTooltipText()}

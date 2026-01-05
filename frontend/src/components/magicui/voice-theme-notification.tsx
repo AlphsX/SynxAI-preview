@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 interface VoiceThemeNotificationProps {
   message: string;
-  theme: "dark" | "light";
+  theme: 'dark' | 'light';
   isVisible: boolean;
   onClose: () => void;
-  type?: "info" | "success" | "error" | "warning"; // Add type property
+  type?: 'info' | 'success' | 'error' | 'warning'; // Add type property
 }
 
 export function VoiceThemeNotification({
@@ -15,7 +15,7 @@ export function VoiceThemeNotification({
   theme,
   isVisible,
   onClose,
-  type = "info", // Default to info
+  type = 'info', // Default to info
 }: VoiceThemeNotificationProps) {
   // Auto-dismiss after 3 seconds
   useEffect(() => {
@@ -24,7 +24,7 @@ export function VoiceThemeNotification({
         () => {
           onClose();
         },
-        type === "error" ? 5000 : 3000,
+        type === 'error' ? 5000 : 3000
       ); // Show errors for longer
 
       return () => clearTimeout(timer);
@@ -54,31 +54,31 @@ export function VoiceThemeNotification({
       // If swiping up with significant vertical movement
       if (deltaY < -50 && Math.abs(deltaX) < 100) {
         onClose();
-        document.removeEventListener("touchmove", handleTouchMove);
-        document.removeEventListener("touchend", handleTouchEnd);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
       }
     };
 
     const handleTouchEnd = () => {
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
 
-    document.addEventListener("touchmove", handleTouchMove, { passive: false });
-    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
   };
 
   if (!isVisible) return null;
 
   // Determine if this is a sidebar notification based on the message
-  const isSidebarNotification = message.includes("Sidebar");
+  const isSidebarNotification = message.includes('Sidebar');
 
   // Select appropriate icon based on notification type
   const renderIcon = () => {
     // Sidebar notifications now use contextually appropriate icons
     if (isSidebarNotification) {
       switch (type) {
-        case "success":
+        case 'success':
           // Sidebar success icon (checkmark with sidebar representation)
           return (
             <svg
@@ -96,7 +96,7 @@ export function VoiceThemeNotification({
               />
             </svg>
           );
-        case "error":
+        case 'error':
           // Sidebar error icon (sidebar with error indicator)
           return (
             <svg
@@ -116,7 +116,7 @@ export function VoiceThemeNotification({
               />
             </svg>
           );
-        case "warning":
+        case 'warning':
           // Sidebar warning icon (sidebar with warning triangle)
           return (
             <svg
@@ -134,7 +134,7 @@ export function VoiceThemeNotification({
               />
             </svg>
           );
-        case "info":
+        case 'info':
         default:
           // Sidebar info icon (sidebar with info circle)
           return (
@@ -151,14 +151,7 @@ export function VoiceThemeNotification({
                 d="M12 9.5a.75.75 0 01.75.75v.75a.75.75 0 01-1.5 0v-.75A.75.75 0 0112 9.5zm-.75 3a.75.75 0 000 1.5h1.5a.75.75 0 000-1.5h-1.5z"
                 clipRule="evenodd"
               />
-              <circle
-                cx="12"
-                cy="12"
-                r="7.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
+              <circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </svg>
           );
       }
@@ -166,7 +159,7 @@ export function VoiceThemeNotification({
 
     // Different icons for different notification types
     switch (type) {
-      case "success":
+      case 'success':
         // Checkmark icon for success
         return (
           <svg
@@ -182,7 +175,7 @@ export function VoiceThemeNotification({
             />
           </svg>
         );
-      case "error":
+      case 'error':
         // Error icon (exclamation circle)
         return (
           <svg
@@ -198,7 +191,7 @@ export function VoiceThemeNotification({
             />
           </svg>
         );
-      case "warning":
+      case 'warning':
         // Warning icon (exclamation triangle)
         return (
           <svg
@@ -214,10 +207,10 @@ export function VoiceThemeNotification({
             />
           </svg>
         );
-      case "info":
+      case 'info':
       default:
         // Info icon (i in circle) or theme-specific icons
-        if (theme === "dark") {
+        if (theme === 'dark') {
           // Moon icon for dark mode
           return (
             <svg
@@ -254,45 +247,37 @@ export function VoiceThemeNotification({
     // Apply contextually appropriate styling for sidebar notifications
     if (isSidebarNotification) {
       switch (type) {
-        case "success":
-          return theme === "dark"
-            ? "bg-gradient-to-r from-cyan-900/90 via-cyan-800/90 to-cyan-900/90 text-cyan-100 border-cyan-700/50"
-            : "bg-gradient-to-r from-blue-100/90 via-blue-50/90 to-blue-100/90 text-blue-900 border-blue-300/50";
-        case "error":
-          return theme === "dark"
-            ? "bg-gradient-to-r from-rose-900/90 via-rose-800/90 to-rose-900/90 text-rose-100 border-rose-700/50"
-            : "bg-gradient-to-r from-rose-100/90 via-rose-50/90 to-rose-100/90 text-rose-900 border-rose-300/50";
-        case "warning":
-          return theme === "dark"
-            ? "bg-gradient-to-r from-amber-900/90 via-amber-800/90 to-amber-900/90 text-amber-100 border-amber-700/50"
-            : "bg-gradient-to-r from-amber-100/90 via-amber-50/90 to-amber-100/90 text-amber-900 border-amber-300/50";
-        case "info":
+        case 'success':
+          return theme === 'dark'
+            ? 'bg-gradient-to-r from-cyan-900/90 via-cyan-800/90 to-cyan-900/90 text-cyan-100 border-cyan-700/50'
+            : 'bg-gradient-to-r from-blue-100/90 via-blue-50/90 to-blue-100/90 text-blue-900 border-blue-300/50';
+        case 'error':
+          return theme === 'dark'
+            ? 'bg-gradient-to-r from-rose-900/90 via-rose-800/90 to-rose-900/90 text-rose-100 border-rose-700/50'
+            : 'bg-gradient-to-r from-rose-100/90 via-rose-50/90 to-rose-100/90 text-rose-900 border-rose-300/50';
+        case 'warning':
+          return theme === 'dark'
+            ? 'bg-gradient-to-r from-amber-900/90 via-amber-800/90 to-amber-900/90 text-amber-100 border-amber-700/50'
+            : 'bg-gradient-to-r from-amber-100/90 via-amber-50/90 to-amber-100/90 text-amber-900 border-amber-300/50';
+        case 'info':
         default:
-          return theme === "dark"
-            ? "bg-gradient-to-r from-sky-900/90 via-sky-800/90 to-sky-900/90 text-sky-100 border-sky-700/50"
-            : "bg-gradient-to-r from-sky-100/90 via-sky-50/90 to-sky-100/90 text-sky-900 border-sky-300/50";
+          return theme === 'dark'
+            ? 'bg-gradient-to-r from-sky-900/90 via-sky-800/90 to-sky-900/90 text-sky-100 border-sky-700/50'
+            : 'bg-gradient-to-r from-sky-100/90 via-sky-50/90 to-sky-100/90 text-sky-900 border-sky-300/50';
       }
     }
 
     // For regular notifications, use the gradient classes which already include appropriate shadows
     switch (type) {
-      case "success":
-        return theme === "dark"
-          ? "luxury-gradient-success-dark"
-          : "luxury-gradient-success-light";
-      case "error":
-        return theme === "dark"
-          ? "luxury-gradient-error-dark"
-          : "luxury-gradient-error-light";
-      case "warning":
-        return theme === "dark"
-          ? "luxury-gradient-warning-dark"
-          : "luxury-gradient-warning-light";
-      case "info":
+      case 'success':
+        return theme === 'dark' ? 'luxury-gradient-success-dark' : 'luxury-gradient-success-light';
+      case 'error':
+        return theme === 'dark' ? 'luxury-gradient-error-dark' : 'luxury-gradient-error-light';
+      case 'warning':
+        return theme === 'dark' ? 'luxury-gradient-warning-dark' : 'luxury-gradient-warning-light';
+      case 'info':
       default:
-        return theme === "dark"
-          ? "luxury-gradient-info-dark"
-          : "luxury-gradient-info-light";
+        return theme === 'dark' ? 'luxury-gradient-info-dark' : 'luxury-gradient-info-light';
     }
   };
 
@@ -301,42 +286,40 @@ export function VoiceThemeNotification({
     // Apply contextually appropriate icon colors for sidebar notifications
     if (isSidebarNotification) {
       switch (type) {
-        case "success":
-          return theme === "dark" ? "text-cyan-400" : "text-blue-500";
-        case "error":
-          return theme === "dark" ? "text-rose-400" : "text-rose-500";
-        case "warning":
-          return theme === "dark" ? "text-amber-400" : "text-amber-500";
-        case "info":
+        case 'success':
+          return theme === 'dark' ? 'text-cyan-400' : 'text-blue-500';
+        case 'error':
+          return theme === 'dark' ? 'text-rose-400' : 'text-rose-500';
+        case 'warning':
+          return theme === 'dark' ? 'text-amber-400' : 'text-amber-500';
+        case 'info':
         default:
-          return theme === "dark" ? "text-sky-300" : "text-sky-500";
+          return theme === 'dark' ? 'text-sky-300' : 'text-sky-500';
       }
     }
 
     switch (type) {
-      case "success":
-        return theme === "dark" ? "text-emerald-400" : "text-green-500";
-      case "error":
-        return theme === "dark" ? "text-red-400" : "text-red-500";
-      case "warning":
-        return theme === "dark" ? "text-amber-400" : "text-amber-500";
-      case "info":
+      case 'success':
+        return theme === 'dark' ? 'text-emerald-400' : 'text-green-500';
+      case 'error':
+        return theme === 'dark' ? 'text-red-400' : 'text-red-500';
+      case 'warning':
+        return theme === 'dark' ? 'text-amber-400' : 'text-amber-500';
+      case 'info':
       default:
-        return theme === "dark" ? "text-purple-300" : "text-amber-500";
+        return theme === 'dark' ? 'text-purple-300' : 'text-amber-500';
     }
   };
 
   // Format message to support multi-line display
   const formatMessage = () => {
     // If message contains a period followed by a space, split it into two lines
-    if (message.includes(". ")) {
-      const parts = message.split(". ", 2);
+    if (message.includes('. ')) {
+      const parts = message.split('. ', 2);
       return (
         <>
           <div className="luxury-font-primary">{parts[0]}.</div>
-          {parts[1] && (
-            <div className="mt-1 text-sm luxury-font-secondary">{parts[1]}</div>
-          )}
+          {parts[1] && <div className="mt-1 text-sm luxury-font-secondary">{parts[1]}</div>}
         </>
       );
     }
@@ -344,13 +327,11 @@ export function VoiceThemeNotification({
     else if (message.length > 50) {
       // Try to find a natural break point around the middle
       const breakPoint = Math.floor(message.length / 2);
-      const spaceIndex = message.lastIndexOf(" ", breakPoint);
+      const spaceIndex = message.lastIndexOf(' ', breakPoint);
       if (spaceIndex > 0) {
         return (
           <>
-            <div className="luxury-font-primary">
-              {message.substring(0, spaceIndex)}
-            </div>
+            <div className="luxury-font-primary">{message.substring(0, spaceIndex)}</div>
             <div className="mt-1 text-sm luxury-font-secondary">
               {message.substring(spaceIndex + 1)}
             </div>
@@ -370,28 +351,24 @@ export function VoiceThemeNotification({
         border transition-all duration-500
         animate-luxury-enter
         ${getNotificationStyle()}
-        ${isSidebarNotification ? "luxury-shadow-" + type : ""}
+        ${isSidebarNotification ? 'luxury-shadow-' + type : ''}
         flex items-start space-x-3
-        ${isSidebarNotification ? "min-w-[300px]" : "max-w-md"}
+        ${isSidebarNotification ? 'min-w-[300px]' : 'max-w-md'}
         pointer-events-auto touch-manipulation
       `}
       role="alert"
       aria-live="polite"
       onTouchStart={handleTouchStart}
     >
-      <div
-        className={`flex-shrink-0 w-6 h-6 ${getIconColor()} luxury-icon-glow`}
-      >
+      <div className={`flex-shrink-0 w-6 h-6 ${getIconColor()} luxury-icon-glow`}>
         {renderIcon()}
       </div>
-      <div
-        className={`flex-1 ${isSidebarNotification ? "text-lg" : "text-base"} luxury-text-glow`}
-      >
+      <div className={`flex-1 ${isSidebarNotification ? 'text-lg' : 'text-base'} luxury-text-glow`}>
         {formatMessage()}
       </div>
       <button
         onClick={handleClose}
-        onTouchStart={(e) => e.stopPropagation()}
+        onTouchStart={e => e.stopPropagation()}
         onTouchEnd={handleClose}
         className="ml-2 flex-shrink-0 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-sm opacity-70 hover:opacity-100 active:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-current transition-all duration-200 luxury-icon-glow rounded-full hover:bg-black/10 dark:hover:bg-white/10 active:bg-black/20 dark:active:bg-white/20 touch-manipulation cursor-pointer notification-close-btn"
         aria-label="ปิดการแจ้งเตือน"

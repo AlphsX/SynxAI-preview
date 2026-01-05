@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { ChatGPTStyleMessage } from "@/components/chat/ChatGPTStyleMessage";
-import { ChatGPTStyleInput } from "@/components/chat/ChatGPTStyleInput";
+import React, { useState } from 'react';
+import { ChatGPTStyleMessage } from '@/components/chat/ChatGPTStyleMessage';
+import { ChatGPTStyleInput } from '@/components/chat/ChatGPTStyleInput';
 
 export default function TestChatGPTStyle() {
   const [messages, setMessages] = useState([
     {
-      role: "user" as const,
-      content: "Gimme Async Rust Code example",
+      role: 'user' as const,
+      content: 'Gimme Async Rust Code example',
     },
     {
-      role: "assistant" as const,
+      role: 'assistant' as const,
       content: `Absolutely 😎 — here's a clean, **expert-level async Rust example** demonstrating async/await, concurrency with \`tokio\`, error handling, and structured design.
 
 🦀 **Example: Concurrent API Fetcher with Async Rust**
@@ -73,22 +73,21 @@ async fn fetch_url(client: &Client, url: &str) -> Result<String> {
 \`\`\``,
     },
   ]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   const handleSubmit = () => {
     if (!input.trim()) return;
 
-    setMessages([...messages, { role: "user", content: input }]);
-    setInput("");
+    setMessages([...messages, { role: 'user', content: input }]);
+    setInput('');
 
     // Simulate AI response
     setTimeout(() => {
-      setMessages((prev) => [
+      setMessages(prev => [
         ...prev,
         {
-          role: "assistant",
-          content:
-            "This is a simulated response. The ChatGPT-style UI is working!",
+          role: 'assistant',
+          content: 'This is a simulated response. The ChatGPT-style UI is working!',
         },
       ]);
     }, 1000);
@@ -99,21 +98,13 @@ async fn fetch_url(client: &Client, url: &str) -> Result<String> {
       {/* Messages */}
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
         {messages.map((msg, idx) => (
-          <ChatGPTStyleMessage
-            key={idx}
-            role={msg.role}
-            content={msg.content}
-          />
+          <ChatGPTStyleMessage key={idx} role={msg.role} content={msg.content} />
         ))}
       </div>
 
       {/* Input */}
       <div className="fixed bottom-8 left-0 right-0">
-        <ChatGPTStyleInput
-          value={input}
-          onChange={setInput}
-          onSubmit={handleSubmit}
-        />
+        <ChatGPTStyleInput value={input} onChange={setInput} onSubmit={handleSubmit} />
       </div>
     </div>
   );

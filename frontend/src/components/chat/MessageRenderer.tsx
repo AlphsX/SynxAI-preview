@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useMemo, useCallback, memo, lazy, Suspense } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import React, { useMemo, useCallback, memo, lazy, Suspense } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   MessageRendererProps,
   HeadingProps,
@@ -11,21 +11,18 @@ import {
   ListItemProps,
   BlockquoteProps,
   LinkProps,
-} from "@/types/markdown";
-import { DEFAULT_MARKDOWN_THEME } from "@/constants/markdown";
-import {
-  analyzeMarkdownFeatures,
-  safeParseMarkdown,
-} from "@/lib/markdown-utils";
-import { MarkdownErrorBoundary } from "./MarkdownErrorBoundary";
-import { CodeBlock } from "./CodeBlock";
-import { useMarkdownTheme } from "@/hooks/useMarkdownTheme";
-import { useComponentPerformanceMonitoring } from "@/hooks/usePerformanceMonitoring";
-import { JSX } from "react/jsx-runtime";
+} from '@/types/markdown';
+import { DEFAULT_MARKDOWN_THEME } from '@/constants/markdown';
+import { analyzeMarkdownFeatures, safeParseMarkdown } from '@/lib/markdown-utils';
+import { MarkdownErrorBoundary } from './MarkdownErrorBoundary';
+import { CodeBlock } from './CodeBlock';
+import { useMarkdownTheme } from '@/hooks/useMarkdownTheme';
+import { useComponentPerformanceMonitoring } from '@/hooks/usePerformanceMonitoring';
+import { JSX } from 'react/jsx-runtime';
 
 // Lazy load heavy components for better performance
 const LazyCodeBlock = lazy(() =>
-  import("./CodeBlock").then((module) => ({ default: module.CodeBlock })),
+  import('./CodeBlock').then(module => ({ default: module.CodeBlock }))
 );
 
 // Custom heading component
@@ -40,11 +37,7 @@ const CustomHeading: React.FC<HeadingProps & { level: number }> = ({
       `h${level}` as keyof typeof DEFAULT_MARKDOWN_THEME.typography.headings
     ];
 
-  return (
-    <HeadingTag className={`${headingClass} ${className || ""}`}>
-      {children}
-    </HeadingTag>
-  );
+  return <HeadingTag className={`${headingClass} ${className || ''}`}>{children}</HeadingTag>;
 };
 
 // Custom paragraph component
@@ -54,31 +47,21 @@ const CustomParagraph: React.FC<ParagraphProps & { node?: unknown }> = ({
 }) => {
   // Check if children contains block-level elements (like code blocks)
   // to avoid invalid HTML nesting (p > pre)
-  const hasBlockElements = React.Children.toArray(children).some((child) => {
+  const hasBlockElements = React.Children.toArray(children).some(child => {
     // Check if child is a code block or other block element
-    if (typeof child === "object" && child !== null && "props" in child) {
-      const childProps = (child as React.ReactElement).props as Record<
-        string,
-        unknown
-      >;
+    if (typeof child === 'object' && child !== null && 'props' in child) {
+      const childProps = (child as React.ReactElement).props as Record<string, unknown>;
       const node = childProps?.node as Record<string, unknown> | undefined;
-      return (
-        node?.tagName === "pre" ||
-        (node?.tagName === "code" && !childProps?.inline)
-      );
+      return node?.tagName === 'pre' || (node?.tagName === 'code' && !childProps?.inline);
     }
     return false;
   });
 
   // Use div instead of p if it contains block elements
-  const Tag = hasBlockElements ? "div" : "p";
+  const Tag = hasBlockElements ? 'div' : 'p';
 
   return (
-    <Tag
-      className={`${DEFAULT_MARKDOWN_THEME.typography.paragraph} ${
-        className || ""
-      }`}
-    >
+    <Tag className={`${DEFAULT_MARKDOWN_THEME.typography.paragraph} ${className || ''}`}>
       {children}
     </Tag>
   );
@@ -90,33 +73,24 @@ const CustomList: React.FC<ListProps & { ordered?: boolean }> = ({
   children,
   className,
 }) => {
-  const ListTag = ordered ? "ol" : "ul";
+  const ListTag = ordered ? 'ol' : 'ul';
   const listClass = `${DEFAULT_MARKDOWN_THEME.typography.list} ${
-    ordered ? "list-decimal list-inside" : "list-disc list-inside"
+    ordered ? 'list-decimal list-inside' : 'list-disc list-inside'
   }`;
 
-  return (
-    <ListTag className={`${listClass} ${className || ""}`}>{children}</ListTag>
-  );
+  return <ListTag className={`${listClass} ${className || ''}`}>{children}</ListTag>;
 };
 
 const CustomListItem: React.FC<ListItemProps> = ({ children, className }) => {
   return (
-    <li
-      className={`${DEFAULT_MARKDOWN_THEME.typography.listItem} ${
-        className || ""
-      }`}
-    >
+    <li className={`${DEFAULT_MARKDOWN_THEME.typography.listItem} ${className || ''}`}>
       {children}
     </li>
   );
 };
 
 // Enhanced blockquote component with better visual distinction
-const CustomBlockquote: React.FC<BlockquoteProps> = ({
-  children,
-  className,
-}) => {
+const CustomBlockquote: React.FC<BlockquoteProps> = ({ children, className }) => {
   return (
     <blockquote
       className={`
@@ -128,7 +102,7 @@ const CustomBlockquote: React.FC<BlockquoteProps> = ({
       before:content-['"'] before:absolute before:-left-2 before:-top-2 
       before:text-6xl before:text-blue-500/20 dark:before:text-blue-400/20
       before:font-serif before:leading-none
-      ${className || ""}
+      ${className || ''}
     `}
     >
       <div className="relative z-10">{children}</div>
@@ -142,7 +116,7 @@ const CustomLink: React.FC<LinkProps> = ({ href, children, className }) => {
   const isValidUrl = (url: string): boolean => {
     try {
       const urlObj = new URL(url);
-      return ["http:", "https:", "mailto:"].includes(urlObj.protocol);
+      return ['http:', 'https:', 'mailto:'].includes(urlObj.protocol);
     } catch {
       return false;
     }
@@ -150,13 +124,10 @@ const CustomLink: React.FC<LinkProps> = ({ href, children, className }) => {
 
   // Don't render invalid or potentially dangerous URLs
   if (!href || !isValidUrl(href)) {
-    return (
-      <span className="text-gray-500 dark:text-gray-400">[Invalid Link]</span>
-    );
+    return <span className="text-gray-500 dark:text-gray-400">[Invalid Link]</span>;
   }
 
-  const isExternal =
-    href.startsWith("http") && !href.includes(window.location.hostname);
+  const isExternal = href.startsWith('http') && !href.includes(window.location.hostname);
 
   return (
     <a
@@ -169,10 +140,10 @@ const CustomLink: React.FC<LinkProps> = ({ href, children, className }) => {
         focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2
         focus:ring-offset-white dark:focus:ring-offset-gray-900
         rounded-sm
-        ${className || ""}
+        ${className || ''}
       `}
-      target={isExternal ? "_blank" : undefined}
-      rel={isExternal ? "noopener noreferrer" : undefined}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
       title={isExternal ? `External link: ${href}` : href}
     >
       {children}
@@ -197,14 +168,8 @@ const CustomLink: React.FC<LinkProps> = ({ href, children, className }) => {
 };
 
 // Custom inline code component
-const CustomInlineCode: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  return (
-    <code className={DEFAULT_MARKDOWN_THEME.typography.inlineCode}>
-      {children}
-    </code>
-  );
+const CustomInlineCode: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <code className={DEFAULT_MARKDOWN_THEME.typography.inlineCode}>{children}</code>;
 };
 
 // ChatGPT-style table components
@@ -216,41 +181,31 @@ const CustomTable: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-const CustomTableHead: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const CustomTableHead: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <thead>{children}</thead>;
 };
 
-const CustomTableBody: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const CustomTableBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <tbody>{children}</tbody>;
 };
 
-const CustomTableRow: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const CustomTableRow: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <tr>{children}</tr>;
 };
 
-const CustomTableHeader: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const CustomTableHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <th>{children}</th>;
 };
 
-const CustomTableCell: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const CustomTableCell: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <td>{children}</td>;
 };
 
 export const MessageRenderer: React.FC<MessageRendererProps> = memo(
-  ({ content, isStreaming = false, onCopyCode, className = "" }) => {
+  ({ content, isStreaming = false, onCopyCode, className = '' }) => {
     // Enhanced performance monitoring
     const { startComponentRender, endComponentRender, recordComponentError } =
-      useComponentPerformanceMonitoring("MessageRenderer");
+      useComponentPerformanceMonitoring('MessageRenderer');
 
     // Start performance monitoring
     React.useEffect(() => {
@@ -266,21 +221,20 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
         recordComponentError(error);
 
         // Report error to monitoring service in production
-        if (process.env.NODE_ENV === "production" && (window as any).gtag) {
-          (window as any).gtag("event", "exception", {
+        if (process.env.NODE_ENV === 'production' && (window as any).gtag) {
+          (window as any).gtag('event', 'exception', {
             description: `MessageRenderer: ${error.message}`,
             fatal: false,
           });
         }
       },
-      [recordComponentError],
+      [recordComponentError]
     );
 
     // Memoized content parsing with enhanced error handling
     const { parsedContent, features, errors } = useMemo(() => {
       try {
-        const { content: safeContent, errors: parseErrors } =
-          safeParseMarkdown(content);
+        const { content: safeContent, errors: parseErrors } = safeParseMarkdown(content);
         const contentFeatures = analyzeMarkdownFeatures(safeContent);
 
         return {
@@ -291,7 +245,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
       } catch (error) {
         handleError(error);
         return {
-          parsedContent: content || "",
+          parsedContent: content || '',
           features: {
             hasHeaders: false,
             hasLists: false,
@@ -302,8 +256,8 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
           },
           errors: [
             {
-              type: "parsing" as const,
-              message: "Failed to parse markdown content",
+              type: 'parsing' as const,
+              message: 'Failed to parse markdown content',
               recoverable: true,
             },
           ],
@@ -318,7 +272,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
           onCopyCode(code);
         }
       },
-      [onCopyCode],
+      [onCopyCode]
     );
 
     // Memoized custom components for react-markdown with performance optimizations
@@ -374,9 +328,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
             {children}
           </CustomList>
         ),
-        li: ({ children, ...props }: any) => (
-          <CustomListItem {...props}>{children}</CustomListItem>
-        ),
+        li: ({ children, ...props }: any) => <CustomListItem {...props}>{children}</CustomListItem>,
 
         // Blockquotes
         blockquote: ({ children, ...props }: any) => (
@@ -392,7 +344,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
 
         // Code handling with lazy-loaded CodeBlock component for better performance
         code: ({ inline, className, children, ...props }: any) => {
-          const match = /language-(\w+)/.exec(className || "");
+          const match = /language-(\w+)/.exec(className || '');
           const language = match ? match[1] : undefined;
 
           // Use lazy loading for code blocks to improve initial render performance
@@ -420,34 +372,25 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
 
           // Use regular CodeBlock for inline code and simple blocks
           return (
-            <CodeBlock
-              inline={inline}
-              language={language}
-              onCopy={handleCopyCode}
-              {...props}
-            >
+            <CodeBlock inline={inline} language={language} onCopy={handleCopyCode} {...props}>
               {children}
             </CodeBlock>
           );
         },
 
         // Tables with enhanced structure
-        table: ({ children, ...props }: any) => (
-          <CustomTable {...props}>{children}</CustomTable>
-        ),
+        table: ({ children, ...props }: any) => <CustomTable {...props}>{children}</CustomTable>,
         thead: ({ children, ...props }: any) => (
           <CustomTableHead {...props}>{children}</CustomTableHead>
         ),
         tbody: ({ children, ...props }: any) => (
           <CustomTableBody {...props}>{children}</CustomTableBody>
         ),
-        tr: ({ children, ...props }: unknown) => (
-          <CustomTableRow {...props}>{children}</CustomTableRow>
-        ),
-        th: ({ children, ...props }: unknown) => (
+        tr: ({ children, ...props }: any) => <CustomTableRow {...props}>{children}</CustomTableRow>,
+        th: ({ children, ...props }: any) => (
           <CustomTableHeader {...props}>{children}</CustomTableHeader>
         ),
-        td: ({ children, ...props }: unknown) => (
+        td: ({ children, ...props }: any) => (
           <CustomTableCell {...props}>{children}</CustomTableCell>
         ),
       };
@@ -464,25 +407,21 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
 
     return (
       <MarkdownErrorBoundary fallbackContent={content} onError={handleError}>
-        <div
-          className={`message-renderer ${className} ${
-            isStreaming ? "streaming" : ""
-          }`}
-        >
+        <div className={`message-renderer ${className} ${isStreaming ? 'streaming' : ''}`}>
           {/* Show streaming indicator only when there's no content yet */}
           {isStreaming && !content && (
             <div className="flex items-center gap-2">
               <span
                 className="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                style={{ animationDelay: "0ms" }}
+                style={{ animationDelay: '0ms' }}
               ></span>
               <span
                 className="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                style={{ animationDelay: "150ms" }}
+                style={{ animationDelay: '150ms' }}
               ></span>
               <span
                 className="inline-block w-2 h-2 bg-blue-500 rounded-full animate-pulse"
-                style={{ animationDelay: "300ms" }}
+                style={{ animationDelay: '300ms' }}
               ></span>
             </div>
           )}
@@ -499,7 +438,7 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
           </div>
 
           {/* Enhanced error display for development */}
-          {process.env.NODE_ENV === "development" && errors.length > 0 && (
+          {process.env.NODE_ENV === 'development' && errors.length > 0 && (
             <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
               <div className="flex items-center mb-2">
                 <svg
@@ -523,10 +462,8 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
                     <span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-2 flex-shrink-0"></span>
                     <span>
                       <strong>{error.type}:</strong> {error.message}
-                      {"line" in error && error.line && (
-                        <span className="text-xs ml-1">
-                          (line {error.line})
-                        </span>
+                      {'line' in error && error.line && (
+                        <span className="text-xs ml-1">(line {error.line})</span>
                       )}
                     </span>
                   </li>
@@ -536,18 +473,16 @@ export const MessageRenderer: React.FC<MessageRendererProps> = memo(
           )}
 
           {/* Performance metrics in development */}
-          {process.env.NODE_ENV === "development" &&
-            content &&
-            content.length > 1000 && (
-              <div className="mt-2 text-xs text-gray-400 dark:text-gray-600">
-                Content: {content.length} chars | Features:{" "}
-                {Object.values(features).filter(Boolean).length}
-              </div>
-            )}
+          {process.env.NODE_ENV === 'development' && content && content.length > 1000 && (
+            <div className="mt-2 text-xs text-gray-400 dark:text-gray-600">
+              Content: {content.length} chars | Features:{' '}
+              {Object.values(features).filter(Boolean).length}
+            </div>
+          )}
         </div>
       </MarkdownErrorBoundary>
     );
-  },
+  }
 );
 
 export default MessageRenderer;

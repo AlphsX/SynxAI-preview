@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { useDarkMode } from "@/hooks/useDarkMode";
-import { useEffect } from "react";
+import { useDarkMode } from '@/hooks/useDarkMode';
+import { useEffect } from 'react';
 
 export default function TestThemePage() {
   const { isDarkMode, toggleDarkMode, resetToSystemPreference } = useDarkMode();
 
   // Log system preference changes for testing
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const logSystemPreference = (e: MediaQueryListEvent) => {
-        console.log("System preference changed:", e.matches ? "dark" : "light");
+        console.log('System preference changed:', e.matches ? 'dark' : 'light');
       };
 
-      mediaQuery.addEventListener("change", logSystemPreference);
+      mediaQuery.addEventListener('change', logSystemPreference);
 
       return () => {
-        mediaQuery.removeEventListener("change", logSystemPreference);
+        mediaQuery.removeEventListener('change', logSystemPreference);
       };
     }
   }, []);
@@ -29,18 +29,15 @@ export default function TestThemePage() {
       <div className="mb-8 p-6 rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg">
         <h2 className="text-xl font-semibold mb-4">Current Theme Status</h2>
         <p className="text-lg mb-2">
-          Dark Mode:{" "}
-          <span className="font-mono">
-            {isDarkMode ? "enabled" : "disabled"}
-          </span>
+          Dark Mode: <span className="font-mono">{isDarkMode ? 'enabled' : 'disabled'}</span>
         </p>
         <p className="text-lg">
-          System Preference:{" "}
+          System Preference:{' '}
           <span className="font-mono">
-            {typeof window !== "undefined" &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light"}
+            {typeof window !== 'undefined' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'}
           </span>
         </p>
       </div>
@@ -67,8 +64,7 @@ export default function TestThemePage() {
           <li>Check if the theme matches your system preference</li>
           <li>Toggle the theme manually</li>
           <li>
-            Change your system theme and see if it updates automatically (when
-            not manually set)
+            Change your system theme and see if it updates automatically (when not manually set)
           </li>
           <li>Reset to system preference and test again</li>
         </ol>

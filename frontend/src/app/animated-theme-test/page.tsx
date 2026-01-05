@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useDarkMode } from "@/hooks/useDarkMode";
-import { useDynamicFavicon } from "@/hooks/useDynamicFavicon";
-import { AnimatedThemeToggler } from "@/components/magicui";
+import { useDarkMode } from '@/hooks/useDarkMode';
+import { useDynamicFavicon } from '@/hooks/useDynamicFavicon';
+import { AnimatedThemeToggler } from '@/components/magicui';
 
 export default function AnimatedThemeTest() {
   const { isDarkMode, toggleDarkMode, isUsingSystemPreference } = useDarkMode();
@@ -16,7 +16,7 @@ export default function AnimatedThemeTest() {
         Animated Theme Toggler Test
       </h1>
       <p className="text-gray-700 dark:text-gray-300 mb-4">
-        Current mode: {isDarkMode ? "Dark" : "Light"}
+        Current mode: {isDarkMode ? 'Dark' : 'Light'}
       </p>
 
       <div className="mb-4">

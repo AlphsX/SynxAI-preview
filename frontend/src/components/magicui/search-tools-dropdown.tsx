@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Plus,
   Globe,
@@ -10,9 +10,9 @@ import {
   Loader2,
   Search,
   Newspaper,
-} from "lucide-react";
-import { chatAPI } from "@/lib/api";
-import { useMediaQuery } from "@/hooks";
+} from 'lucide-react';
+import { chatAPI } from '@/lib/api';
+import { useMediaQuery } from '@/hooks';
 
 type SearchTool = {
   id: string;
@@ -39,13 +39,13 @@ type Props = {
 
 const getIconForTool = (toolId: string) => {
   switch (toolId) {
-    case "web_search":
+    case 'web_search':
       return <Globe className="h-5 w-5" />;
-    case "news_search":
+    case 'news_search':
       return <Newspaper className="h-5 w-5" />;
-    case "crypto_data":
+    case 'crypto_data':
       return <TrendingUp className="h-5 w-5" />;
-    case "vector_search":
+    case 'vector_search':
       return <Search className="h-5 w-5" />;
     default:
       return <Sparkles className="h-5 w-5" />;
@@ -54,35 +54,35 @@ const getIconForTool = (toolId: string) => {
 
 const getColorForTool = (toolId: string) => {
   switch (toolId) {
-    case "web_search":
+    case 'web_search':
       return {
-        color: "text-blue-500",
-        bgColor: "bg-blue-500/10",
-        hoverBgColor: "hover:bg-blue-500/10",
+        color: 'text-blue-500',
+        bgColor: 'bg-blue-500/10',
+        hoverBgColor: 'hover:bg-blue-500/10',
       };
-    case "news_search":
+    case 'news_search':
       return {
-        color: "text-orange-500",
-        bgColor: "bg-orange-500/10",
-        hoverBgColor: "hover:bg-orange-500/10",
+        color: 'text-orange-500',
+        bgColor: 'bg-orange-500/10',
+        hoverBgColor: 'hover:bg-orange-500/10',
       };
-    case "crypto_data":
+    case 'crypto_data':
       return {
-        color: "text-green-500",
-        bgColor: "bg-green-500/10",
-        hoverBgColor: "hover:bg-green-500/10",
+        color: 'text-green-500',
+        bgColor: 'bg-green-500/10',
+        hoverBgColor: 'hover:bg-green-500/10',
       };
-    case "vector_search":
+    case 'vector_search':
       return {
-        color: "text-purple-500",
-        bgColor: "bg-purple-500/10",
-        hoverBgColor: "hover:bg-purple-500/10",
+        color: 'text-purple-500',
+        bgColor: 'bg-purple-500/10',
+        hoverBgColor: 'hover:bg-purple-500/10',
       };
     default:
       return {
-        color: "text-gray-500",
-        bgColor: "bg-gray-500/10",
-        hoverBgColor: "hover:bg-gray-500/10",
+        color: 'text-gray-500',
+        bgColor: 'bg-gray-500/10',
+        hoverBgColor: 'hover:bg-gray-500/10',
       };
   }
 };
@@ -91,7 +91,7 @@ export const SearchToolsDropdown = ({
   onToolSelect,
   selectedTool,
   isDarkMode,
-  className = "",
+  className = '',
   onDropdownStateChange,
   externalOpen,
   showButton = true,
@@ -106,7 +106,7 @@ export const SearchToolsDropdown = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const plusButtonRef = useRef<HTMLButtonElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   // Fetch search tools from enhanced backend
   useEffect(() => {
@@ -139,63 +139,63 @@ export const SearchToolsDropdown = ({
               primary_provider: tool.primary_provider,
               ...colors,
             };
-          },
+          }
         );
 
         setSearchTools(transformedTools);
       } catch (err) {
-        console.error("Failed to fetch search tools:", err);
-        setError("Failed to load search tools");
+        console.error('Failed to fetch search tools:', err);
+        setError('Failed to load search tools');
 
         // Fallback to default tools if API fails - enhanced with news search
         setSearchTools([
           {
-            id: "web_search",
-            name: "Web Search",
-            description: "Search the web for current information",
+            id: 'web_search',
+            name: 'Web Search',
+            description: 'Search the web for current information',
             icon: <Globe className="h-5 w-5" />,
-            color: "text-blue-500",
-            bgColor: "bg-blue-500/10",
-            hoverBgColor: "hover:bg-blue-500/10",
+            color: 'text-blue-500',
+            bgColor: 'bg-blue-500/10',
+            hoverBgColor: 'hover:bg-blue-500/10',
             available: true,
-            providers: ["SerpAPI", "Brave Search"],
-            primary_provider: "SerpAPI",
+            providers: ['SerpAPI', 'Brave Search'],
+            primary_provider: 'SerpAPI',
           },
           {
-            id: "news_search",
-            name: "News Search",
-            description: "Search for latest news and current events",
+            id: 'news_search',
+            name: 'News Search',
+            description: 'Search for latest news and current events',
             icon: <Newspaper className="h-5 w-5" />,
-            color: "text-orange-500",
-            bgColor: "bg-orange-500/10",
-            hoverBgColor: "hover:bg-orange-500/10",
+            color: 'text-orange-500',
+            bgColor: 'bg-orange-500/10',
+            hoverBgColor: 'hover:bg-orange-500/10',
             available: true,
-            providers: ["SerpAPI", "Brave Search"],
-            primary_provider: "SerpAPI",
+            providers: ['SerpAPI', 'Brave Search'],
+            primary_provider: 'SerpAPI',
           },
           {
-            id: "crypto_data",
-            name: "Crypto Data",
-            description: "Get real-time cryptocurrency market data",
+            id: 'crypto_data',
+            name: 'Crypto Data',
+            description: 'Get real-time cryptocurrency market data',
             icon: <TrendingUp className="h-5 w-5" />,
-            color: "text-green-500",
-            bgColor: "bg-green-500/10",
-            hoverBgColor: "hover:bg-green-500/10",
+            color: 'text-green-500',
+            bgColor: 'bg-green-500/10',
+            hoverBgColor: 'hover:bg-green-500/10',
             available: true,
-            providers: ["Binance"],
-            primary_provider: "Binance",
+            providers: ['Binance'],
+            primary_provider: 'Binance',
           },
           {
-            id: "vector_search",
-            name: "Knowledge Search",
-            description: "Search domain-specific knowledge base",
+            id: 'vector_search',
+            name: 'Knowledge Search',
+            description: 'Search domain-specific knowledge base',
             icon: <Search className="h-5 w-5" />,
-            color: "text-purple-500",
-            bgColor: "bg-purple-500/10",
-            hoverBgColor: "hover:bg-purple-500/10",
+            color: 'text-purple-500',
+            bgColor: 'bg-purple-500/10',
+            hoverBgColor: 'hover:bg-purple-500/10',
             available: true,
-            providers: ["Vector Database"],
-            primary_provider: "PostgreSQL + pgvector",
+            providers: ['Vector Database'],
+            primary_provider: 'PostgreSQL + pgvector',
           },
         ]);
       } finally {
@@ -256,7 +256,7 @@ export const SearchToolsDropdown = ({
       onToolSelect(toolId);
       closeDropdown();
     },
-    [onToolSelect, closeDropdown],
+    [onToolSelect, closeDropdown]
   );
 
   // Close dropdown when clicking outside
@@ -272,9 +272,9 @@ export const SearchToolsDropdown = ({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [closeDropdown]);
 
@@ -284,31 +284,31 @@ export const SearchToolsDropdown = ({
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // Only handle keyboard events if the dropdown is open
-      if (e.key === "ArrowUp") {
+      if (e.key === 'ArrowUp') {
         e.preventDefault();
         e.stopPropagation();
-        setHighlightedIndex((prev) => {
+        setHighlightedIndex(prev => {
           // If nothing is highlighted, start from the last item
           if (prev === -1) return searchTools.length - 1;
           return prev <= 0 ? searchTools.length - 1 : prev - 1;
         });
-      } else if (e.key === "ArrowDown") {
+      } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         e.stopPropagation();
-        setHighlightedIndex((prev) => {
+        setHighlightedIndex(prev => {
           // If nothing is highlighted, start from the first item
           if (prev === -1) return 0;
           return prev >= searchTools.length - 1 ? 0 : prev + 1;
         });
       } else if (
-        e.key === "Enter" &&
+        e.key === 'Enter' &&
         highlightedIndex >= 0 &&
         searchTools[highlightedIndex]?.available
       ) {
         e.preventDefault();
         e.stopPropagation();
         handleToolSelect(searchTools[highlightedIndex].id);
-      } else if (e.key === "Escape") {
+      } else if (e.key === 'Escape') {
         e.preventDefault();
         e.stopPropagation();
         closeDropdown();
@@ -316,8 +316,8 @@ export const SearchToolsDropdown = ({
     };
 
     // Use capture phase to ensure we handle events before other components
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => window.removeEventListener("keydown", handleKeyDown, true);
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
   }, [isOpen, highlightedIndex, searchTools, handleToolSelect, closeDropdown]);
 
   // Focus management - only reset highlight when closed
@@ -335,11 +335,11 @@ export const SearchToolsDropdown = ({
 
   // Calculate the button color based on selected tool
   const getButtonColor = () => {
-    if (selectedTool === "web_search") return "#3b82f6";
-    if (selectedTool === "news_search") return "#f97316";
-    if (selectedTool === "crypto_data") return "#10b981";
-    if (selectedTool === "vector_search") return "#8b5cf6";
-    return isDarkMode ? "#9ca3af" : "#6b7280";
+    if (selectedTool === 'web_search') return '#3b82f6';
+    if (selectedTool === 'news_search') return '#f97316';
+    if (selectedTool === 'crypto_data') return '#10b981';
+    if (selectedTool === 'vector_search') return '#8b5cf6';
+    return isDarkMode ? '#9ca3af' : '#6b7280';
   };
 
   return (
@@ -350,12 +350,12 @@ export const SearchToolsDropdown = ({
           ref={backdropRef}
           className={`fixed inset-0 z-[9998] transition-all duration-300 ease-out ${
             isOpen
-              ? "bg-black/20 dark:bg-black/40 backdrop-blur-sm opacity-100"
-              : "bg-black/0 dark:bg-black/0 backdrop-blur-none opacity-0"
+              ? 'bg-black/20 dark:bg-black/40 backdrop-blur-sm opacity-100'
+              : 'bg-black/0 dark:bg-black/0 backdrop-blur-none opacity-0'
           }`}
           style={{
-            backdropFilter: isOpen ? "blur(8px)" : "blur(0px)",
-            WebkitBackdropFilter: isOpen ? "blur(8px)" : "blur(0px)",
+            backdropFilter: isOpen ? 'blur(8px)' : 'blur(0px)',
+            WebkitBackdropFilter: isOpen ? 'blur(8px)' : 'blur(0px)',
           }}
           onClick={closeDropdown}
         />
@@ -368,13 +368,11 @@ export const SearchToolsDropdown = ({
             ref={plusButtonRef}
             type="button"
             className={`w-full h-full flex items-center justify-center rounded-full transition-all duration-300 ease-out transform ${
-              isOpen || isAnimating
-                ? "rotate-45 scale-110"
-                : "rotate-0 scale-100"
+              isOpen || isAnimating ? 'rotate-45 scale-110' : 'rotate-0 scale-100'
             } hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105 touch-manipulation relative z-[9999] ${
-              isOpen ? "shadow-lg" : ""
+              isOpen ? 'shadow-lg' : ''
             }`}
-            onClick={(e) => {
+            onClick={e => {
               e.preventDefault();
               e.stopPropagation();
               if (isOpen || isAnimating) {
@@ -383,13 +381,13 @@ export const SearchToolsDropdown = ({
                 openDropdown();
               }
             }}
-            onTouchStart={(e) => {
+            onTouchStart={e => {
               // Prevent iOS Safari from showing touch callout
               e.preventDefault();
             }}
             style={{
               color: getButtonColor(),
-              WebkitTapHighlightColor: "transparent",
+              WebkitTapHighlightColor: 'transparent',
             }}
             disabled={isLoading}
             data-plus-button
@@ -409,20 +407,18 @@ export const SearchToolsDropdown = ({
           <div
             ref={dropdownRef}
             className={`absolute bottom-full mb-2 rounded-2xl shadow-2xl border border-gray-200/40 dark:border-gray-700/40 py-2 z-[9999] bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl transition-all duration-300 ease-out ${
-              isMobile ? "w-56" : "w-48"
+              isMobile ? 'w-56' : 'w-48'
             } ${
-              isOpen
-                ? "opacity-100 translate-y-0 scale-100"
-                : "opacity-0 translate-y-4 scale-95"
+              isOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'
             }`}
             style={{
-              left: "0",
-              bottom: "calc(100% + 0.5rem)",
-              transformOrigin: "bottom left",
+              left: '0',
+              bottom: 'calc(100% + 0.5rem)',
+              transformOrigin: 'bottom left',
             }}
           >
             <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-              {error ? "Error Loading Tools" : "Select Tools"}
+              {error ? 'Error Loading Tools' : 'Select Tools'}
             </div>
             {error ? (
               <div className="px-4 py-3 text-sm text-red-600 dark:text-red-400 flex items-center">
@@ -435,22 +431,22 @@ export const SearchToolsDropdown = ({
                   key={tool.id}
                   type="button"
                   className={`w-full text-left group rounded-xl mx-1 touch-manipulation dropdown-item-hover ${
-                    isMobile ? "px-3 py-2.5" : "px-4 py-3"
+                    isMobile ? 'px-3 py-2.5' : 'px-4 py-3'
                   } ${
                     tool.available
                       ? `text-gray-700 dark:text-gray-300 hover:${tool.bgColor} dark:hover:${tool.bgColor}`
-                      : "text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-60"
+                      : 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-60'
                   } ${
                     highlightedIndex === index
                       ? `${tool.bgColor} dark:${tool.bgColor} shadow-md`
-                      : ""
-                  } ${isOpen ? "animate-item-slide-in" : ""}`}
+                      : ''
+                  } ${isOpen ? 'animate-item-slide-in' : ''}`}
                   style={{
-                    animationDelay: isOpen ? `${index * 50}ms` : "0ms",
-                    minHeight: isMobile ? "48px" : "44px",
-                    WebkitTapHighlightColor: "transparent",
+                    animationDelay: isOpen ? `${index * 50}ms` : '0ms',
+                    minHeight: isMobile ? '48px' : '44px',
+                    WebkitTapHighlightColor: 'transparent',
                   }}
-                  onClick={(e) => {
+                  onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
                     if (tool.available) {
@@ -465,7 +461,7 @@ export const SearchToolsDropdown = ({
                     // Clear highlight when mouse leaves
                     setHighlightedIndex(-1);
                   }}
-                  onTouchStart={(e) => {
+                  onTouchStart={e => {
                     e.preventDefault();
                   }}
                   disabled={!tool.available}
@@ -475,9 +471,7 @@ export const SearchToolsDropdown = ({
                     <div className="flex items-center">
                       <div
                         className={`${
-                          tool.available
-                            ? tool.color
-                            : "text-gray-400 dark:text-gray-600"
+                          tool.available ? tool.color : 'text-gray-400 dark:text-gray-600'
                         } mr-3 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ease-out flex-shrink-0`}
                       >
                         {tool.icon}
@@ -498,9 +492,7 @@ export const SearchToolsDropdown = ({
                     <div className="flex items-start">
                       <div
                         className={`${
-                          tool.available
-                            ? tool.color
-                            : "text-gray-400 dark:text-gray-600"
+                          tool.available ? tool.color : 'text-gray-400 dark:text-gray-600'
                         } mr-3 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ease-out flex-shrink-0 mt-0.5`}
                       >
                         {tool.icon}

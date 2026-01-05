@@ -1,15 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Sparkles,
-  Globe,
-  TrendingUp,
-  User,
-  Mic,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Sparkles, Globe, TrendingUp, User, Mic, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Custom Logo Icon Component
 const LogoIcon = ({ className }: { className?: string }) => (
@@ -56,33 +48,25 @@ const NewChatIcon = ({ className }: { className?: string }) => (
     />
   </svg>
 );
-import {
-  useDarkMode,
-  useSwipeGesture,
-  useDynamicFavicon,
-  useKeyboardShortcuts,
-} from "@/hooks";
-import { useMobileDetection } from "@/hooks/useTouchInteractions";
+import { useDarkMode, useSwipeGesture, useDynamicFavicon, useKeyboardShortcuts } from '@/hooks';
+import { useMobileDetection } from '@/hooks/useTouchInteractions';
 import {
   AnimatedThemeToggler,
   VoiceThemeNotification,
   AuroraText,
   SearchToolsDropdown,
-} from "@/components/magicui";
-import { AIModelDropdown } from "@/components/magicui/ai-model-dropdown";
-import { chatAPI } from "@/lib/api";
-import { ChatGPTStyleMessage } from "@/components/chat/ChatGPTStyleMessage";
-import { EnhancedMessage, FormattingMetadata } from "@/types/markdown";
-import { analyzeMarkdownFeatures } from "@/lib/markdown-utils";
-import { IdleMeteorAnimation } from "@/components/ui/idle-meteor-animation";
-import { LoadingScreen } from "@/components/ui/loading-screen";
-import { BrowserCompatibilityWarning } from "@/components/ui/browser-compatibility-warning";
-import { useAppLoading } from "@/hooks/useAppLoading";
-import {
-  detectBrowser,
-  checkSpeechRecognitionSupport,
-} from "@/utils/browserDetection";
-import { detectMobileOS, getMobilePatterns } from "@/utils/mobileDetection";
+} from '@/components/magicui';
+import { AIModelDropdown } from '@/components/magicui/ai-model-dropdown';
+import { chatAPI } from '@/lib/api';
+import { ChatGPTStyleMessage } from '@/components/chat/ChatGPTStyleMessage';
+import { EnhancedMessage, FormattingMetadata } from '@/types/markdown';
+import { analyzeMarkdownFeatures } from '@/lib/markdown-utils';
+import { IdleMeteorAnimation } from '@/components/ui/idle-meteor-animation';
+import { LoadingScreen } from '@/components/ui/loading-screen';
+import { BrowserCompatibilityWarning } from '@/components/ui/browser-compatibility-warning';
+import { useAppLoading } from '@/hooks/useAppLoading';
+import { detectBrowser, checkSpeechRecognitionSupport } from '@/utils/browserDetection';
+import { detectMobileOS, getMobilePatterns } from '@/utils/mobileDetection';
 
 // Type definitions for SpeechRecognition API
 interface SpeechRecognitionEvent extends Event {
@@ -117,18 +101,14 @@ interface SpeechRecognition {
   continuous: boolean;
   interimResults: boolean;
   lang: string;
-  state: "inactive" | "listening" | "processing";
+  state: 'inactive' | 'listening' | 'processing';
 
   start(): void;
   stop(): void;
   abort(): void;
 
-  onresult:
-    | ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => void)
-    | null;
-  onerror:
-    | ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => void)
-    | null;
+  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => void) | null;
+  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => void) | null;
   onend: ((this: SpeechRecognition, ev: Event) => void) | null;
   onstart: ((this: SpeechRecognition, ev: Event) => void) | null;
 }
@@ -140,7 +120,7 @@ declare global {
   }
 }
 
-interface Message extends Omit<EnhancedMessage, "formattingMetadata"> {
+interface Message extends Omit<EnhancedMessage, 'formattingMetadata'> {
   model?: string;
   isStreaming?: boolean;
   formattingMetadata?: FormattingMetadata;
@@ -166,8 +146,8 @@ export default function Home() {
   // Keyboard shortcuts
   const toggleSidebar = useCallback(() => {
     // Toggle both mobile and desktop sidebar states
-    setIsSidebarOpen((prev) => !prev);
-    setIsDesktopSidebarCollapsed((prev) => !prev);
+    setIsSidebarOpen(prev => !prev);
+    setIsDesktopSidebarCollapsed(prev => !prev);
   }, []);
 
   const focusInput = useCallback(() => {
@@ -175,42 +155,37 @@ export default function Home() {
       inputRef.current.focus();
       // Scroll to input if it's not visible (especially on mobile)
       inputRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
+        behavior: 'smooth',
+        block: 'center',
       });
     }
   }, []);
 
   const newChat = useCallback(() => {
     setMessages([]);
-    setInputText("");
+    setInputText('');
     setShowWelcome(true);
     // Clear conversation session to start fresh
-    sessionStorage.removeItem("conversation_id");
-    console.log("🗑️ Cleared conversation session - starting new chat");
+    sessionStorage.removeItem('conversation_id');
+    console.log('🗑️ Cleared conversation session - starting new chat');
     inputRef.current?.focus();
   }, []);
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] =
-    useState(false);
-  const [selectedModel, setSelectedModel] = useState("openai/gpt-oss-120b");
+  const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('openai/gpt-oss-120b');
   const [showWelcome, setShowWelcome] = useState(true);
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [availableModels, setAvailableModels] = useState<AIModel[]>([]);
   const [lastClickTime, setLastClickTime] = useState<number>(0);
-  const [lastClickedPrompt, setLastClickedPrompt] = useState<string>("");
+  const [lastClickedPrompt, setLastClickedPrompt] = useState<string>('');
   const [isHydrated, setIsHydrated] = useState(false);
   const [isToolsDropdownOpen, setIsToolsDropdownOpen] = useState(false);
-  const [browserInfo, setBrowserInfo] = useState<ReturnType<
-    typeof detectBrowser
-  > | null>(null);
-  const [mobileInfo, setMobileInfo] = useState<ReturnType<
-    typeof detectMobileOS
-  > | null>(null);
+  const [browserInfo, setBrowserInfo] = useState<ReturnType<typeof detectBrowser> | null>(null);
+  const [mobileInfo, setMobileInfo] = useState<ReturnType<typeof detectMobileOS> | null>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   // Voice recognition state variables
@@ -219,9 +194,9 @@ export default function Home() {
   const [voiceThemeNotification, setVoiceThemeNotification] = useState<{
     isVisible: boolean;
     message: string;
-    theme: "dark" | "light";
-    type?: "info" | "success" | "error" | "warning";
-  }>({ isVisible: false, message: "", theme: "dark", type: "info" });
+    theme: 'dark' | 'light';
+    type?: 'info' | 'success' | 'error' | 'warning';
+  }>({ isVisible: false, message: '', theme: 'dark', type: 'info' });
   // Add a ref to track if recognition is currently starting
   const isStartingRef = useRef(false);
 
@@ -231,7 +206,7 @@ export default function Home() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   // Generate stable IDs for messages to prevent hydration issues
@@ -245,11 +220,9 @@ export default function Home() {
 
   const toggleTools = useCallback(() => {
     // Trigger if input is empty or contains only "/"
-    if (!inputText.trim() || inputText.trim() === "/") {
-      if (typeof document !== "undefined") {
-        const plusButton = document.querySelector(
-          "[data-plus-button]",
-        ) as HTMLButtonElement;
+    if (!inputText.trim() || inputText.trim() === '/') {
+      if (typeof document !== 'undefined') {
+        const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
         if (plusButton) {
           plusButton.click();
         }
@@ -280,8 +253,8 @@ export default function Home() {
       setShowScrollButton(!isNearBottom && messages.length > 0);
     };
 
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
   }, [messages.length]);
 
   // Hydration effect
@@ -314,7 +287,7 @@ export default function Home() {
       const userMessage: Message = {
         id: generateMessageId(),
         content: inputText,
-        role: "user",
+        role: 'user',
         timestamp: new Date(),
         formattingMetadata: {
           hasHeaders: userMessageFeatures.hasHeaders,
@@ -326,22 +299,22 @@ export default function Home() {
         },
       };
 
-      setMessages((prev) => [...prev, userMessage]);
+      setMessages(prev => [...prev, userMessage]);
 
       // Prepare message content with tool context if a tool is selected
       let messageContent = inputText;
       if (selectedTool) {
         switch (selectedTool) {
-          case "web_search":
+          case 'web_search':
             messageContent = `[TOOL: Web Search] ${inputText}`;
             break;
-          case "news_search":
+          case 'news_search':
             messageContent = `[TOOL: News Search] ${inputText}`;
             break;
-          case "crypto_data":
+          case 'crypto_data':
             messageContent = `[TOOL: Cryptocurrency Data] ${inputText}`;
             break;
-          case "vector_search":
+          case 'vector_search':
             messageContent = `[TOOL: Knowledge Search] ${inputText}`;
             break;
         }
@@ -349,15 +322,15 @@ export default function Home() {
         // setSelectedTool(null);
       }
 
-      setInputText("");
+      setInputText('');
       setIsLoading(true);
 
       // Create AI response message that will be updated with streaming content
       const aiMessageId = generateMessageId();
       const aiMessage: Message = {
         id: aiMessageId,
-        content: "",
-        role: "assistant",
+        content: '',
+        role: 'assistant',
         timestamp: new Date(),
         model: selectedModel,
         isStreaming: true,
@@ -371,23 +344,18 @@ export default function Home() {
         },
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages(prev => [...prev, aiMessage]);
 
       try {
         // Use enhanced chat API with streaming
         // Generate unique conversation ID per browser session for memory continuity
-        let conversationId = sessionStorage.getItem("conversation_id");
+        let conversationId = sessionStorage.getItem('conversation_id');
         if (!conversationId) {
-          conversationId = `session_${Date.now()}_${Math.random()
-            .toString(36)
-            .substr(2, 9)}`;
-          sessionStorage.setItem("conversation_id", conversationId);
-          console.log("🆕 Created new conversation session:", conversationId);
+          conversationId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          sessionStorage.setItem('conversation_id', conversationId);
+          console.log('🆕 Created new conversation session:', conversationId);
         } else {
-          console.log(
-            "♻️ Using existing conversation session:",
-            conversationId,
-          );
+          console.log('♻️ Using existing conversation session:', conversationId);
         }
 
         await chatAPI.streamChat(
@@ -396,12 +364,11 @@ export default function Home() {
           selectedModel,
           // onChunk - update the AI message content as chunks arrive
           (chunk: string) => {
-            setMessages((prev) =>
-              prev.map((msg) => {
+            setMessages(prev =>
+              prev.map(msg => {
                 if (msg.id === aiMessageId) {
                   const updatedContent = msg.content + chunk;
-                  const updatedFeatures =
-                    analyzeMarkdownFeatures(updatedContent);
+                  const updatedFeatures = analyzeMarkdownFeatures(updatedContent);
                   return {
                     ...msg,
                     content: updatedContent,
@@ -417,14 +384,14 @@ export default function Home() {
                   };
                 }
                 return msg;
-              }),
+              })
             );
           },
           // onComplete - finalize the response
           (data: unknown) => {
-            console.log("Enhanced chat stream completed:", data);
-            setMessages((prev) =>
-              prev.map((msg) => {
+            console.log('Enhanced chat stream completed:', data);
+            setMessages(prev =>
+              prev.map(msg => {
                 if (msg.id === aiMessageId) {
                   const finalFeatures = analyzeMarkdownFeatures(msg.content);
                   return {
@@ -441,48 +408,39 @@ export default function Home() {
                   };
                 }
                 return msg;
-              }),
+              })
             );
             setIsLoading(false);
           },
           // onError - handle errors with better user experience
           (error: string) => {
-            console.error("Enhanced chat stream error:", error);
+            console.error('Enhanced chat stream error:', error);
 
             // Create a more user-friendly error message
-            let friendlyError = "";
-            if (error.includes("NoneType") || error.includes("subscriptable")) {
+            let friendlyError = '';
+            if (error.includes('NoneType') || error.includes('subscriptable')) {
               friendlyError =
-                "Sorry, there was an error processing the data 😅 Let me try to answer your question with my available knowledge instead! 💫\n\n";
+                'Sorry, there was an error processing the data 😅 Let me try to answer your question with my available knowledge instead! 💫\n\n';
 
               // Try to provide a helpful response based on the query
               const query = messageContent.toLowerCase();
               if (
-                query.includes("trending") ||
-                query.includes("news") ||
-                query.includes("latest")
+                query.includes('trending') ||
+                query.includes('news') ||
+                query.includes('latest')
               ) {
+                friendlyError += 'For the latest information and news, I recommend:\n\n';
+                friendlyError += '📰 **Tech News**: TechCrunch, The Verge, Wired\n';
+                friendlyError += '🤖 **AI Development**: OpenAI Blog, Google AI Blog, Anthropic\n';
                 friendlyError +=
-                  "For the latest information and news, I recommend:\n\n";
-                friendlyError +=
-                  "📰 **Tech News**: TechCrunch, The Verge, Wired\n";
-                friendlyError +=
-                  "🤖 **AI Development**: OpenAI Blog, Google AI Blog, Anthropic\n";
-                friendlyError +=
-                  "🌐 **Trending Topics**: Twitter Trends, Reddit Popular, Google Trends\n\n";
+                  '🌐 **Trending Topics**: Twitter Trends, Reddit Popular, Google Trends\n\n';
                 friendlyError +=
                   'Or try asking more specific questions like "Explain the latest AI technology" instead! 😊';
-              } else if (
-                query.includes("crypto") ||
-                query.includes("bitcoin")
-              ) {
-                friendlyError += "For Cryptocurrency information:\n\n";
-                friendlyError +=
-                  "💰 **Current Bitcoin Price**: Around $43,000-$45,000 USD\n";
-                friendlyError +=
-                  "📈 **Trend**: Crypto market is highly volatile\n";
-                friendlyError +=
-                  "🔍 **Data Sources**: CoinGecko, CoinMarketCap, Binance\n\n";
+              } else if (query.includes('crypto') || query.includes('bitcoin')) {
+                friendlyError += 'For Cryptocurrency information:\n\n';
+                friendlyError += '💰 **Current Bitcoin Price**: Around $43,000-$45,000 USD\n';
+                friendlyError += '📈 **Trend**: Crypto market is highly volatile\n';
+                friendlyError += '🔍 **Data Sources**: CoinGecko, CoinMarketCap, Binance\n\n';
                 friendlyError +=
                   'Try asking more specific questions like "Explain blockchain technology"! 😊';
               } else {
@@ -493,8 +451,8 @@ export default function Home() {
               friendlyError = `Sorry, an error occurred: ${error}\n\nTry asking a new question or refresh the page 😊`;
             }
 
-            setMessages((prev) =>
-              prev.map((msg) => {
+            setMessages(prev =>
+              prev.map(msg => {
                 if (msg.id === aiMessageId) {
                   const errorFeatures = analyzeMarkdownFeatures(friendlyError);
                   return {
@@ -512,13 +470,13 @@ export default function Home() {
                   };
                 }
                 return msg;
-              }),
+              })
             );
             setIsLoading(false);
-          },
+          }
         );
       } catch (error) {
-        console.error("Failed to send message to enhanced backend:", error);
+        console.error('Failed to send message to enhanced backend:', error);
 
         // Enhanced fallback response with more context
         const fallbackContent = `I received your message: "${messageContent}". 
@@ -526,13 +484,12 @@ export default function Home() {
 The enhanced backend appears to be unavailable. Here's what I would do with full backend integration:
 
 🤖 **AI Model**: Process through ${selectedModel} (${
-          availableModels.find((m) => m.id === selectedModel)?.name ||
-          "Selected Model"
+          availableModels.find(m => m.id === selectedModel)?.name || 'Selected Model'
         })
 🔍 **Search Tools**: ${
           selectedTool
             ? `Use ${selectedTool} for real-time data`
-            : "Intelligent context detection for web search, crypto data, or news"
+            : 'Intelligent context detection for web search, crypto data, or news'
         }
 ⚡ **Enhanced Features**: Real-time streaming, conversation history, vector search, and intelligent fallback handling
 
@@ -542,8 +499,8 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
 - Binance API (for crypto data)
 - PostgreSQL with pgvector (for knowledge search)`;
 
-        setMessages((prev) =>
-          prev.map((msg) => {
+        setMessages(prev =>
+          prev.map(msg => {
             if (msg.id === aiMessageId) {
               const fallbackFeatures = analyzeMarkdownFeatures(fallbackContent);
               return {
@@ -561,24 +518,17 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               };
             }
             return msg;
-          }),
+          })
         );
         setIsLoading(false);
       }
     },
-    [
-      inputText,
-      isLoading,
-      selectedModel,
-      availableModels,
-      selectedTool,
-      generateMessageId,
-    ],
+    [inputText, isLoading, selectedModel, availableModels, selectedTool, generateMessageId]
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // Check for Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux) for voice input
-    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
       e.preventDefault();
       toggleVoiceRecognition();
       return;
@@ -587,19 +537,14 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     // Check if tools dropdown is open - don't submit, let dropdown handle it
     if (isToolsDropdownOpen) {
       // Let the dropdown handle all keyboard events when it's open
-      if (
-        e.key === "Enter" ||
-        e.key === "ArrowUp" ||
-        e.key === "ArrowDown" ||
-        e.key === "Escape"
-      ) {
+      if (e.key === 'Enter' || e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Escape') {
         // Don't prevent default here - let the dropdown component handle it
         return;
       }
     }
 
     // Existing Enter key handling - only when dropdown is closed
-    if (e.key === "Enter" && !e.shiftKey && !isToolsDropdownOpen) {
+    if (e.key === 'Enter' && !e.shiftKey && !isToolsDropdownOpen) {
       e.preventDefault();
       handleSubmit(e as React.FormEvent);
     }
@@ -612,9 +557,9 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       if (event.defaultPrevented) return;
     };
 
-    document.addEventListener("mousedown", handleSidebarToggle);
+    document.addEventListener('mousedown', handleSidebarToggle);
     return () => {
-      document.removeEventListener("mousedown", handleSidebarToggle);
+      document.removeEventListener('mousedown', handleSidebarToggle);
     };
   }, []);
 
@@ -623,8 +568,8 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     setSelectedTool(toolId);
 
     // Remove the "/" from input if it's the only character or starts with "/"
-    if (inputText === "/" || inputText.startsWith("/")) {
-      setInputText("");
+    if (inputText === '/' || inputText.startsWith('/')) {
+      setInputText('');
     }
 
     // Close the tools dropdown
@@ -651,7 +596,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         }, 0);
         // Reset click tracking
         setLastClickTime(0);
-        setLastClickedPrompt("");
+        setLastClickedPrompt('');
       } else {
         // Single click - populate input field
         setInputText(prompt);
@@ -662,7 +607,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         setLastClickedPrompt(prompt);
       }
     },
-    [isHydrated, lastClickTime, lastClickedPrompt, handleSubmit],
+    [isHydrated, lastClickTime, lastClickedPrompt, handleSubmit]
   );
 
   // Auto-focus the input field when the component mounts and when welcome screen is shown
@@ -687,9 +632,8 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       }
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () =>
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [showWelcome]);
 
   // Fetch available models from enhanced backend
@@ -701,12 +645,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
 
         // Set default model if none selected and models are available
         if (!selectedModel && response.models && response.models.length > 0) {
-          const recommendedModel = response.models.find((m) => m.recommended);
+          const recommendedModel = response.models.find(m => m.recommended);
           const defaultModel = recommendedModel || response.models[0];
           setSelectedModel(defaultModel.id);
         }
       } catch (error) {
-        console.error("Failed to fetch models:", error);
+        console.error('Failed to fetch models:', error);
         // Keep empty array as fallback - the AIModelDropdown will handle this
       }
     };
@@ -744,10 +688,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
 
   // Debug: Monitor tools dropdown state changes
   useEffect(() => {
-    console.log(
-      "Page.tsx: isToolsDropdownOpen changed to:",
-      isToolsDropdownOpen,
-    );
+    console.log('Page.tsx: isToolsDropdownOpen changed to:', isToolsDropdownOpen);
   }, [isToolsDropdownOpen]);
 
   // Initialize SpeechRecognition API
@@ -761,8 +702,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     }
 
     // Enhanced browser support check for mobile devices
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     // Check for mobile device - Enhanced support for more mobile OS
     const mobilePatterns = getMobilePatterns();
@@ -786,8 +726,8 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         setVoiceThemeNotification({
           isVisible: true,
           message: speechSupport.message,
-          theme: isDarkModeRef.current ? "dark" : "light",
-          type: "error",
+          theme: isDarkModeRef.current ? 'dark' : 'light',
+          type: 'error',
         });
       }
       return;
@@ -797,7 +737,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = "en-US";
+    recognition.lang = 'en-US';
 
     // Mobile-specific optimizations
     if (isMobile) {
@@ -807,20 +747,16 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         recognition.interimResults = false; // iOS Safari works better with final results only
 
         // Set additional iOS-friendly properties
-        if ("maxAlternatives" in recognition) {
-          (
-            recognition as SpeechRecognition & { maxAlternatives?: number }
-          ).maxAlternatives = 1;
+        if ('maxAlternatives' in recognition) {
+          (recognition as SpeechRecognition & { maxAlternatives?: number }).maxAlternatives = 1;
         }
       } else {
         // Other mobile browsers
         recognition.continuous = false;
         recognition.interimResults = true; // Better feedback on other mobile browsers
 
-        if ("maxAlternatives" in recognition) {
-          (
-            recognition as SpeechRecognition & { maxAlternatives?: number }
-          ).maxAlternatives = 1;
+        if ('maxAlternatives' in recognition) {
+          (recognition as SpeechRecognition & { maxAlternatives?: number }).maxAlternatives = 1;
         }
       }
     }
@@ -829,60 +765,60 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = Array.from(event.results)
         .map((result: SpeechRecognitionResult) => result[0])
-        .map((result) => result.transcript)
-        .join("");
+        .map(result => result.transcript)
+        .join('');
 
       // Reset the starting flag when we get results
       isStartingRef.current = false;
 
       // Check for voice commands to switch theme
       const lowerTranscript = transcript.toLowerCase().trim();
-      if (lowerTranscript === "system switch dark mode") {
+      if (lowerTranscript === 'system switch dark mode') {
         // Switch to dark mode if not already in dark mode
         if (!isDarkModeRef.current) {
           toggleDarkModeRef.current();
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Switched to dark mode",
-            theme: "dark",
-            type: "success",
+            message: 'Switched to dark mode',
+            theme: 'dark',
+            type: 'success',
           });
         } else {
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Already in dark mode",
-            theme: "dark",
-            type: "info",
+            message: 'Already in dark mode',
+            theme: 'dark',
+            type: 'info',
           });
         }
         setIsListening(false);
         return; // Don't set input text for voice commands
-      } else if (lowerTranscript === "system switch light mode") {
+      } else if (lowerTranscript === 'system switch light mode') {
         // Switch to light mode if not already in light mode
         if (isDarkModeRef.current) {
           toggleDarkModeRef.current();
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Switched to light mode",
-            theme: "light",
-            type: "success",
+            message: 'Switched to light mode',
+            theme: 'light',
+            type: 'success',
           });
         } else {
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Already in light mode",
-            theme: "light",
-            type: "info",
+            message: 'Already in light mode',
+            theme: 'light',
+            type: 'info',
           });
         }
         setIsListening(false);
         return; // Don't set input text for voice commands
-      } else if (lowerTranscript === "system clear") {
+      } else if (lowerTranscript === 'system clear') {
         // Clear the input immediately
-        setInputText("");
+        setInputText('');
         setIsListening(false);
         return; // Don't set input text for voice commands
-      } else if (lowerTranscript === "system close sidebar") {
+      } else if (lowerTranscript === 'system close sidebar') {
         // Close sidebar for both mobile and desktop
         const mobileAlreadyClosed = !isSidebarOpenRef.current;
         const desktopAlreadyClosed = isDesktopSidebarCollapsedRef.current;
@@ -894,21 +830,21 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         if (mobileAlreadyClosed && desktopAlreadyClosed) {
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Sidebar already closed",
-            theme: isDarkModeRef.current ? "dark" : "light",
-            type: "info",
+            message: 'Sidebar already closed',
+            theme: isDarkModeRef.current ? 'dark' : 'light',
+            type: 'info',
           });
         } else {
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Sidebar closed",
-            theme: isDarkModeRef.current ? "dark" : "light",
-            type: "success",
+            message: 'Sidebar closed',
+            theme: isDarkModeRef.current ? 'dark' : 'light',
+            type: 'success',
           });
         }
         setIsListening(false);
         return; // Don't set input text for voice commands
-      } else if (lowerTranscript === "system open sidebar") {
+      } else if (lowerTranscript === 'system open sidebar') {
         // Open sidebar for both mobile and desktop
         const mobileAlreadyOpen = isSidebarOpenRef.current;
         const desktopAlreadyOpen = !isDesktopSidebarCollapsedRef.current;
@@ -920,16 +856,16 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         if (mobileAlreadyOpen && desktopAlreadyOpen) {
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Sidebar already open",
-            theme: isDarkModeRef.current ? "dark" : "light",
-            type: "info",
+            message: 'Sidebar already open',
+            theme: isDarkModeRef.current ? 'dark' : 'light',
+            type: 'info',
           });
         } else {
           setVoiceThemeNotification({
             isVisible: true,
-            message: "Sidebar opened",
-            theme: isDarkModeRef.current ? "dark" : "light",
-            type: "success",
+            message: 'Sidebar opened',
+            theme: isDarkModeRef.current ? 'dark' : 'light',
+            type: 'success',
           });
         }
         setIsListening(false);
@@ -952,22 +888,22 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       // console.error('Speech recognition error', event.error);
       setIsListening(false);
 
-      let errorMessage = "";
+      let errorMessage = '';
       switch (event.error) {
-        case "no-speech":
-          errorMessage = ""; // 'No speech was detected. Please try again.'
+        case 'no-speech':
+          errorMessage = ''; // 'No speech was detected. Please try again.'
           break;
-        case "audio-capture":
-          errorMessage = "Audio capture failed. Please check your microphone.";
+        case 'audio-capture':
+          errorMessage = 'Audio capture failed. Please check your microphone.';
           break;
-        case "not-allowed":
+        case 'not-allowed':
           errorMessage =
-            "Microphone access denied. Please allow microphone access in your browser settings.";
+            'Microphone access denied. Please allow microphone access in your browser settings.';
           break;
-        case "network":
-          errorMessage = "Network error occurred during recognition.";
+        case 'network':
+          errorMessage = 'Network error occurred during recognition.';
           break;
-        case "aborted":
+        case 'aborted':
           // User aborted, no need to show error
           return;
         // default:
@@ -979,13 +915,13 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         setVoiceThemeNotification({
           isVisible: true,
           message: errorMessage,
-          theme: isDarkModeRef.current ? "dark" : "light",
-          type: "error",
+          theme: isDarkModeRef.current ? 'dark' : 'light',
+          type: 'error',
         });
 
         // Clear error message after 5 seconds (existing behavior)
         setTimeout(() => {
-          setVoiceThemeNotification((prev) => ({ ...prev, isVisible: false }));
+          setVoiceThemeNotification(prev => ({ ...prev, isVisible: false }));
         }, 5000);
       }
     };
@@ -1013,7 +949,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           isStartingRef.current = false;
           speechRecognitionRef.current.stop();
         } catch (e) {
-          console.warn("Error stopping speech recognition:", e);
+          console.warn('Error stopping speech recognition:', e);
         }
         speechRecognitionRef.current = null;
       }
@@ -1026,8 +962,8 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       setVoiceThemeNotification({
         isVisible: true,
         message: `Voice input is not available in unsupported browsers. Please use: Chrome, Safari, Firefox, Brave, Arc Browser, or Comet.`,
-        theme: isDarkModeRef.current ? "dark" : "light",
-        type: "error",
+        theme: isDarkModeRef.current ? 'dark' : 'light',
+        type: 'error',
       });
       return;
     }
@@ -1039,8 +975,8 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       setVoiceThemeNotification({
         isVisible: true,
         message: speechSupport.message,
-        theme: isDarkModeRef.current ? "dark" : "light",
-        type: "error",
+        theme: isDarkModeRef.current ? 'dark' : 'light',
+        type: 'error',
       });
       return;
     }
@@ -1061,9 +997,9 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     if (!speechRecognitionRef.current) {
       setVoiceThemeNotification({
         isVisible: true,
-        message: "Speech recognition not initialized properly",
-        theme: isDarkModeRef.current ? "dark" : "light",
-        type: "error",
+        message: 'Speech recognition not initialized properly',
+        theme: isDarkModeRef.current ? 'dark' : 'light',
+        type: 'error',
       });
       return;
     }
@@ -1077,11 +1013,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         setIsListening(false);
 
         // Add haptic feedback for mobile devices
-        if (isMobile && "vibrate" in navigator) {
+        if (isMobile && 'vibrate' in navigator) {
           navigator.vibrate(30); // Short vibration to indicate stop
         }
       } catch (error) {
-        console.warn("Error stopping speech recognition:", error);
+        console.warn('Error stopping speech recognition:', error);
       }
     } else {
       // Start listening - Check if already starting or listening
@@ -1093,7 +1029,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         }
 
         // Check if recognition is already running
-        if (speechRecognitionRef.current.state === "listening") {
+        if (speechRecognitionRef.current.state === 'listening') {
           // Already listening, stop it first
           speechRecognitionRef.current.stop();
         }
@@ -1101,14 +1037,13 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         // iOS Safari specific handling - requires user gesture
         if (isIOSSafari) {
           // Ensure we have a user gesture by checking if this was triggered by user interaction
-          const hasUserGesture =
-            document.hasFocus() && document.visibilityState === "visible";
+          const hasUserGesture = document.hasFocus() && document.visibilityState === 'visible';
           if (!hasUserGesture) {
             setVoiceThemeNotification({
               isVisible: true,
-              message: "Please use the microphone button to start voice input",
-              theme: isDarkModeRef.current ? "dark" : "light",
-              type: "info",
+              message: 'Please use the microphone button to start voice input',
+              theme: isDarkModeRef.current ? 'dark' : 'light',
+              type: 'info',
             });
             return;
           }
@@ -1119,38 +1054,37 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         speechRecognitionRef.current.start();
 
         // Add haptic feedback for mobile devices
-        if (isMobile && "vibrate" in navigator) {
+        if (isMobile && 'vibrate' in navigator) {
           navigator.vibrate(50); // Short vibration to indicate start
         }
 
         // isListening state will be set by the onstart event handler
       } catch (error: unknown) {
-        console.error("Error starting speech recognition:", error);
+        console.error('Error starting speech recognition:', error);
         // Reset the starting flag on error
         isStartingRef.current = false;
 
         // Don't set isListening to false here as it might be starting
-        let errorMessage = "Error starting speech recognition";
+        let errorMessage = 'Error starting speech recognition';
         if (error instanceof Error) {
-          if (error.name === "NotAllowedError") {
+          if (error.name === 'NotAllowedError') {
             if (isIOSSafari) {
               errorMessage =
-                "Microphone access denied. Please go to Settings > Safari > Microphone and allow access, then refresh the page.";
+                'Microphone access denied. Please go to Settings > Safari > Microphone and allow access, then refresh the page.';
             } else {
               errorMessage =
-                "Microphone access denied. Please allow microphone access in your browser settings.";
+                'Microphone access denied. Please allow microphone access in your browser settings.';
             }
-          } else if (error.name === "NotFoundError") {
-            errorMessage =
-              "No microphone found. Please connect a microphone and try again.";
-          } else if (error.name === "InvalidStateError") {
+          } else if (error.name === 'NotFoundError') {
+            errorMessage = 'No microphone found. Please connect a microphone and try again.';
+          } else if (error.name === 'InvalidStateError') {
             // This is the error we're trying to fix - recognition is already started
-            errorMessage = ""; // Don't show error message for this case
+            errorMessage = ''; // Don't show error message for this case
             // The recognition is already running, so update the state to reflect that
             setIsListening(true);
-          } else if (error.name === "ServiceNotAllowedError" && isIOSSafari) {
+          } else if (error.name === 'ServiceNotAllowedError' && isIOSSafari) {
             errorMessage =
-              "Voice input service not available. Please check your internet connection and try again.";
+              'Voice input service not available. Please check your internet connection and try again.';
           } else if (error.message) {
             errorMessage = error.message;
           }
@@ -1160,13 +1094,13 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           setVoiceThemeNotification({
             isVisible: true,
             message: errorMessage,
-            theme: isDarkModeRef.current ? "dark" : "light",
-            type: "error",
+            theme: isDarkModeRef.current ? 'dark' : 'light',
+            type: 'error',
           });
 
           // Clear error message after 5 seconds
           setTimeout(() => {
-            setVoiceThemeNotification((prev) => ({
+            setVoiceThemeNotification(prev => ({
               ...prev,
               isVisible: false,
             }));
@@ -1184,18 +1118,18 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       // Don't interfere if user is typing in an input field, textarea, or contenteditable
       const target = e.target as HTMLElement;
       const isTypingInInput =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.contentEditable === "true" ||
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.contentEditable === 'true' ||
         target.closest('[contenteditable="true"]');
 
       // Check if Cmd (Mac) or Ctrl (Windows/Linux) is pressed along with 'J'
-      if ((e.metaKey || e.ctrlKey) && e.key === "j") {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
         e.preventDefault();
         focusInput();
       }
       // Check for Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux) for voice input
-      else if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      else if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
         // Prevent rapid toggling
         const now = Date.now();
         if (now - lastVoiceToggleTime > 500) {
@@ -1217,7 +1151,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       ) {
         // Only for printable characters and when on welcome screen
         const isPrintable = e.key.match(
-          /^[a-zA-Z0-9\s\.,\?!@#\$%\^&\*\(\)_\+\-=\[\]\{\}\|\\:";'<>\?\/`~]$/,
+          /^[a-zA-Z0-9\s\.,\?!@#\$%\^&\*\(\)_\+\-=\[\]\{\}\|\\:";'<>\?\/`~]$/
         );
         if (isPrintable) {
           e.preventDefault();
@@ -1225,31 +1159,29 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           if (inputRef.current) {
             inputRef.current.focus();
             // Add the character to the input
-            setInputText((prev) => prev + e.key);
+            setInputText(prev => prev + e.key);
           }
         }
       }
       // Handle Escape key to clear input or close tools dropdown
-      else if (e.key === "Escape") {
+      else if (e.key === 'Escape') {
         if (isToolsDropdownOpen) {
           // Close tools dropdown
-          const plusButton = document.querySelector(
-            "[data-plus-button]",
-          ) as HTMLButtonElement;
+          const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
           if (plusButton) {
             plusButton.click();
           }
         } else if (inputText.trim()) {
           // Clear input if it has content
-          setInputText("");
+          setInputText('');
           inputRef.current?.focus();
         }
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [
     isListening,
@@ -1264,7 +1196,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
   const { attachToElement } = useSwipeGesture({
     onSwipeRight: () => {
       // Open sidebar on swipe right (only on mobile)
-      if (typeof window !== "undefined" && window.innerWidth < 768) {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
         // Use setTimeout to prevent any potential theme interference
         setTimeout(() => {
           setIsSidebarOpen(true);
@@ -1273,7 +1205,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
     },
     onSwipeLeft: () => {
       // Close sidebar on swipe left (only on mobile)
-      if (typeof window !== "undefined" && window.innerWidth < 768) {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
         // Use setTimeout to prevent any potential theme interference
         setTimeout(() => {
           setIsSidebarOpen(false);
@@ -1311,19 +1243,17 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
       <div
         ref={mainContainerRef}
         className="swipe-container flex h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-1000 dark:via-gray-950 dark:to-gray-900 text-gray-900 dark:text-gray-50 transition-all duration-500"
-        data-selected-tool={selectedTool || "none"}
+        data-selected-tool={selectedTool || 'none'}
       >
         {/* Mobile Sidebar Overlay */}
         <div
           className={`md:hidden fixed inset-0 z-50 flex transition-opacity duration-300 ${
-            isSidebarOpen
-              ? "opacity-100 pointer-events-auto"
-              : "opacity-0 pointer-events-none"
+            isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
         >
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
-            onClick={(e) => {
+            onClick={e => {
               // Only close sidebar if clicking directly on the overlay, not on child elements
               if (e.target === e.currentTarget) {
                 setIsSidebarOpen(false);
@@ -1332,7 +1262,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           ></div>
           <div
             className={`relative w-64 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-r border-gray-200/30 dark:border-gray-700/30 flex flex-col z-10 transition-transform duration-300 ease-out ${
-              isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+              isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
             {/* Mobile Sidebar Header */}
@@ -1341,12 +1271,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 <div className="relative">
                   <div
                     className="flex items-center justify-center cursor-pointer hover:scale-105 transition-transform duration-200"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation(); // Prevent sidebar toggle when clicking logo
                       setMessages([]);
                       setShowWelcome(true);
                       setSelectedTool(null); // Reset selected tool
-                      setInputText(""); // Clear input field
+                      setInputText(''); // Clear input field
                     }}
                     data-sidebar-element="logo"
                   >
@@ -1360,12 +1290,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             <div className="p-4 pt-2 pb-2">
               <button
                 className="w-full flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-600 dark:hover:to-blue-800 text-white rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-105"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   setMessages([]);
                   setShowWelcome(true);
                   setSelectedTool(null); // Reset selected tool
-                  setInputText(""); // Clear input field
+                  setInputText(''); // Clear input field
                   setIsSidebarOpen(false); // Close sidebar on mobile
                 }}
               >
@@ -1379,44 +1309,32 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               <div className="space-y-2">
                 <button
                   className="w-full h-10 flex items-center space-x-2 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                 >
                   <Globe className="h-4 w-4 text-blue-500 flex-shrink-0" />
                   <div className="text-left">
-                    <p className="text-sm font-medium truncate">
-                      Web search capabilities
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      2 hours ago
-                    </p>
+                    <p className="text-sm font-medium truncate">Web search capabilities</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">2 hours ago</p>
                   </div>
                 </button>
                 <button
                   className="w-full h-10 flex items-center space-x-2 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                 >
                   <TrendingUp className="h-4 w-4 text-green-500 flex-shrink-0" />
                   <div className="text-left">
-                    <p className="text-sm font-medium truncate">
-                      Crypto market analysis
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Yesterday
-                    </p>
+                    <p className="text-sm font-medium truncate">Crypto market analysis</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Yesterday</p>
                   </div>
                 </button>
                 <button
                   className="w-full h-10 flex items-center space-x-2 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                 >
                   <Sparkles className="h-4 w-4 text-purple-500 flex-shrink-0" />
                   <div className="text-left">
-                    <p className="text-sm font-medium truncate">
-                      General AI conversation
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      2 days ago
-                    </p>
+                    <p className="text-sm font-medium truncate">General AI conversation</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">2 days ago</p>
                   </div>
                 </button>
               </div>
@@ -1433,22 +1351,18 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                     <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 dark:bg-green-400 rounded-full border-2 border-white dark:border-gray-900"></div>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                      𝕏
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Online
-                    </p>
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">𝕏</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Online</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-1">
                   <button
                     className="w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors flex items-center justify-center"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setIsSidebarOpen(!isSidebarOpen);
                     }}
-                    title={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+                    title={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
                     data-sidebar-element="mobile-sidebar-toggle"
                   >
                     {isSidebarOpen ? (
@@ -1469,21 +1383,17 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           className={`hidden md:flex bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r 
           border-gray-200/30 dark:border-gray-700/30 flex-col transition-all duration-300 
           ${
-            isDesktopSidebarCollapsed
-              ? "w-16 cursor-e-resize"
-              : "w-64 cursor-w-resize"
+            isDesktopSidebarCollapsed ? 'w-16 cursor-e-resize' : 'w-64 cursor-w-resize'
           } overflow-hidden`}
           data-sidebar-element="desktop-sidebar"
-          onClick={(e) => {
+          onClick={e => {
             // Prevent toggle when clicking on interactive elements
             const target = e.target as HTMLElement;
-            const isInteractiveElement = target.closest(
-              "button, a, input, textarea, select",
-            );
+            const isInteractiveElement = target.closest('button, a, input, textarea, select');
 
             if (!isInteractiveElement) {
               e.stopPropagation();
-              setIsDesktopSidebarCollapsed((prev) => !prev);
+              setIsDesktopSidebarCollapsed(prev => !prev);
             }
           }}
         >
@@ -1492,18 +1402,18 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             <div className="flex items-center justify-center">
               <div
                 className={`flex items-center w-full ${
-                  isDesktopSidebarCollapsed ? "justify-center" : "justify-start"
+                  isDesktopSidebarCollapsed ? 'justify-center' : 'justify-start'
                 }`}
               >
                 <div className="relative">
                   <div
                     className="flex items-center justify-center cursor-pointer hover:scale-105 transition-transform duration-200"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation(); // Prevent sidebar toggle when clicking logo
                       setMessages([]);
                       setShowWelcome(true);
                       setSelectedTool(null); // Reset selected tool
-                      setInputText(""); // Clear input field
+                      setInputText(''); // Clear input field
                     }}
                     data-sidebar-element="logo"
                   >
@@ -1520,12 +1430,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               <button
                 className="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-600 dark:hover:to-blue-800 text-white rounded-xl font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-105"
                 title="New Chat"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   setMessages([]);
                   setShowWelcome(true);
                   setSelectedTool(null); // Reset selected tool
-                  setInputText(""); // Clear input field
+                  setInputText(''); // Clear input field
                 }}
                 data-sidebar-element="new-chat-button"
               >
@@ -1534,12 +1444,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             ) : (
               <button
                 className="w-full flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-600 dark:hover:to-blue-800 text-white rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-[1.02]"
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   setMessages([]);
                   setShowWelcome(true);
                   setSelectedTool(null); // Reset selected tool
-                  setInputText(""); // Clear input field
+                  setInputText(''); // Clear input field
                 }}
                 data-sidebar-element="new-chat-button"
               >
@@ -1555,47 +1465,35 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               <div className="space-y-2">
                 <button
                   className="w-full h-12 flex items-center space-x-3 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                   data-sidebar-element="chat-history-item"
                 >
                   <Globe className="h-5 w-5 text-blue-500 flex-shrink-0" />
                   <div className="text-left">
-                    <p className="font-medium truncate">
-                      Web search capabilities
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      2 hours ago
-                    </p>
+                    <p className="font-medium truncate">Web search capabilities</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">2 hours ago</p>
                   </div>
                 </button>
                 <button
                   className="w-full h-12 flex items-center space-x-3 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                   data-sidebar-element="chat-history-item"
                 >
                   <TrendingUp className="h-5 w-5 text-green-500 flex-shrink-0" />
                   <div className="text-left">
-                    <p className="font-medium truncate">
-                      Crypto market analysis
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Yesterday
-                    </p>
+                    <p className="font-medium truncate">Crypto market analysis</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Yesterday</p>
                   </div>
                 </button>
                 <button
                   className="w-full h-12 flex items-center space-x-3 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                   data-sidebar-element="chat-history-item"
                 >
                   <Sparkles className="h-5 w-5 text-purple-500 flex-shrink-0" />
                   <div className="text-left">
-                    <p className="font-medium truncate">
-                      General AI conversation
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      2 days ago
-                    </p>
+                    <p className="font-medium truncate">General AI conversation</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">2 days ago</p>
                   </div>
                 </button>
               </div>
@@ -1604,7 +1502,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 <button
                   className="w-10 h-10 rounded-xl bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 flex items-center justify-center shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40 transition-all duration-200 transform hover:scale-105"
                   title="Web search capabilities"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                   data-sidebar-element="chat-history-item"
                 >
                   <Globe className="h-5 w-5 text-blue-500 mx-auto" />
@@ -1612,7 +1510,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 <button
                   className="w-10 h-10 rounded-xl bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 flex items-center justify-center shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40 transition-all duration-200 transform hover:scale-105"
                   title="Crypto market analysis"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                   data-sidebar-element="chat-history-item"
                 >
                   <TrendingUp className="h-5 w-5 text-green-500 mx-auto" />
@@ -1620,7 +1518,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 <button
                   className="w-10 h-10 rounded-xl bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 flex items-center justify-center shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40 transition-all duration-200 transform hover:scale-105"
                   title="General AI conversation"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
                   data-sidebar-element="chat-history-item"
                 >
                   <Sparkles className="h-5 w-5 text-purple-500 mx-auto" />
@@ -1641,26 +1539,18 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                     <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 dark:bg-green-400 rounded-full border-2 border-white dark:border-gray-900"></div>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                      𝕏
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      Online
-                    </p>
+                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">𝕏</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Online</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-1">
                   <button
                     className="w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors flex items-center justify-center" // Close sidebar toggle button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setIsDesktopSidebarCollapsed(!isDesktopSidebarCollapsed);
                     }}
-                    title={
-                      isDesktopSidebarCollapsed
-                        ? "Open sidebar"
-                        : "Close sidebar"
-                    }
+                    title={isDesktopSidebarCollapsed ? 'Open sidebar' : 'Close sidebar'}
                     data-sidebar-element="desktop-sidebar-toggle"
                   >
                     {isDesktopSidebarCollapsed ? (
@@ -1682,15 +1572,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 <div className="flex flex-col items-center space-y-1">
                   <button
                     className="w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-colors flex items-center justify-center" // Open sidebar toggle button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       setIsDesktopSidebarCollapsed(!isDesktopSidebarCollapsed);
                     }}
-                    title={
-                      isDesktopSidebarCollapsed
-                        ? "Open sidebar"
-                        : "Close sidebar"
-                    }
+                    title={isDesktopSidebarCollapsed ? 'Open sidebar' : 'Close sidebar'}
                     data-sidebar-element="desktop-sidebar-toggle"
                   >
                     {isDesktopSidebarCollapsed ? (
@@ -1717,7 +1603,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                   <button
                     className="md:hidden p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-700/40 hover:bg-white/90 dark:hover:bg-gray-700/90 transition-all duration-200 shadow hover:shadow-md flex items-center justify-center"
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    title={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
+                    title={isSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
                   >
                     <svg
                       width="20"
@@ -1733,10 +1619,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <AIModelDropdown
-                    selectedModel={selectedModel}
-                    onModelSelect={setSelectedModel}
-                  />
+                  <AIModelDropdown selectedModel={selectedModel} onModelSelect={setSelectedModel} />
                   <AnimatedThemeToggler
                     isDarkMode={isDarkMode}
                     toggleDarkMode={toggleDarkMode}
@@ -1749,10 +1632,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           </header>
 
           {/* Chat Container */}
-          <div
-            ref={chatContainerRef}
-            className="flex-1 overflow-y-auto relative"
-          >
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto relative">
             {/* Voice Theme Notification */}
             <VoiceThemeNotification
               message={voiceThemeNotification.message}
@@ -1760,7 +1640,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               type={voiceThemeNotification.type}
               isVisible={voiceThemeNotification.isVisible}
               onClose={() =>
-                setVoiceThemeNotification((prev) => ({
+                setVoiceThemeNotification(prev => ({
                   ...prev,
                   isVisible: false,
                 }))
@@ -1793,7 +1673,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                       <div
                         className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center"
                         onClick={() => {
-                          setSelectedTool("web_search");
+                          setSelectedTool('web_search');
                           focusInput();
                         }}
                       >
@@ -1809,7 +1689,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                       <div
                         className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center"
                         onClick={() => {
-                          setSelectedTool("crypto_data");
+                          setSelectedTool('crypto_data');
                           focusInput();
                         }}
                       >
@@ -1846,9 +1726,9 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                       <div className="flex flex-wrap gap-2 justify-center">
                         {[
                           "What's trending on the internet today?",
-                          "Explain quantum computing simply",
+                          'Explain quantum computing simply',
                           "What's the current Bitcoin price?",
-                          "Latest news in AI development",
+                          'Latest news in AI development',
                         ].map((prompt, index) => (
                           <button
                             key={index}
@@ -1867,7 +1747,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               /* Chat Messages - ChatGPT Style */
               <div className="p-4 md:p-6">
                 <div className="max-w-3xl mx-auto space-y-6 w-full">
-                  {messages.map((message) => (
+                  {messages.map(message => (
                     <ChatGPTStyleMessage
                       key={message.id}
                       role={message.role}
@@ -1879,7 +1759,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                   {/* Loading indicator - color matches selected tool */}
                   {isLoading &&
                     (() => {
-                      console.log("Loading with selectedTool:", selectedTool);
+                      console.log('Loading with selectedTool:', selectedTool);
                       return (
                         <div className="flex justify-start">
                           <div className="flex space-x-4">
@@ -1888,48 +1768,48 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                 <div
                                   className="w-2 h-2 rounded-full animate-bounce"
                                   style={{
-                                    animationDelay: "-0.3s",
+                                    animationDelay: '-0.3s',
                                     backgroundColor:
-                                      selectedTool === "web_search"
-                                        ? "#60a5fa"
-                                        : selectedTool === "news_search"
-                                          ? "#fb923c"
-                                          : selectedTool === "crypto_data"
-                                            ? "#4ade80"
-                                            : selectedTool === "vector_search"
-                                              ? "#a78bfa"
-                                              : "#60a5fa",
+                                      selectedTool === 'web_search'
+                                        ? '#60a5fa'
+                                        : selectedTool === 'news_search'
+                                          ? '#fb923c'
+                                          : selectedTool === 'crypto_data'
+                                            ? '#4ade80'
+                                            : selectedTool === 'vector_search'
+                                              ? '#a78bfa'
+                                              : '#60a5fa',
                                   }}
                                 ></div>
                                 <div
                                   className="w-2 h-2 rounded-full animate-bounce"
                                   style={{
-                                    animationDelay: "-0.15s",
+                                    animationDelay: '-0.15s',
                                     backgroundColor:
-                                      selectedTool === "web_search"
-                                        ? "#3b82f6"
-                                        : selectedTool === "news_search"
-                                          ? "#f97316"
-                                          : selectedTool === "crypto_data"
-                                            ? "#22c55e"
-                                            : selectedTool === "vector_search"
-                                              ? "#8b5cf6"
-                                              : "#3b82f6",
+                                      selectedTool === 'web_search'
+                                        ? '#3b82f6'
+                                        : selectedTool === 'news_search'
+                                          ? '#f97316'
+                                          : selectedTool === 'crypto_data'
+                                            ? '#22c55e'
+                                            : selectedTool === 'vector_search'
+                                              ? '#8b5cf6'
+                                              : '#3b82f6',
                                   }}
                                 ></div>
                                 <div
                                   className="w-2 h-2 rounded-full animate-bounce"
                                   style={{
                                     backgroundColor:
-                                      selectedTool === "web_search"
-                                        ? "#2563eb"
-                                        : selectedTool === "news_search"
-                                          ? "#ea580c"
-                                          : selectedTool === "crypto_data"
-                                            ? "#16a34a"
-                                            : selectedTool === "vector_search"
-                                              ? "#7c3aed"
-                                              : "#2563eb",
+                                      selectedTool === 'web_search'
+                                        ? '#2563eb'
+                                        : selectedTool === 'news_search'
+                                          ? '#ea580c'
+                                          : selectedTool === 'crypto_data'
+                                            ? '#16a34a'
+                                            : selectedTool === 'vector_search'
+                                              ? '#7c3aed'
+                                              : '#2563eb',
                                   }}
                                 ></div>
                               </div>
@@ -1962,11 +1842,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                   xmlns="http://www.w3.org/2000/svg"
                   className="stroke-[2] -mb-0.5"
                 >
-                  <path
-                    d="M6 9L12 15L18 9"
-                    stroke="currentColor"
-                    strokeLinecap="square"
-                  />
+                  <path d="M6 9L12 15L18 9" stroke="currentColor" strokeLinecap="square" />
                 </svg>
               </button>
             </div>
@@ -1991,15 +1867,15 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             <div className="flex space-x-1">
                               <div
                                 className="w-1 h-3 bg-red-500 rounded-full animate-pulse"
-                                style={{ animationDelay: "0ms" }}
+                                style={{ animationDelay: '0ms' }}
                               ></div>
                               <div
                                 className="w-1 h-4 bg-red-500 rounded-full animate-pulse"
-                                style={{ animationDelay: "150ms" }}
+                                style={{ animationDelay: '150ms' }}
                               ></div>
                               <div
                                 className="w-1 h-3 bg-red-500 rounded-full animate-pulse"
-                                style={{ animationDelay: "300ms" }}
+                                style={{ animationDelay: '300ms' }}
                               ></div>
                             </div>
                           </div>
@@ -2023,24 +1899,24 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                           <div className="absolute left-14 top-2 z-10">
                             <div
                               className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 animate-fadeInScale cursor-pointer group ${
-                                selectedTool === "web_search"
-                                  ? "bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 dark:hover:bg-blue-500/30"
-                                  : selectedTool === "news_search"
-                                    ? "bg-orange-500/10 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 dark:hover:bg-orange-500/30"
-                                    : selectedTool === "crypto_data"
-                                      ? "bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 dark:hover:bg-green-500/30"
-                                      : selectedTool === "vector_search"
-                                        ? "bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 dark:hover:bg-purple-500/30"
-                                        : "bg-gray-500/10 dark:bg-gray-500/20 text-gray-600 dark:text-gray-400"
+                                selectedTool === 'web_search'
+                                  ? 'bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 dark:hover:bg-blue-500/30'
+                                  : selectedTool === 'news_search'
+                                    ? 'bg-orange-500/10 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:bg-orange-500/20 dark:hover:bg-orange-500/30'
+                                    : selectedTool === 'crypto_data'
+                                      ? 'bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 dark:hover:bg-green-500/30'
+                                      : selectedTool === 'vector_search'
+                                        ? 'bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 dark:hover:bg-purple-500/30'
+                                        : 'bg-gray-500/10 dark:bg-gray-500/20 text-gray-600 dark:text-gray-400'
                               }`}
                               onClick={() => setSelectedTool(null)}
                               title="Click to remove tool"
                             >
                               {/* Tool Icon */}
                               <span className="group-hover:scale-110 transition-transform duration-200">
-                                {selectedTool === "web_search" ? (
+                                {selectedTool === 'web_search' ? (
                                   <Globe className="h-3.5 w-3.5" />
-                                ) : selectedTool === "news_search" ? (
+                                ) : selectedTool === 'news_search' ? (
                                   <svg
                                     className="h-3.5 w-3.5"
                                     fill="none"
@@ -2054,9 +1930,9 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                       d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
                                     />
                                   </svg>
-                                ) : selectedTool === "crypto_data" ? (
+                                ) : selectedTool === 'crypto_data' ? (
                                   <TrendingUp className="h-3.5 w-3.5" />
-                                ) : selectedTool === "vector_search" ? (
+                                ) : selectedTool === 'vector_search' ? (
                                   <svg
                                     className="h-3.5 w-3.5"
                                     fill="none"
@@ -2075,14 +1951,14 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
 
                               {/* Tool Name - English - Show on all devices */}
                               <span className="whitespace-nowrap">
-                                {selectedTool === "web_search"
-                                  ? "Web Search"
-                                  : selectedTool === "news_search"
-                                    ? "News"
-                                    : selectedTool === "crypto_data"
-                                      ? "Crypto"
-                                      : selectedTool === "vector_search"
-                                        ? "Knowledge"
+                                {selectedTool === 'web_search'
+                                  ? 'Web Search'
+                                  : selectedTool === 'news_search'
+                                    ? 'News'
+                                    : selectedTool === 'crypto_data'
+                                      ? 'Crypto'
+                                      : selectedTool === 'vector_search'
+                                        ? 'Knowledge'
                                         : selectedTool}
                               </span>
 
@@ -2109,30 +1985,24 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                         <textarea
                           ref={inputRef}
                           value={inputText}
-                          onChange={(e) => {
+                          onChange={e => {
                             const newValue = e.target.value;
                             const oldValue = inputText;
                             setInputText(newValue);
 
                             // Enhanced slash command logic - more reliable approach
-                            console.log("Input changed:", {
+                            console.log('Input changed:', {
                               oldValue,
                               newValue,
                               isToolsDropdownOpen,
                             });
 
                             // Case 1: Just typed "/" as the only character
-                            if (
-                              newValue === "/" &&
-                              oldValue !== "/" &&
-                              !isToolsDropdownOpen
-                            ) {
-                              console.log(
-                                "Opening dropdown - typed single slash",
-                              );
+                            if (newValue === '/' && oldValue !== '/' && !isToolsDropdownOpen) {
+                              console.log('Opening dropdown - typed single slash');
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]",
+                                  '[data-plus-button]'
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2140,17 +2010,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                               }, 50);
                             }
                             // Case 2: Deleted everything, leaving empty string
-                            else if (
-                              newValue === "" &&
-                              oldValue === "/" &&
-                              isToolsDropdownOpen
-                            ) {
-                              console.log(
-                                "Closing dropdown - deleted slash completely",
-                              );
+                            else if (newValue === '' && oldValue === '/' && isToolsDropdownOpen) {
+                              console.log('Closing dropdown - deleted slash completely');
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]",
+                                  '[data-plus-button]'
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2159,16 +2023,14 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             }
                             // Case 3: Typed something after "/" (like "//" or "/ " or "/abc")
                             else if (
-                              oldValue === "/" &&
+                              oldValue === '/' &&
                               newValue.length > 1 &&
                               isToolsDropdownOpen
                             ) {
-                              console.log(
-                                "Closing dropdown - typed after slash",
-                              );
+                              console.log('Closing dropdown - typed after slash');
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]",
+                                  '[data-plus-button]'
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2177,16 +2039,14 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             }
                             // Case 4: Deleted back to just "/" from longer text
                             else if (
-                              newValue === "/" &&
+                              newValue === '/' &&
                               oldValue.length > 1 &&
                               !isToolsDropdownOpen
                             ) {
-                              console.log(
-                                "Opening dropdown - deleted back to single slash",
-                              );
+                              console.log('Opening dropdown - deleted back to single slash');
                               setTimeout(() => {
                                 const plusButton = document.querySelector(
-                                  "[data-plus-button]",
+                                  '[data-plus-button]'
                                 ) as HTMLButtonElement;
                                 if (plusButton) {
                                   plusButton.click();
@@ -2196,30 +2056,30 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                           }}
                           onKeyDown={handleKeyDown}
                           placeholder={
-                            isToolsDropdownOpen && inputText === "/"
-                              ? "Select a tool from dropdown..."
+                            isToolsDropdownOpen && inputText === '/'
+                              ? 'Select a tool from dropdown...'
                               : selectedTool
                                 ? `${
-                                    selectedTool === "web_search"
-                                      ? "Search the web..."
-                                      : selectedTool === "news_search"
-                                        ? "Search latest news..."
-                                        : selectedTool === "crypto_data"
-                                          ? "Get crypto data..."
-                                          : selectedTool === "vector_search"
-                                            ? "Search knowledge base..."
-                                            : "Ask me anything..."
+                                    selectedTool === 'web_search'
+                                      ? 'Search the web...'
+                                      : selectedTool === 'news_search'
+                                        ? 'Search latest news...'
+                                        : selectedTool === 'crypto_data'
+                                          ? 'Get crypto data...'
+                                          : selectedTool === 'vector_search'
+                                            ? 'Search knowledge base...'
+                                            : 'Ask me anything...'
                                   }`
-                                : "Ask me anything..."
+                                : 'Ask me anything...'
                           }
                           className={`w-full resize-none bg-transparent px-14 pr-14 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none leading-relaxed font-medium chat-input ${
-                            isMobile ? "text-base" : "text-sm"
-                          } ${selectedTool ? "pt-9 pb-3" : "py-3"}`}
+                            isMobile ? 'text-base' : 'text-sm'
+                          } ${selectedTool ? 'pt-9 pb-3' : 'py-3'}`}
                           rows={1}
                           style={{
-                            minHeight: "40px",
-                            maxHeight: "120px",
-                            fontSize: isMobile ? "16px" : "14px", // Prevent iOS zoom
+                            minHeight: '40px',
+                            maxHeight: '120px',
+                            fontSize: isMobile ? '16px' : '14px', // Prevent iOS zoom
                           }}
                           suppressHydrationWarning
                         />
@@ -2231,31 +2091,29 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             type="button"
                             className={`flex-shrink-0 w-9 h-9 md:w-9 md:h-9 flex items-center justify-center rounded-full transition-all duration-200 touch-manipulation ${
                               isListening
-                                ? "text-red-500 hover:bg-red-500/10 bg-red-500/5"
-                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                ? 'text-red-500 hover:bg-red-500/10 bg-red-500/5'
+                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                             } ${
                               // Add mobile-specific styling with larger touch targets for iOS
-                              "min-h-[44px] min-w-[44px] md:min-h-[36px] md:min-w-[36px]"
+                              'min-h-[44px] min-w-[44px] md:min-h-[36px] md:min-w-[36px]'
                             }`}
-                            onClick={(e) => {
+                            onClick={e => {
                               // Prevent any potential event bubbling on mobile
                               e.preventDefault();
                               e.stopPropagation();
                               toggleVoiceRecognition();
                             }}
-                            onTouchStart={(e) => {
+                            onTouchStart={e => {
                               // iOS Safari specific - ensure proper touch handling
                               e.preventDefault();
                             }}
                             title={
                               isListening
-                                ? "Stop listening (Cmd+Enter or Ctrl+Enter)"
-                                : "Start voice input (Cmd+Enter or Ctrl+Enter)"
+                                ? 'Stop listening (Cmd+Enter or Ctrl+Enter)'
+                                : 'Start voice input (Cmd+Enter or Ctrl+Enter)'
                             }
                             aria-label={
-                              isListening
-                                ? "Stop voice recording"
-                                : "Start voice recording"
+                              isListening ? 'Stop voice recording' : 'Start voice recording'
                             }
                           >
                             {isListening ? (
@@ -2271,13 +2129,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                 strokeLinejoin="round"
                                 className="h-5 w-5"
                               >
-                                <rect
-                                  x="6"
-                                  y="6"
-                                  width="12"
-                                  height="12"
-                                  rx="1"
-                                />
+                                <rect x="6" y="6" width="12" height="12" rx="1" />
                               </svg>
                             ) : (
                               <Mic className={`h-5 w-5`} />
@@ -2290,14 +2142,14 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             disabled={!inputText.trim() || isLoading}
                             className={`flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200 shadow hover:shadow-md disabled:shadow transform disabled:scale-100 disabled:cursor-not-allowed border border-gray-900/20 dark:border-gray-100/20 group ${
                               inputText.trim() && !isLoading
-                                ? "animate-aurora-btn bg-[length:200%_auto]"
-                                : "bg-gray-100 dark:bg-gray-800"
+                                ? 'animate-aurora-btn bg-[length:200%_auto]'
+                                : 'bg-gray-100 dark:bg-gray-800'
                             }`}
                             style={
                               inputText.trim() && !isLoading
                                 ? {
                                     backgroundImage:
-                                      "linear-gradient(135deg, #FF0080, #7928CA, #0070F3, #38bdf8, #FF0080)",
+                                      'linear-gradient(135deg, #FF0080, #7928CA, #0070F3, #38bdf8, #FF0080)',
                                   }
                                 : {}
                             }
@@ -2310,8 +2162,8 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                               xmlns="http://www.w3.org/2000/svg"
                               className={`h-5 w-5 group-hover:-translate-y-0.5 transition-transform duration-200 mx-auto ${
                                 !inputText.trim() || isLoading
-                                  ? "text-gray-900/20 dark:text-gray-100/20"
-                                  : "text-white"
+                                  ? 'text-gray-900/20 dark:text-gray-100/20'
+                                  : 'text-white'
                               }`}
                             >
                               <path

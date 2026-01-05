@@ -1,16 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface LoadingScreenProps {
   isLoading: boolean;
   onLoadingComplete?: () => void;
 }
 
-export function LoadingScreen({
-  isLoading,
-  onLoadingComplete,
-}: LoadingScreenProps) {
+export function LoadingScreen({ isLoading, onLoadingComplete }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -22,16 +19,16 @@ export function LoadingScreen({
     // Set up proper mobile viewport height
     const setVH = () => {
       const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
 
     setVH();
-    window.addEventListener("resize", setVH);
-    window.addEventListener("orientationchange", setVH);
+    window.addEventListener('resize', setVH);
+    window.addEventListener('orientationchange', setVH);
 
     return () => {
-      window.removeEventListener("resize", setVH);
-      window.removeEventListener("orientationchange", setVH);
+      window.removeEventListener('resize', setVH);
+      window.removeEventListener('orientationchange', setVH);
     };
   }, []);
 
@@ -77,7 +74,7 @@ export function LoadingScreen({
   return (
     <div
       className={`loading-container fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-black transition-opacity duration-200 ${
-        isExiting ? "opacity-0" : "opacity-100"
+        isExiting ? 'opacity-0' : 'opacity-100'
       }`}
     >
       <div className="flex flex-col items-center space-y-8">
@@ -90,11 +87,11 @@ export function LoadingScreen({
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             className={`text-black dark:text-white transition-all duration-500 ${
-              progress > 50 ? "scale-105" : "scale-100"
+              progress > 50 ? 'scale-105' : 'scale-100'
             }`}
             style={{
               // Prevent layout shift during animation
-              willChange: "transform",
+              willChange: 'transform',
             }}
           >
             <path
@@ -110,15 +107,14 @@ export function LoadingScreen({
             className="h-full rounded-full bg-black dark:bg-white relative overflow-hidden"
             style={{
               width: `${Math.min(progress, 100)}%`,
-              transition: "width 0.1s ease-out",
+              transition: 'width 0.1s ease-out',
             }}
           >
             {/* Shimmer effect */}
             <div
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 dark:via-black/30 to-transparent animate-pulse"
               style={{
-                animation:
-                  progress > 0 ? "shimmer 1.5s ease-in-out infinite" : "none",
+                animation: progress > 0 ? 'shimmer 1.5s ease-in-out infinite' : 'none',
               }}
             />
           </div>
@@ -127,7 +123,7 @@ export function LoadingScreen({
         {/* Loading text with fade animation */}
         <div
           className={`text-sm text-gray-600 dark:text-gray-400 transition-opacity duration-300 ${
-            progress > 80 ? "opacity-50" : "opacity-100"
+            progress > 80 ? 'opacity-50' : 'opacity-100'
           }`}
         ></div>
       </div>

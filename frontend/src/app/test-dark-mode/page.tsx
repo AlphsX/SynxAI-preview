@@ -1,17 +1,15 @@
-"use client";
+'use client';
 
-import { useDarkMode } from "@/hooks/useDarkMode";
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 export default function TestDarkMode() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 p-8">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-        Dark Mode Test
-      </h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Dark Mode Test</h1>
       <p className="text-gray-700 dark:text-gray-300 mb-4">
-        Current mode: {isDarkMode ? "Dark" : "Light"}
+        Current mode: {isDarkMode ? 'Dark' : 'Light'}
       </p>
 
       <button

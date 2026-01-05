@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
-import { SimpleMessageRenderer } from "./SimpleMessageRenderer";
-import { SearchToolsDropdown } from "../magicui/search-tools-dropdown";
+import React, { useState, useRef, useEffect } from 'react';
+import { SimpleMessageRenderer } from './SimpleMessageRenderer';
+import { SearchToolsDropdown } from '../magicui/search-tools-dropdown';
 
 interface Message {
   id: string;
   content: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   timestamp: Date;
   isStreaming?: boolean;
 }
@@ -23,7 +23,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
   onSendMessage,
   isLoading = false,
 }) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
@@ -36,20 +36,20 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
   // Detect dark mode
   useEffect(() => {
     const checkDarkMode = () => {
-      setIsDarkMode(document.documentElement.classList.contains("dark"));
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
     };
     checkDarkMode();
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["class"],
+      attributeFilter: ['class'],
     });
     return () => observer.disconnect();
   }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   // Check if user has scrolled up
@@ -63,18 +63,18 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
       setShowScrollButton(!isNearBottom && messages.length > 0);
     };
 
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
   }, [messages.length]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   // Auto-resize textarea
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.style.height = "auto";
+      inputRef.current.style.height = 'auto';
       inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
     }
   }, [inputValue]);
@@ -82,20 +82,20 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
   const handleSend = () => {
     if (inputValue.trim() && !isLoading) {
       onSendMessage(inputValue.trim());
-      setInputValue("");
+      setInputValue('');
       setIsTyping(false);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     // Don't send message if dropdown is open
-    if (e.key === "Enter" && !e.shiftKey && !showSearchTools) {
+    if (e.key === 'Enter' && !e.shiftKey && !showSearchTools) {
       e.preventDefault();
       handleSend();
     }
 
     // Close dropdown on Escape
-    if (e.key === "Escape" && showSearchTools) {
+    if (e.key === 'Escape' && showSearchTools) {
       e.preventDefault();
       setShowSearchTools(false);
     }
@@ -107,7 +107,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
     setIsTyping(value.length > 0);
 
     // Show search tools dropdown ONLY when input is exactly "/"
-    if (value === "/") {
+    if (value === '/') {
       setShowSearchTools(true);
     } else {
       setShowSearchTools(false);
@@ -141,17 +141,17 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"></div>
                     <div
                       className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.1s" }}
+                      style={{ animationDelay: '0.1s' }}
                     ></div>
                     <div
                       className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"
-                      style={{ animationDelay: "0.2s" }}
+                      style={{ animationDelay: '0.2s' }}
                     ></div>
                   </div>
                   <span>Typing...</span>
                 </span>
               ) : (
-                "Ready to help you"
+                'Ready to help you'
               )}
             </p>
           </div>
@@ -159,10 +159,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
       </div>
 
       {/* Messages Area */}
-      <div
-        ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-6 relative"
-      >
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-4 py-6 relative">
         <div className="max-w-4xl mx-auto">
           {messages.length === 0 ? (
             /* Welcome Message */
@@ -174,16 +171,16 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 Hello! Welcome
               </h3>
               <p className="text-gray-600 dark:text-gray-300 max-w-lg mx-auto text-lg leading-relaxed">
-                I&apos;m ready to help answer your questions and chat with you.
-                How can I assist you today? 😊
+                I&apos;m ready to help answer your questions and chat with you. How can I assist you
+                today? 😊
               </p>
             </div>
           ) : (
             /* Chat Messages */
             <div className="space-y-4">
-              {messages.map((message) => (
+              {messages.map(message => (
                 <div key={message.id}>
-                  {message.role === "assistant" ? (
+                  {message.role === 'assistant' ? (
                     <div className="flex justify-start mb-4">
                       <div className="flex items-end space-x-2 max-w-[85%]">
                         <div className="flex-shrink-0 mb-1">
@@ -195,7 +192,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                           <SimpleMessageRenderer
                             content={message.content}
                             isStreaming={message.isStreaming}
-                            onCopyCode={(code) => {
+                            onCopyCode={code => {
                               navigator.clipboard.writeText(code);
                               // Could add toast notification here
                             }}
@@ -271,10 +268,8 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 <div
                   className="absolute inset-[-3px] rounded-full border-[4px] border-transparent bg-gradient-to-br from-gray-400/60 via-gray-300/40 to-gray-400/60 dark:from-gray-500/50 dark:via-gray-600/30 dark:to-gray-500/50 opacity-70 group-hover:opacity-90 transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.2)] dark:shadow-[0_0_15px_rgba(0,0,0,0.4)]"
                   style={{
-                    WebkitMaskImage:
-                      "radial-gradient(circle, transparent 48%, black 52%)",
-                    maskImage:
-                      "radial-gradient(circle, transparent 48%, black 52%)",
+                    WebkitMaskImage: 'radial-gradient(circle, transparent 48%, black 52%)',
+                    maskImage: 'radial-gradient(circle, transparent 48%, black 52%)',
                   }}
                 ></div>
 
@@ -282,10 +277,8 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 <div
                   className="absolute inset-[-1px] rounded-full border-[2px] border-transparent bg-gradient-to-br from-white/40 via-white/20 to-white/40 dark:from-white/20 dark:via-white/10 dark:to-white/20 opacity-50 group-hover:opacity-70 transition-opacity duration-300"
                   style={{
-                    WebkitMaskImage:
-                      "radial-gradient(circle, transparent 49%, black 51%)",
-                    maskImage:
-                      "radial-gradient(circle, transparent 49%, black 51%)",
+                    WebkitMaskImage: 'radial-gradient(circle, transparent 49%, black 51%)',
+                    maskImage: 'radial-gradient(circle, transparent 49%, black 51%)',
                   }}
                 ></div>
 
@@ -350,10 +343,10 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
               <div
                 className="absolute bottom-full left-0 mb-2 z-[10000]"
                 style={{
-                  position: "absolute",
-                  bottom: "100%",
-                  left: "0",
-                  marginBottom: "0.5rem",
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: '0',
+                  marginBottom: '0.5rem',
                   zIndex: 10000,
                 }}
               >
@@ -363,7 +356,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                   isDarkMode={isDarkMode}
                   externalOpen={showSearchTools}
                   showButton={false}
-                  onDropdownStateChange={(isOpen) => {
+                  onDropdownStateChange={isOpen => {
                     if (!isOpen) {
                       setShowSearchTools(false);
                     }
@@ -388,12 +381,7 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -412,11 +400,11 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
                 <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
                 <div
                   className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.1s" }}
+                  style={{ animationDelay: '0.1s' }}
                 ></div>
                 <div
                   className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.2s" }}
+                  style={{ animationDelay: '0.2s' }}
                 ></div>
               </div>
               <span>Typing...</span>

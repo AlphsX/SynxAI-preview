@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 import {
   Send,
   Sparkles,
@@ -12,14 +12,14 @@ import {
   Paperclip,
   Zap,
   Activity,
-} from "lucide-react";
+} from 'lucide-react';
 // import { useChat, useExternalData, useAppCapabilities } from '@/hooks';
-import { AIModelDropdown } from "@/components/magicui/ai-model-dropdown";
+import { AIModelDropdown } from '@/components/magicui/ai-model-dropdown';
 
 interface Message {
   id: string;
   content: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   timestamp: Date;
   model?: string;
 }
@@ -37,11 +37,11 @@ export default function EnhancedHome() {
   // Mock chat hook for now
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentResponse, setCurrentResponse] = useState("");
+  const [currentResponse, setCurrentResponse] = useState('');
   const [availableModels, setAvailableModels] = useState<AIModel[]>([]);
-  const [selectedModel, setSelectedModel] = useState("openai/gpt-oss-120b");
+  const [selectedModel, setSelectedModel] = useState('openai/gpt-oss-120b');
   const sendMessage = async (message: string) => {
-    console.log("Sending message:", message);
+    console.log('Sending message:', message);
   };
 
   // Mock external data hooks for now
@@ -54,20 +54,16 @@ export default function EnhancedHome() {
 
   // Mock capabilities hook for now
   const capabilities = {
-    features: [
-      "Multi-AI model support",
-      "Real-time web search",
-      "Cryptocurrency data",
-    ],
+    features: ['Multi-AI model support', 'Real-time web search', 'Cryptocurrency data'],
     external_apis: 3,
   };
 
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -79,22 +75,22 @@ export default function EnhancedHome() {
     if (!inputText.trim() || isLoading) return;
 
     const message = inputText;
-    setInputText("");
+    setInputText('');
     await sendMessage(message);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e as React.FormEvent);
     }
   };
 
-  const handleQuickAction = async (action: "web" | "crypto") => {
-    if (action === "web") {
-      setInputText("Search the web for latest AI developments");
-    } else if (action === "crypto") {
-      setInputText("Get current cryptocurrency market data");
+  const handleQuickAction = async (action: 'web' | 'crypto') => {
+    if (action === 'web') {
+      setInputText('Search the web for latest AI developments');
+    } else if (action === 'crypto') {
+      setInputText('Get current cryptocurrency market data');
     }
     inputRef.current?.focus();
   };
@@ -103,10 +99,10 @@ export default function EnhancedHome() {
   useEffect(() => {
     if (messages.length === 0) {
       const welcomeMessage: Message = {
-        id: "1",
+        id: '1',
         content:
           "Hello! I'm Checkmate Spec Preview, your AI assistant with enhanced capabilities. I can search the web, get crypto data, and provide intelligent responses. Try asking me about current events or market trends!",
-        role: "assistant",
+        role: 'assistant',
         timestamp: new Date(),
         model: selectedModel,
       };
@@ -141,26 +137,21 @@ export default function EnhancedHome() {
                 </div>
               )}
 
-              <AIModelDropdown
-                selectedModel={selectedModel}
-                onModelSelect={setSelectedModel}
-              />
+              <AIModelDropdown selectedModel={selectedModel} onModelSelect={setSelectedModel} />
             </div>
           </div>
 
           {/* Capabilities Banner */}
           {capabilities && capabilities.features && (
             <div className="mt-3 flex flex-wrap gap-2">
-              {capabilities.features
-                .slice(0, 4)
-                .map((feature: string, index: number) => (
-                  <span
-                    key={index}
-                    className="px-2 py-1 bg-blue-600/20 text-blue-300 text-xs rounded-full"
-                  >
-                    {feature}
-                  </span>
-                ))}
+              {capabilities.features.slice(0, 4).map((feature: string, index: number) => (
+                <span
+                  key={index}
+                  className="px-2 py-1 bg-blue-600/20 text-blue-300 text-xs rounded-full"
+                >
+                  {feature}
+                </span>
+              ))}
             </div>
           )}
         </div>
@@ -179,18 +170,16 @@ export default function EnhancedHome() {
                 </div>
                 <div className="rounded-2xl border border-gray-700 bg-gray-800 px-4 py-3 max-w-[80%]">
                   <p className="text-sm leading-relaxed">
-                    Hello! I&apos;m Checkmate Spec Preview, your AI assistant
-                    with enhanced capabilities. I can search the web in
-                    real-time, get cryptocurrency market data, and provide
-                    intelligent responses with current information. What would
-                    you like to explore?
+                    Hello! I&apos;m Checkmate Spec Preview, your AI assistant with enhanced
+                    capabilities. I can search the web in real-time, get cryptocurrency market data,
+                    and provide intelligent responses with current information. What would you like
+                    to explore?
                   </p>
                   <div className="mt-2 text-xs text-gray-400">
-                    Enhanced with{" "}
-                    {capabilities &&
-                    typeof capabilities.external_apis === "number"
+                    Enhanced with{' '}
+                    {capabilities && typeof capabilities.external_apis === 'number'
                       ? capabilities.external_apis
-                      : 3}{" "}
+                      : 3}{' '}
                     external APIs
                   </div>
                 </div>
@@ -198,29 +187,25 @@ export default function EnhancedHome() {
             </div>
           )}
 
-          {messages.map((message) => (
+          {messages.map(message => (
             <div
               key={message.id}
-              className={`flex ${
-                message.role === "user" ? "justify-end" : "justify-start"
-              }`}
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
                 className={`flex max-w-[80%] space-x-3 ${
-                  message.role === "user"
-                    ? "flex-row-reverse space-x-reverse"
-                    : ""
+                  message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
                 }`}
               >
                 {/* Avatar */}
                 <div
                   className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
-                    message.role === "user"
-                      ? "bg-blue-600"
-                      : "bg-gradient-to-r from-purple-600 to-pink-600"
+                    message.role === 'user'
+                      ? 'bg-blue-600'
+                      : 'bg-gradient-to-r from-purple-600 to-pink-600'
                   }`}
                 >
-                  {message.role === "user" ? (
+                  {message.role === 'user' ? (
                     <User className="h-4 w-4 text-white" />
                   ) : (
                     <Bot className="h-4 w-4 text-white" />
@@ -230,19 +215,16 @@ export default function EnhancedHome() {
                 {/* Message Content */}
                 <div
                   className={`rounded-2xl px-4 py-3 ${
-                    message.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-800 text-gray-100 border border-gray-700"
+                    message.role === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-800 text-gray-100 border border-gray-700'
                   }`}
                 >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {message.content}
-                  </p>
-                  {message.role === "assistant" && message.model && (
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                  {message.role === 'assistant' && message.model && (
                     <div className="mt-2 text-xs text-gray-400 flex items-center gap-2">
                       <Zap className="h-3 w-3" />
-                      {availableModels.find((m) => m.id === message.model)
-                        ?.name || message.model}
+                      {availableModels.find(m => m.id === message.model)?.name || message.model}
                     </div>
                   )}
                 </div>
@@ -258,9 +240,7 @@ export default function EnhancedHome() {
                   <Bot className="h-4 w-4 text-white" />
                 </div>
                 <div className="rounded-2xl border border-gray-700 bg-gray-800 px-4 py-3 max-w-[80%]">
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {currentResponse}
-                  </p>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{currentResponse}</p>
                   <div className="mt-2 text-xs text-gray-400 flex items-center gap-1">
                     <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                     Streaming response...
@@ -309,12 +289,12 @@ export default function EnhancedHome() {
               <textarea
                 ref={inputRef}
                 value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
+                onChange={e => setInputText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask me anything... I have real-time web search, crypto data, and more!"
                 className="w-full resize-none rounded-2xl bg-gray-800 border border-gray-600 px-4 py-3 pr-20 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 rows={1}
-                style={{ minHeight: "48px", maxHeight: "120px" }}
+                style={{ minHeight: '48px', maxHeight: '120px' }}
                 disabled={isLoading}
               />
 
@@ -322,7 +302,7 @@ export default function EnhancedHome() {
               <div className="absolute right-2 top-2 flex space-x-1">
                 <button
                   type="button"
-                  onClick={() => handleQuickAction("web")}
+                  onClick={() => handleQuickAction('web')}
                   className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white transition-colors"
                   title="Search web"
                   disabled={isLoading}
@@ -331,7 +311,7 @@ export default function EnhancedHome() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleQuickAction("crypto")}
+                  onClick={() => handleQuickAction('crypto')}
                   className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white transition-colors"
                   title="Get crypto data"
                   disabled={isLoading}
@@ -362,8 +342,7 @@ export default function EnhancedHome() {
 
           {/* Footer info */}
           <div className="mt-2 text-center text-xs text-gray-500">
-            Checkmate Spec Preview can make mistakes. Enhanced with real-time
-            data capabilities.
+            Checkmate Spec Preview can make mistakes. Enhanced with real-time data capabilities.
           </div>
         </div>
       </div>

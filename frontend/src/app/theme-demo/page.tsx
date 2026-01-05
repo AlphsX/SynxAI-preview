@@ -1,17 +1,12 @@
-"use client";
+'use client';
 
-import { useDarkMode } from "@/hooks/useDarkMode";
-import { useDynamicFavicon } from "@/hooks/useDynamicFavicon";
-import { AnimatedThemeToggler } from "@/components/magicui/animated-theme-toggler";
+import { useDarkMode } from '@/hooks/useDarkMode';
+import { useDynamicFavicon } from '@/hooks/useDynamicFavicon';
+import { AnimatedThemeToggler } from '@/components/magicui/animated-theme-toggler';
 
 export default function ThemeDemo() {
-  const {
-    isDarkMode,
-    toggleDarkMode,
-    isUsingSystemPreference,
-    systemPreference,
-    isHydrated,
-  } = useDarkMode();
+  const { isDarkMode, toggleDarkMode, isUsingSystemPreference, systemPreference, isHydrated } =
+    useDarkMode();
 
   // Dynamic favicon based on theme
   useDynamicFavicon(isDarkMode);
@@ -45,8 +40,8 @@ export default function ThemeDemo() {
               />
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 {isUsingSystemPreference
-                  ? `Following system (${systemPreference ? "Dark" : "Light"})`
-                  : `Manual override (${isDarkMode ? "Dark" : "Light"})`}
+                  ? `Following system (${systemPreference ? 'Dark' : 'Light'})`
+                  : `Manual override (${isDarkMode ? 'Dark' : 'Light'})`}
               </div>
             </div>
           </div>
@@ -57,27 +52,21 @@ export default function ThemeDemo() {
             </h2>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">
-                  Current Theme:
-                </span>
+                <span className="text-gray-600 dark:text-gray-400">Current Theme:</span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  {isDarkMode ? "Dark" : "Light"}
+                  {isDarkMode ? 'Dark' : 'Light'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">
-                  Using System:
-                </span>
+                <span className="text-gray-600 dark:text-gray-400">Using System:</span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  {isUsingSystemPreference ? "Yes" : "No"}
+                  {isUsingSystemPreference ? 'Yes' : 'No'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600 dark:text-gray-400">
-                  System Preference:
-                </span>
+                <span className="text-gray-600 dark:text-gray-400">System Preference:</span>
                 <span className="font-medium text-gray-900 dark:text-white">
-                  {systemPreference ? "Dark" : "Light"}
+                  {systemPreference ? 'Dark' : 'Light'}
                 </span>
               </div>
             </div>
@@ -101,20 +90,11 @@ export default function ThemeDemo() {
               How it works
             </h2>
             <div className="text-gray-600 dark:text-gray-400 space-y-2 text-sm">
-              <p>
-                • Theme now defaults to your system preference automatically
-              </p>
-              <p>
-                • The toggle button shows a monitor icon when using system
-                preference
-              </p>
-              <p>
-                • Clicking the button switches to manual mode (sun/moon icons)
-              </p>
+              <p>• Theme now defaults to your system preference automatically</p>
+              <p>• The toggle button shows a monitor icon when using system preference</p>
+              <p>• Clicking the button switches to manual mode (sun/moon icons)</p>
               <p>• Manual selections override system preference until reset</p>
-              <p>
-                • Changes to system theme are automatically detected and applied
-              </p>
+              <p>• Changes to system theme are automatically detected and applied</p>
             </div>
           </div>
         </div>

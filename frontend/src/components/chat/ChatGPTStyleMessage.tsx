@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { Copy, Check, ChevronDown } from "lucide-react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import React, { useState } from 'react';
+import { Copy, Check, ChevronDown } from 'lucide-react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface ChatGPTStyleMessageProps {
   content: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   isStreaming?: boolean;
   selectedTool?: string;
 }
@@ -27,12 +27,8 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
 
   // Parse content for code blocks
   const renderContent = () => {
-    if (role === "user") {
-      return (
-        <div className="chatgpt-user-message chatgpt-message-animate">
-          {content}
-        </div>
-      );
+    if (role === 'user') {
+      return <div className="chatgpt-user-message chatgpt-message-animate">{content}</div>;
     }
 
     // Split content by code blocks
@@ -53,12 +49,12 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
             dangerouslySetInnerHTML={{
               __html: formatText(textContent),
             }}
-          />,
+          />
         );
       }
 
       // Add code block
-      const language = match[1] || "text";
+      const language = match[1] || 'text';
       const code = match[2].trim();
       const codeId = `code-${blockIndex}`;
 
@@ -66,10 +62,7 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
         <div key={codeId} className="chatgpt-code-block">
           <div className="chatgpt-code-header">
             <span className="chatgpt-code-language">{language}</span>
-            <button
-              className="chatgpt-copy-button"
-              onClick={() => handleCopyCode(code, codeId)}
-            >
+            <button className="chatgpt-copy-button" onClick={() => handleCopyCode(code, codeId)}>
               {copiedCode === codeId ? (
                 <>
                   <Check size={14} />
@@ -90,20 +83,19 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
               customStyle={{
                 margin: 0,
                 padding: 0,
-                background: "transparent",
-                fontSize: "0.875rem",
+                background: 'transparent',
+                fontSize: '0.875rem',
               }}
               codeTagProps={{
                 style: {
-                  fontFamily:
-                    "'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace",
+                  fontFamily: "'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace",
                 },
               }}
             >
               {code}
             </SyntaxHighlighter>
           </div>
-        </div>,
+        </div>
       );
 
       lastIndex = match.index + match[0].length;
@@ -120,7 +112,7 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
           dangerouslySetInnerHTML={{
             __html: formatText(textContent),
           }}
-        />,
+        />
       );
     }
 
@@ -135,13 +127,13 @@ export const ChatGPTStyleMessage: React.FC<ChatGPTStyleMessageProps> = ({
   // Format text with inline code, bold, etc.
   const formatText = (text: string): string => {
     // Handle inline code
-    text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
 
     // Handle bold text
-    text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
     // Handle line breaks
-    text = text.replace(/\n/g, "<br />");
+    text = text.replace(/\n/g, '<br />');
 
     return text;
   };

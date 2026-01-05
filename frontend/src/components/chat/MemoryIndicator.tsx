@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from "react";
-import { Brain, Trash2, Info } from "lucide-react";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Brain, Trash2, Info } from 'lucide-react';
 
 interface MemoryStats {
   total_messages: number;
@@ -16,10 +16,7 @@ interface MemoryIndicatorProps {
   onClearMemory?: () => void;
 }
 
-export default function MemoryIndicator({
-  conversationId,
-  onClearMemory,
-}: MemoryIndicatorProps) {
+export default function MemoryIndicator({ conversationId, onClearMemory }: MemoryIndicatorProps) {
   const [stats, setStats] = useState<MemoryStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -33,19 +30,19 @@ export default function MemoryIndicator({
         setStats(data);
       }
     } catch (error) {
-      console.error("Failed to fetch memory stats:", error);
+      console.error('Failed to fetch memory stats:', error);
     }
   }, [conversationId]);
 
   const checkMemoryStatus = useCallback(async () => {
     try {
-      const response = await fetch("/api/v1/memory/status");
+      const response = await fetch('/api/v1/memory/status');
       if (response.ok) {
         const data = await response.json();
         setMemoryEnabled(data.memory_enabled);
       }
     } catch (error) {
-      console.error("Failed to check memory status:", error);
+      console.error('Failed to check memory status:', error);
     }
   }, []);
 
@@ -57,14 +54,14 @@ export default function MemoryIndicator({
   }, [conversationId, fetchMemoryStats, checkMemoryStatus]);
 
   const handleClearMemory = async () => {
-    if (!confirm("Are you sure you want to clear the conversation memory?")) {
+    if (!confirm('Are you sure you want to clear the conversation memory?')) {
       return;
     }
 
     setIsLoading(true);
     try {
       const response = await fetch(`/api/v1/memory/clear/${conversationId}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
       if (response.ok) {
@@ -72,13 +69,13 @@ export default function MemoryIndicator({
         if (onClearMemory) {
           onClearMemory();
         }
-        alert("Memory cleared successfully!");
+        alert('Memory cleared successfully!');
       } else {
-        alert("Failed to clear memory");
+        alert('Failed to clear memory');
       }
     } catch (error) {
-      console.error("Failed to clear memory:", error);
-      alert("Error clearing memory");
+      console.error('Failed to clear memory:', error);
+      alert('Error clearing memory');
     } finally {
       setIsLoading(false);
     }
@@ -87,16 +84,14 @@ export default function MemoryIndicator({
   const toggleMemory = async () => {
     setIsLoading(true);
     try {
-      const endpoint = memoryEnabled
-        ? "/api/v1/memory/disable"
-        : "/api/v1/memory/enable";
-      const response = await fetch(endpoint, { method: "POST" });
+      const endpoint = memoryEnabled ? '/api/v1/memory/disable' : '/api/v1/memory/enable';
+      const response = await fetch(endpoint, { method: 'POST' });
 
       if (response.ok) {
         setMemoryEnabled(!memoryEnabled);
       }
     } catch (error) {
-      console.error("Failed to toggle memory:", error);
+      console.error('Failed to toggle memory:', error);
     } finally {
       setIsLoading(false);
     }
@@ -114,16 +109,12 @@ export default function MemoryIndicator({
           {/* Memory Icon */}
           <div
             className={`p-2 rounded-full ${
-              memoryEnabled
-                ? "bg-green-100 dark:bg-green-900"
-                : "bg-gray-100 dark:bg-gray-700"
+              memoryEnabled ? 'bg-green-100 dark:bg-green-900' : 'bg-gray-100 dark:bg-gray-700'
             }`}
           >
             <Brain
               className={`w-5 h-5 ${
-                memoryEnabled
-                  ? "text-green-600 dark:text-green-400"
-                  : "text-gray-400"
+                memoryEnabled ? 'text-green-600 dark:text-green-400' : 'text-gray-400'
               }`}
             />
           </div>
@@ -165,17 +156,13 @@ export default function MemoryIndicator({
         {showDetails && stats && (
           <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
             <div className="flex justify-between text-xs">
-              <span className="text-gray-600 dark:text-gray-400">
-                User messages:
-              </span>
+              <span className="text-gray-600 dark:text-gray-400">User messages:</span>
               <span className="font-medium text-gray-900 dark:text-gray-100">
                 {stats.user_messages}
               </span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-gray-600 dark:text-gray-400">
-                AI messages:
-              </span>
+              <span className="text-gray-600 dark:text-gray-400">AI messages:</span>
               <span className="font-medium text-gray-900 dark:text-gray-100">
                 {stats.assistant_messages}
               </span>
@@ -187,17 +174,13 @@ export default function MemoryIndicator({
               </span>
             </div>
             <div className="flex justify-between text-xs">
-              <span className="text-gray-600 dark:text-gray-400">
-                LangSmith:
-              </span>
+              <span className="text-gray-600 dark:text-gray-400">LangSmith:</span>
               <span
                 className={`font-medium ${
-                  stats.langsmith_enabled
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-gray-400"
+                  stats.langsmith_enabled ? 'text-green-600 dark:text-green-400' : 'text-gray-400'
                 }`}
               >
-                {stats.langsmith_enabled ? "Enabled" : "Disabled"}
+                {stats.langsmith_enabled ? 'Enabled' : 'Disabled'}
               </span>
             </div>
 
@@ -207,15 +190,11 @@ export default function MemoryIndicator({
               disabled={isLoading}
               className={`w-full mt-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                 memoryEnabled
-                  ? "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800"
-                  : "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800"
+                  ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800'
+                  : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
               } disabled:opacity-50`}
             >
-              {isLoading
-                ? "Processing..."
-                : memoryEnabled
-                  ? "Disable Memory"
-                  : "Enable Memory"}
+              {isLoading ? 'Processing...' : memoryEnabled ? 'Disable Memory' : 'Enable Memory'}
             </button>
           </div>
         )}

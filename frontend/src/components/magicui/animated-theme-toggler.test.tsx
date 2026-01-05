@@ -1,101 +1,72 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { AnimatedThemeToggler } from "./animated-theme-toggler";
+import { render, screen, fireEvent } from '@testing-library/react';
+import { AnimatedThemeToggler } from './animated-theme-toggler';
 
 // Mock the useDarkMode hook
-jest.mock("@/hooks/useDarkMode", () => ({
+jest.mock('@/hooks/useDarkMode', () => ({
   useDarkMode: () => ({
     isDarkMode: false,
     toggleDarkMode: jest.fn(),
   }),
 }));
 
-describe("AnimatedThemeToggler", () => {
-  it("renders correctly in light mode", () => {
+describe('AnimatedThemeToggler', () => {
+  it('renders correctly in light mode', () => {
     const toggleDarkMode = jest.fn();
-    render(
-      <AnimatedThemeToggler
-        isDarkMode={false}
-        toggleDarkMode={toggleDarkMode}
-      />,
-    );
+    render(<AnimatedThemeToggler isDarkMode={false} toggleDarkMode={toggleDarkMode} />);
 
     // Check if the component renders
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it("renders correctly in dark mode", () => {
+  it('renders correctly in dark mode', () => {
     const toggleDarkMode = jest.fn();
-    render(
-      <AnimatedThemeToggler
-        isDarkMode={true}
-        toggleDarkMode={toggleDarkMode}
-      />,
-    );
+    render(<AnimatedThemeToggler isDarkMode={true} toggleDarkMode={toggleDarkMode} />);
 
     // Check if the component renders
-    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it("renders correctly with system preference", () => {
+  it('renders correctly with system preference', () => {
     const toggleDarkMode = jest.fn();
     render(
       <AnimatedThemeToggler
         isDarkMode={false}
         toggleDarkMode={toggleDarkMode}
         isUsingSystemPreference={true}
-      />,
+      />
     );
 
     // Check if the component renders
-    expect(screen.getByRole("button")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toHaveAttribute(
-      "aria-label",
-      "Using system theme preference",
+    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-label',
+      'Using system theme preference'
     );
   });
 
-  it("calls toggleDarkMode when clicked", () => {
+  it('calls toggleDarkMode when clicked', () => {
     const toggleDarkMode = jest.fn();
-    render(
-      <AnimatedThemeToggler
-        isDarkMode={false}
-        toggleDarkMode={toggleDarkMode}
-      />,
-    );
+    render(<AnimatedThemeToggler isDarkMode={false} toggleDarkMode={toggleDarkMode} />);
 
     // Click the button
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByRole('button'));
 
     // Check if toggleDarkMode was called
     expect(toggleDarkMode).toHaveBeenCalledTimes(1);
   });
 
-  it("has proper aria-label for accessibility", () => {
+  it('has proper aria-label for accessibility', () => {
     const toggleDarkMode = jest.fn();
 
     // Test light mode label
     const { rerender } = render(
-      <AnimatedThemeToggler
-        isDarkMode={false}
-        toggleDarkMode={toggleDarkMode}
-      />,
+      <AnimatedThemeToggler isDarkMode={false} toggleDarkMode={toggleDarkMode} />
     );
-    expect(screen.getByRole("button")).toHaveAttribute(
-      "aria-label",
-      "Switch to dark mode",
-    );
+    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Switch to dark mode');
 
     // Test dark mode label
-    rerender(
-      <AnimatedThemeToggler
-        isDarkMode={true}
-        toggleDarkMode={toggleDarkMode}
-      />,
-    );
-    expect(screen.getByRole("button")).toHaveAttribute(
-      "aria-label",
-      "Switch to light mode",
-    );
+    rerender(<AnimatedThemeToggler isDarkMode={true} toggleDarkMode={toggleDarkMode} />);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Switch to light mode');
 
     // Test system preference label
     rerender(
@@ -103,11 +74,11 @@ describe("AnimatedThemeToggler", () => {
         isDarkMode={false}
         toggleDarkMode={toggleDarkMode}
         isUsingSystemPreference={true}
-      />,
+      />
     );
-    expect(screen.getByRole("button")).toHaveAttribute(
-      "aria-label",
-      "Using system theme preference",
+    expect(screen.getByRole('button')).toHaveAttribute(
+      'aria-label',
+      'Using system theme preference'
     );
   });
 });

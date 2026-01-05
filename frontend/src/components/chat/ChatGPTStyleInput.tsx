@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useRef, useEffect } from "react";
-import { Plus, Mic, Send } from "lucide-react";
+import React, { useRef, useEffect } from 'react';
+import { Plus, Mic, Send } from 'lucide-react';
 
 interface ChatGPTStyleInputProps {
   value: string;
@@ -22,7 +22,7 @@ export const ChatGPTStyleInput: React.FC<ChatGPTStyleInputProps> = ({
   onPlusClick,
   isListening = false,
   isLoading = false,
-  placeholder = "Ask anything",
+  placeholder = 'Ask anything',
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -30,13 +30,13 @@ export const ChatGPTStyleInput: React.FC<ChatGPTStyleInputProps> = ({
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = "auto";
+      textarea.style.height = 'auto';
       textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
     }
   }, [value]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (value.trim() && !isLoading) {
         onSubmit();
@@ -62,7 +62,7 @@ export const ChatGPTStyleInput: React.FC<ChatGPTStyleInputProps> = ({
           ref={textareaRef}
           className="chatgpt-input"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           rows={1}
@@ -72,7 +72,7 @@ export const ChatGPTStyleInput: React.FC<ChatGPTStyleInputProps> = ({
         {/* Voice button */}
         {onVoiceClick && (
           <button
-            className={`chatgpt-voice-button ${isListening ? "active" : ""}`}
+            className={`chatgpt-voice-button ${isListening ? 'active' : ''}`}
             onClick={onVoiceClick}
             aria-label="Voice input"
           >
@@ -94,9 +94,7 @@ export const ChatGPTStyleInput: React.FC<ChatGPTStyleInputProps> = ({
       </div>
 
       {/* Disclaimer */}
-      <div className="chatgpt-disclaimer">
-        AI can make mistakes. Check important info.
-      </div>
+      <div className="chatgpt-disclaimer">AI can make mistakes. Check important info.</div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { useDarkMode } from "./useDarkMode";
+import { useEffect, useRef, useState } from 'react';
+import { useDarkMode } from './useDarkMode';
 
 export interface ThemeTransitionConfig {
   duration?: number;
@@ -12,7 +12,7 @@ export interface ThemeTransitionConfig {
 export const useThemeTransition = (config: ThemeTransitionConfig = {}) => {
   const {
     duration = 300,
-    easing = "cubic-bezier(0.4, 0, 0.2, 1)",
+    easing = 'cubic-bezier(0.4, 0, 0.2, 1)',
     enableViewTransition = true,
   } = config;
 
@@ -27,17 +27,14 @@ export const useThemeTransition = (config: ThemeTransitionConfig = {}) => {
     setIsTransitioning(true);
 
     // Use View Transitions API if available and enabled
-    if (enableViewTransition && "startViewTransition" in document) {
+    if (enableViewTransition && 'startViewTransition' in document) {
       try {
         // @ts-ignore - View Transitions API is experimental
         await document.startViewTransition(() => {
           toggleDarkMode();
         }).finished;
       } catch (error) {
-        console.warn(
-          "View transition failed, falling back to regular transition:",
-          error,
-        );
+        console.warn('View transition failed, falling back to regular transition:', error);
         toggleDarkMode();
       }
     } else {
@@ -50,16 +47,16 @@ export const useThemeTransition = (config: ThemeTransitionConfig = {}) => {
 
   // Custom transition implementation
   const performCustomTransition = async (): Promise<void> => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       // Create transition overlay
-      const overlay = document.createElement("div");
+      const overlay = document.createElement('div');
       overlay.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: ${isDarkMode ? "#ffffff" : "#000000"};
+        background: ${isDarkMode ? '#ffffff' : '#000000'};
         opacity: 0;
         pointer-events: none;
         z-index: 9999;
@@ -70,7 +67,7 @@ export const useThemeTransition = (config: ThemeTransitionConfig = {}) => {
 
       // Fade in overlay
       requestAnimationFrame(() => {
-        overlay.style.opacity = "0.1";
+        overlay.style.opacity = '0.1';
       });
 
       // Toggle theme at midpoint
@@ -79,7 +76,7 @@ export const useThemeTransition = (config: ThemeTransitionConfig = {}) => {
 
         // Fade out overlay
         setTimeout(() => {
-          overlay.style.opacity = "0";
+          overlay.style.opacity = '0';
 
           // Remove overlay after transition
           setTimeout(() => {
@@ -96,15 +93,15 @@ export const useThemeTransition = (config: ThemeTransitionConfig = {}) => {
     const root = document.documentElement;
 
     if (isTransitioning) {
-      root.style.setProperty("--theme-transition-duration", `${duration}ms`);
-      root.style.setProperty("--theme-transition-easing", easing);
-      root.classList.add("theme-transitioning");
+      root.style.setProperty('--theme-transition-duration', `${duration}ms`);
+      root.style.setProperty('--theme-transition-easing', easing);
+      root.classList.add('theme-transitioning');
     } else {
-      root.classList.remove("theme-transitioning");
+      root.classList.remove('theme-transitioning');
     }
 
     return () => {
-      root.classList.remove("theme-transitioning");
+      root.classList.remove('theme-transitioning');
     };
   }, [isTransitioning, duration, easing]);
 
@@ -196,13 +193,13 @@ export const useThemeTransitionPreferences = () => {
 
   useEffect(() => {
     // Load preferences from localStorage
-    const saved = localStorage.getItem("theme-transition-preferences");
+    const saved = localStorage.getItem('theme-transition-preferences');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        setPreferences((prev) => ({ ...prev, ...parsed }));
+        setPreferences(prev => ({ ...prev, ...parsed }));
       } catch (error) {
-        console.warn("Failed to parse theme transition preferences:", error);
+        console.warn('Failed to parse theme transition preferences:', error);
       }
     }
   }, []);
@@ -210,10 +207,7 @@ export const useThemeTransitionPreferences = () => {
   const updatePreferences = (updates: Partial<typeof preferences>) => {
     const newPreferences = { ...preferences, ...updates };
     setPreferences(newPreferences);
-    localStorage.setItem(
-      "theme-transition-preferences",
-      JSON.stringify(newPreferences),
-    );
+    localStorage.setItem('theme-transition-preferences', JSON.stringify(newPreferences));
   };
 
   return {

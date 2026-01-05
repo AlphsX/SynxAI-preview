@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
-@import "../styles/markdown.css";
-@import "../styles/animations.css";
-@import "../styles/chatgpt-style.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import '../styles/markdown.css';
+@import '../styles/animations.css';
+@import '../styles/chatgpt-style.css';
 
 @tailwind base;
 @tailwind components;
@@ -30,7 +30,7 @@
 
 body {
   font-family:
-    "Inter",
+    'Inter',
     system-ui,
     -apple-system,
     sans-serif;
@@ -262,12 +262,7 @@ body {
 }
 
 .animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -339,11 +334,7 @@ body {
 
 /* Enhanced glassmorphism with depth */
 .glass-depth {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.6) 0%,
-    rgba(255, 255, 255, 0.3) 100%
-  );
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 100%);
   backdrop-filter: blur(60px) saturate(180%) brightness(115%);
   border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow:
@@ -353,11 +344,7 @@ body {
 }
 
 .dark .glass-depth {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.4) 0%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.2) 100%);
   backdrop-filter: blur(60px) saturate(180%) brightness(130%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
@@ -374,8 +361,8 @@ body {
 /* Smooth transitions for all interactive elements */
 * {
   transition-property:
-    color, background-color, border-color, text-decoration-color, fill, stroke,
-    opacity, box-shadow, transform, filter, backdrop-filter;
+    color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow,
+    transform, filter, backdrop-filter;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -754,8 +741,8 @@ select {
 
   /* Ensure chat input doesn't zoom */
   .chat-input,
-  textarea[placeholder*="Ask"],
-  textarea[placeholder*="anything"] {
+  textarea[placeholder*='Ask'],
+  textarea[placeholder*='anything'] {
     font-size: 16px !important;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -901,8 +888,8 @@ Swipe gesture animations */
   }
 
   /* Ensure theme toggle button works correctly on mobile */
-  button[aria-label*="theme"],
-  button[aria-label*="Theme"] {
+  button[aria-label*='theme'],
+  button[aria-label*='Theme'] {
     -webkit-tap-highlight-color: transparent;
     tap-highlight-color: transparent;
     touch-action: manipulation;
@@ -1181,10 +1168,8 @@ Swipe gesture animations */
     rgba(255, 255, 255, 0.02) 50%,
     transparent 100%
   );
-  backdrop-filter: blur(0px) contrast(2.2) brightness(1.8) saturate(1.6)
-    hue-rotate(0deg);
-  -webkit-backdrop-filter: blur(0px) contrast(2.2) brightness(1.8) saturate(1.6)
-    hue-rotate(0deg);
+  backdrop-filter: blur(0px) contrast(2.2) brightness(1.8) saturate(1.6) hue-rotate(0deg);
+  -webkit-backdrop-filter: blur(0px) contrast(2.2) brightness(1.8) saturate(1.6) hue-rotate(0deg);
   transform: scale(1);
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
@@ -1205,10 +1190,8 @@ Swipe gesture animations */
     rgba(255, 255, 255, 0.01) 50%,
     transparent 100%
   );
-  backdrop-filter: blur(0px) contrast(2.5) brightness(2) saturate(1.8)
-    hue-rotate(0deg);
-  -webkit-backdrop-filter: blur(0px) contrast(2.5) brightness(2) saturate(1.8)
-    hue-rotate(0deg);
+  backdrop-filter: blur(0px) contrast(2.5) brightness(2) saturate(1.8) hue-rotate(0deg);
+  -webkit-backdrop-filter: blur(0px) contrast(2.5) brightness(2) saturate(1.8) hue-rotate(0deg);
   box-shadow:
     inset 0 0 30px rgba(255, 255, 255, 0.08),
     inset 0 0 60px rgba(255, 255, 255, 0.04),
@@ -1217,10 +1200,8 @@ Swipe gesture animations */
 
 /* Extreme magnification with powerful zoom effect on hover */
 .magnifying-glass-button:hover .magnifying-lens-effect {
-  backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
-    hue-rotate(3deg);
-  -webkit-backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
-    hue-rotate(3deg);
+  backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2) hue-rotate(3deg);
+  -webkit-backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2) hue-rotate(3deg);
   transform: scale(1.15);
   box-shadow:
     inset 0 0 40px rgba(255, 255, 255, 0.2),
@@ -1229,10 +1210,8 @@ Swipe gesture animations */
 }
 
 .dark .magnifying-glass-button:hover .magnifying-lens-effect {
-  backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
-    hue-rotate(3deg);
-  -webkit-backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
-    hue-rotate(3deg);
+  backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2) hue-rotate(3deg);
+  -webkit-backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2) hue-rotate(3deg);
   box-shadow:
     inset 0 0 40px rgba(255, 255, 255, 0.12),
     inset 0 0 80px rgba(255, 255, 255, 0.06),
@@ -1255,23 +1234,13 @@ Swipe gesture animations */
 }
 
 .animate-liquid-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.5),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
   background-size: 200% 100%;
   animation: liquidGlassShimmer 2.5s ease-in-out infinite;
 }
 
 .dark .animate-liquid-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
 }
 
 /* Radial gradient utility for glass effects */
@@ -1294,7 +1263,7 @@ Swipe gesture animations */
 
 /* Extreme Zoom Effect for Content Behind Button */
 .magnifying-glass-container::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: -40px;
   border-radius: 50%;
@@ -1309,8 +1278,7 @@ Swipe gesture animations */
 
 .magnifying-glass-container:hover::before {
   backdrop-filter: contrast(2.4) brightness(2) saturate(1.8) hue-rotate(2deg);
-  -webkit-backdrop-filter: contrast(2.4) brightness(2) saturate(1.8)
-    hue-rotate(2deg);
+  -webkit-backdrop-filter: contrast(2.4) brightness(2) saturate(1.8) hue-rotate(2deg);
   opacity: 1;
   transform: scale(1.12);
   inset: -50px;
@@ -1321,23 +1289,19 @@ Swipe gesture animations */
   0%,
   100% {
     transform: scale(1) rotate(0deg);
-    filter: brightness(1.1) contrast(1.1)
-      drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+    filter: brightness(1.1) contrast(1.1) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
   }
   25% {
     transform: scale(1.03) rotate(0.8deg);
-    filter: brightness(1.15) contrast(1.15)
-      drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+    filter: brightness(1.15) contrast(1.15) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
   }
   50% {
     transform: scale(1.05) rotate(0deg);
-    filter: brightness(1.2) contrast(1.2)
-      drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
+    filter: brightness(1.2) contrast(1.2) drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
   }
   75% {
     transform: scale(1.03) rotate(-0.8deg);
-    filter: brightness(1.15) contrast(1.15)
-      drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+    filter: brightness(1.15) contrast(1.15) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
   }
 }
 
@@ -1349,8 +1313,7 @@ Swipe gesture animations */
 .magnifying-glass-button:hover {
   animation-play-state: paused;
   transform: scale(1.08) !important;
-  filter: brightness(1.3) contrast(1.3)
-    drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4)) !important;
+  filter: brightness(1.3) contrast(1.3) drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4)) !important;
 }
 
 /* Natural Magnifying Glass Breathing Effect */
@@ -1380,15 +1343,11 @@ Swipe gesture animations */
 
 .magnifying-glass-button:hover .magnifying-lens-effect {
   animation-play-state: paused;
-  backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
-    hue-rotate(3deg) !important;
-  -webkit-backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2)
-    hue-rotate(3deg) !important;
+  backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2) hue-rotate(3deg) !important;
+  -webkit-backdrop-filter: blur(0px) contrast(2.8) brightness(2.2) saturate(2) hue-rotate(3deg) !important;
 }
 
 .dark .magnifying-glass-button:hover .magnifying-lens-effect {
-  backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
-    hue-rotate(3deg) !important;
-  -webkit-backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2)
-    hue-rotate(3deg) !important;
+  backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2) hue-rotate(3deg) !important;
+  -webkit-backdrop-filter: blur(0px) contrast(3.2) brightness(2.5) saturate(2.2) hue-rotate(3deg) !important;
 }

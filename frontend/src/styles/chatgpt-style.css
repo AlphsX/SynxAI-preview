@@ -99,19 +99,19 @@
   --table-hover-bg: #333333;
 }
 
-[data-selected-tool="web_search"] {
+[data-selected-tool='web_search'] {
   --highlight-color: rgba(59, 130, 246, 0.3); /* Blue */
 }
 
-[data-selected-tool="news_search"] {
+[data-selected-tool='news_search'] {
   --highlight-color: rgba(249, 115, 22, 0.3); /* Orange */
 }
 
-[data-selected-tool="crypto_data"] {
+[data-selected-tool='crypto_data'] {
   --highlight-color: rgba(16, 185, 129, 0.3); /* Green */
 }
 
-[data-selected-tool="vector_search"] {
+[data-selected-tool='vector_search'] {
   --highlight-color: rgba(139, 92, 246, 0.3); /* Purple */
 }
 
@@ -157,7 +157,7 @@
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-size: 0.875em;
-  font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Code", monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
 }
 
 /* Code block container */
@@ -184,7 +184,7 @@
   font-size: 0.75rem;
   font-weight: 500;
   text-transform: lowercase;
-  font-family: "SF Mono", "Monaco", "Inconsolata", monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
 }
 
 .chatgpt-copy-button {
@@ -211,7 +211,7 @@
 .chatgpt-code-content {
   padding: 1rem;
   overflow-x: auto;
-  font-family: "SF Mono", "Monaco", "Inconsolata", "Fira Code", monospace;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
   font-size: 0.875rem;
   line-height: 1.5;
   color: var(--code-text);
@@ -573,7 +573,7 @@
 
 /* Emoji support */
 .chatgpt-emoji {
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
 /* Smooth scrolling for code blocks */

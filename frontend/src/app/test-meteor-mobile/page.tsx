@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { IdleMeteorAnimation } from "@/components/ui/idle-meteor-animation";
+import React, { useState } from 'react';
+import { IdleMeteorAnimation } from '@/components/ui/idle-meteor-animation';
 
 export default function TestMeteorMobile() {
   const [showMeteors, setShowMeteors] = useState(true);
@@ -14,25 +14,19 @@ export default function TestMeteorMobile() {
         </h1>
 
         <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-white mb-4">
-            Test Controls
-          </h2>
+          <h2 className="text-2xl font-semibold text-white mb-4">Test Controls</h2>
           <button
             onClick={() => setShowMeteors(!showMeteors)}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
           >
-            {showMeteors ? "Hide Meteors" : "Show Meteors"}
+            {showMeteors ? 'Hide Meteors' : 'Show Meteors'}
           </button>
         </div>
 
         <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
-          <h2 className="text-2xl font-semibold text-white mb-4">
-            Expected Behavior
-          </h2>
+          <h2 className="text-2xl font-semibold text-white mb-4">Expected Behavior</h2>
           <ul className="text-white/80 space-y-2">
-            <li>
-              • Meteors should appear as streaking lights with visible tails
-            </li>
+            <li>• Meteors should appear as streaking lights with visible tails</li>
             <li>• Animation should work smoothly on mobile devices</li>
             <li>• Meteors should not appear as just white dots</li>
             <li>• Gradient tails should be visible and not clipped</li>

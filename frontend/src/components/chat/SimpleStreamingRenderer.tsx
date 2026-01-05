@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback } from "react";
-import { SimpleMessageRenderer } from "./SimpleMessageRenderer";
+import React, { useState, useEffect, useCallback } from 'react';
+import { SimpleMessageRenderer } from './SimpleMessageRenderer';
 
 interface SimpleStreamingRendererProps {
   content: string;
@@ -9,16 +9,18 @@ interface SimpleStreamingRendererProps {
   onContentUpdate?: (content: string) => void;
 }
 
-export const SimpleStreamingRenderer: React.FC<
-  SimpleStreamingRendererProps
-> = ({ content, isComplete, onContentUpdate }) => {
-  const [displayContent, setDisplayContent] = useState("");
+export const SimpleStreamingRenderer: React.FC<SimpleStreamingRendererProps> = ({
+  content,
+  isComplete,
+  onContentUpdate,
+}) => {
+  const [displayContent, setDisplayContent] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Simple streaming effect - gradually reveal content
   useEffect(() => {
     if (!content) {
-      setDisplayContent("");
+      setDisplayContent('');
       return;
     }
 
@@ -45,19 +47,19 @@ export const SimpleStreamingRenderer: React.FC<
   // Handle incomplete markdown gracefully
   const getSafeContent = useCallback(
     (rawContent: string) => {
-      if (!rawContent) return "";
+      if (!rawContent) return '';
 
       // If streaming and ends with incomplete code block, add temporary closing
-      if (!isComplete && rawContent.includes("```")) {
+      if (!isComplete && rawContent.includes('```')) {
         const codeBlockCount = (rawContent.match(/```/g) || []).length;
         if (codeBlockCount % 2 !== 0) {
-          return rawContent + "\n```";
+          return rawContent + '\n```';
         }
       }
 
       return rawContent;
     },
-    [isComplete],
+    [isComplete]
   );
 
   const safeContent = getSafeContent(displayContent);
@@ -72,7 +74,7 @@ export const SimpleStreamingRenderer: React.FC<
       <SimpleMessageRenderer
         content={safeContent}
         isStreaming={!isComplete || isProcessing}
-        onCopyCode={(code) => {
+        onCopyCode={code => {
           navigator.clipboard.writeText(code);
         }}
       />

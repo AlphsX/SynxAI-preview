@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { ChevronDown, AlertCircle, Loader2 } from "lucide-react";
-import { chatAPI } from "@/lib/api";
+import { useState, useRef, useEffect } from 'react';
+import { ChevronDown, AlertCircle, Loader2 } from 'lucide-react';
+import { chatAPI } from '@/lib/api';
 
 // Custom Icon Components based on your specifications
 const GPTIcon = ({ className }: { className?: string }) => (
@@ -14,14 +14,8 @@ const GPTIcon = ({ className }: { className?: string }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={`stroke-[2] ${className}`}
   >
-    <path
-      d="M3.33965 17L11.9999 22L20.6602 17V7L11.9999 2L3.33965 7V17Z"
-      stroke="currentColor"
-    />
-    <path
-      d="M11.9999 12L3.4999 7M11.9999 12L12 21.5M11.9999 12L20.5 7"
-      stroke="currentColor"
-    />
+    <path d="M3.33965 17L11.9999 22L20.6602 17V7L11.9999 2L3.33965 7V17Z" stroke="currentColor" />
+    <path d="M11.9999 12L3.4999 7M11.9999 12L12 21.5M11.9999 12L20.5 7" stroke="currentColor" />
   </svg>
 );
 
@@ -39,10 +33,7 @@ const LlamaIcon = ({ className }: { className?: string }) => (
       stroke="currentColor"
       strokeLinecap="square"
     />
-    <path
-      d="M4.5 16.5C4.5 16.5 4 18 4 20C6 20 7.5 19.5 7.5 19.5"
-      stroke="currentColor"
-    />
+    <path d="M4.5 16.5C4.5 16.5 4 18 4 20C6 20 7.5 19.5 7.5 19.5" stroke="currentColor" />
   </svg>
 );
 
@@ -103,11 +94,7 @@ const QwenIcon = ({ className }: { className?: string }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={`stroke-[2] ${className}`}
   >
-    <path
-      d="M5 14.25L14 4L13 9.75H19L10 20L11 14.25H5Z"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
+    <path d="M5 14.25L14 4L13 9.75H19L10 20L11 14.25H5Z" stroke="currentColor" strokeWidth="2" />
   </svg>
 );
 
@@ -120,82 +107,57 @@ const KimiIcon = ({ className }: { className?: string }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={`stroke-[2] ${className}`}
   >
-    <rect
-      x="4"
-      y="4"
-      width="5"
-      height="5"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
-    <rect
-      x="15"
-      y="4"
-      width="5"
-      height="5"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
-    <rect
-      x="15"
-      y="15"
-      width="5"
-      height="5"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
-    <path
-      d="M11 18H10C7.79086 18 6 16.2091 6 14V13"
-      stroke="currentColor"
-      strokeWidth="2"
-    />
+    <rect x="4" y="4" width="5" height="5" stroke="currentColor" strokeWidth="2" />
+    <rect x="15" y="4" width="5" height="5" stroke="currentColor" strokeWidth="2" />
+    <rect x="15" y="15" width="5" height="5" stroke="currentColor" strokeWidth="2" />
+    <path d="M11 18H10C7.79086 18 6 16.2091 6 14V13" stroke="currentColor" strokeWidth="2" />
   </svg>
 );
 
 // Helper function to get icon and description for each model
 const getModelInfo = (modelId: string, modelName: string) => {
   // GPT OSS 120B - Fast and powerful
-  if (modelId.includes("gpt-oss")) {
+  if (modelId.includes('gpt-oss')) {
     return {
       icon: <GPTIcon className="h-5 w-5" />,
       shortName: modelName,
-      description: "Fast & Accurate",
+      description: 'Fast & Accurate',
     };
   }
 
   // Llama 4 - Balanced performance
-  if (modelId.includes("llama-4") || modelId.includes("llama4")) {
+  if (modelId.includes('llama-4') || modelId.includes('llama4')) {
     return {
       icon: <LlamaIcon className="h-5 w-5" />,
       shortName: modelName,
-      description: "Balanced & Quick",
+      description: 'Balanced & Quick',
     };
   }
 
   // DeepSeek - Deep thinking
-  if (modelId.includes("deepseek")) {
+  if (modelId.includes('deepseek')) {
     return {
       icon: <DeepSeekIcon className="h-5 w-5" />,
       shortName: modelName,
-      description: "Deep Thinking",
+      description: 'Deep Thinking',
     };
   }
 
   // Qwen - Multilingual expert
-  if (modelId.includes("qwen")) {
+  if (modelId.includes('qwen')) {
     return {
       icon: <QwenIcon className="h-5 w-5" />,
       shortName: modelName,
-      description: "Multilingual Expert",
+      description: 'Multilingual Expert',
     };
   }
 
   // Kimi - Creative and smart
-  if (modelId.includes("kimi")) {
+  if (modelId.includes('kimi')) {
     return {
       icon: <KimiIcon className="h-5 w-5" />,
       shortName: modelName,
-      description: "Creative & Smart",
+      description: 'Creative & Smart',
     };
   }
 
@@ -203,7 +165,7 @@ const getModelInfo = (modelId: string, modelName: string) => {
   return {
     icon: <GPTIcon className="h-5 w-5" />,
     shortName: modelName,
-    description: "AI Model",
+    description: 'AI Model',
   };
 };
 
@@ -222,18 +184,14 @@ type Props = {
   className?: string;
 };
 
-export const AIModelDropdown = ({
-  selectedModel,
-  onModelSelect,
-  className = "",
-}: Props) => {
+export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '' }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [aiModels, setAiModels] = useState<AIModel[]>([
     {
-      id: "choose-model",
-      name: "Choose your model",
-      provider: "",
-      description: "Select an AI model to use",
+      id: 'choose-model',
+      name: 'Choose your model',
+      provider: '',
+      description: 'Select an AI model to use',
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -247,75 +205,75 @@ export const AIModelDropdown = ({
       setError(null);
 
       try {
-        console.log("🔄 Fetching AI models from backend...");
+        console.log('🔄 Fetching AI models from backend...');
         const response = await chatAPI.getModels();
-        console.log("✅ Models fetched successfully:", response);
+        console.log('✅ Models fetched successfully:', response);
 
         const fetchedModels = response.models || [];
 
         // Log the fetched models for debugging
-        console.log("📋 Fetched models:", fetchedModels);
+        console.log('📋 Fetched models:', fetchedModels);
 
         // Add the "choose model" option at the beginning
         const modelsWithDefault = [
           {
-            id: "choose-model",
-            name: "Choose your model",
-            provider: "",
-            description: "Select an AI model to use",
+            id: 'choose-model',
+            name: 'Choose your model',
+            provider: '',
+            description: 'Select an AI model to use',
           },
           ...fetchedModels,
         ];
 
         setAiModels(modelsWithDefault);
-        console.log("📋 Models set in state:", modelsWithDefault);
+        console.log('📋 Models set in state:', modelsWithDefault);
       } catch (err) {
-        console.error("❌ Failed to fetch AI models:", err);
-        setError("Failed to load AI models");
+        console.error('❌ Failed to fetch AI models:', err);
+        setError('Failed to load AI models');
 
         // Fallback to your preferred models only
         const fallbackModels = [
           {
-            id: "choose-model",
-            name: "Choose your model",
-            provider: "",
-            description: "Select an AI model to use",
+            id: 'choose-model',
+            name: 'Choose your model',
+            provider: '',
+            description: 'Select an AI model to use',
           },
           {
-            id: "openai/gpt-oss-120b",
-            name: "GPT OSS 120B",
-            provider: "OpenAI",
+            id: 'openai/gpt-oss-120b',
+            name: 'GPT OSS 120B',
+            provider: 'OpenAI',
             description: "OpenAI's GPT OSS 120B model for advanced reasoning",
             recommended: true,
           },
           {
-            id: "meta-llama/llama-4-maverick-17b-128e-instruct",
-            name: "Llama 4 Maverick 17B",
-            provider: "Meta",
+            id: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+            name: 'Llama 4 Maverick 17B',
+            provider: 'Meta',
             description: "Meta's Llama 4 Maverick 17B instruction-tuned model",
           },
           {
-            id: "deepseek-r1-distill-llama-70b",
-            name: "DeepSeek R1 Distill Llama 70B",
-            provider: "DeepSeek",
+            id: 'deepseek-r1-distill-llama-70b',
+            name: 'DeepSeek R1 Distill Llama 70B',
+            provider: 'DeepSeek',
             description: "DeepSeek's R1 distilled Llama 70B model",
           },
           {
-            id: "qwen/qwen3-32b",
-            name: "Qwen 3 32B",
-            provider: "Alibaba",
+            id: 'qwen/qwen3-32b',
+            name: 'Qwen 3 32B',
+            provider: 'Alibaba',
             description: "Alibaba's Qwen 3 32B model for multilingual tasks",
           },
           {
-            id: "moonshotai/kimi-k2-instruct-0905",
-            name: "Kimi K2 Instruct",
-            provider: "MoonshotAI",
+            id: 'moonshotai/kimi-k2-instruct-0905',
+            name: 'Kimi K2 Instruct',
+            provider: 'MoonshotAI',
             description: "MoonshotAI's Kimi K2 instruction-tuned model",
           },
         ];
 
         setAiModels(fallbackModels);
-        console.log("🔄 Using fallback models:", fallbackModels);
+        console.log('🔄 Using fallback models:', fallbackModels);
       } finally {
         setIsLoading(false);
       }
@@ -327,27 +285,20 @@ export const AIModelDropdown = ({
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
-  const selectedModelData =
-    aiModels.find((model) => model.id === selectedModel) || aiModels[0];
+  const selectedModelData = aiModels.find(model => model.id === selectedModel) || aiModels[0];
 
-  const selectedModelInfo = getModelInfo(
-    selectedModelData.id,
-    selectedModelData.name,
-  );
+  const selectedModelInfo = getModelInfo(selectedModelData.id, selectedModelData.name);
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -368,12 +319,12 @@ export const AIModelDropdown = ({
             <span className="flex-shrink-0">{selectedModelInfo.icon}</span>
           )}
           <span className="truncate font-medium">
-            {error ? "Error loading models" : selectedModelData.name}
+            {error ? 'Error loading models' : selectedModelData.name}
           </span>
         </div>
         <ChevronDown
           className={`h-4 w-4 text-gray-500 transition-transform duration-200 flex-shrink-0 ml-2 ${
-            isOpen ? "rotate-180" : ""
+            isOpen ? 'rotate-180' : ''
           }`}
         />
       </button>
@@ -381,12 +332,9 @@ export const AIModelDropdown = ({
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute left-0 right-0 md:left-auto md:right-0 md:w-80 z-50 mt-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden animate-dropdown-in">
-          <div
-            role="listbox"
-            className="py-1 max-h-[60vh] md:max-h-96 overflow-y-auto"
-          >
-            {aiModels.map((model) => {
-              if (model.id === "choose-model") return null; // Skip the placeholder
+          <div role="listbox" className="py-1 max-h-[60vh] md:max-h-96 overflow-y-auto">
+            {aiModels.map(model => {
+              if (model.id === 'choose-model') return null; // Skip the placeholder
 
               const modelInfo = getModelInfo(model.id, model.name);
               const isSelected = selectedModel === model.id;
@@ -397,8 +345,8 @@ export const AIModelDropdown = ({
                   type="button"
                   className={`w-full px-4 py-3 text-left transition-colors duration-150 flex items-start gap-3 ${
                     isSelected
-                      ? "bg-gray-100 dark:bg-gray-700"
-                      : "hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                      ? 'bg-gray-100 dark:bg-gray-700'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                   onClick={() => {
                     onModelSelect(model.id);
@@ -409,8 +357,8 @@ export const AIModelDropdown = ({
                   <div
                     className={`flex-shrink-0 mt-0.5 ${
                       isSelected
-                        ? "text-blue-600 dark:text-blue-400"
-                        : "text-gray-700 dark:text-gray-300"
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-gray-700 dark:text-gray-300'
                     }`}
                   >
                     {modelInfo.icon}
@@ -422,8 +370,8 @@ export const AIModelDropdown = ({
                       <span
                         className={`font-medium text-sm ${
                           isSelected
-                            ? "text-gray-900 dark:text-gray-100"
-                            : "text-gray-900 dark:text-gray-100"
+                            ? 'text-gray-900 dark:text-gray-100'
+                            : 'text-gray-900 dark:text-gray-100'
                         }`}
                       >
                         {model.name}

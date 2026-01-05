@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { chatAPI } from "@/lib/api";
+import { useEffect, useState } from 'react';
+import { chatAPI } from '@/lib/api';
 
 export default function TestAPIPage() {
   const [models, setModels] = useState<any[]>([]);
@@ -11,14 +11,14 @@ export default function TestAPIPage() {
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        console.log("Testing API connection...");
+        console.log('Testing API connection...');
         const response = await chatAPI.getModels();
-        console.log("API Response:", response);
+        console.log('API Response:', response);
         setModels(response.models);
         setLoading(false);
       } catch (err) {
-        console.error("API Error:", err);
-        setError(err instanceof Error ? err.message : "Unknown error");
+        console.error('API Error:', err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
         setLoading(false);
       }
     };
@@ -40,9 +40,7 @@ export default function TestAPIPage() {
 
       {!loading && !error && (
         <div>
-          <h2 className="text-xl font-semibold mb-2">
-            Available Models ({models.length})
-          </h2>
+          <h2 className="text-xl font-semibold mb-2">Available Models ({models.length})</h2>
           <ul className="list-disc pl-5">
             {models.map((model, index) => (
               <li key={index} className="mb-2">

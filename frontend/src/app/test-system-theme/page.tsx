@@ -1,33 +1,29 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useDarkMode } from "@/hooks/useDarkMode";
+import { useState, useEffect } from 'react';
+import { useDarkMode } from '@/hooks/useDarkMode';
 
 export default function TestSystemTheme() {
   const { isDarkMode, toggleDarkMode, resetToSystemPreference } = useDarkMode();
-  const [systemPreference, setSystemPreference] = useState<"dark" | "light">(
-    "dark",
-  );
+  const [systemPreference, setSystemPreference] = useState<'dark' | 'light'>('dark');
 
   // Track system preference changes
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const updateSystemPreference = () => {
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)",
-        ).matches;
-        setSystemPreference(prefersDark ? "dark" : "light");
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setSystemPreference(prefersDark ? 'dark' : 'light');
       };
 
       // Initial check
       updateSystemPreference();
 
       // Listen for changes
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      mediaQuery.addEventListener("change", updateSystemPreference);
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      mediaQuery.addEventListener('change', updateSystemPreference);
 
       return () => {
-        mediaQuery.removeEventListener("change", updateSystemPreference);
+        mediaQuery.removeEventListener('change', updateSystemPreference);
       };
     }
   }, []);
@@ -44,7 +40,7 @@ export default function TestSystemTheme() {
             <div className="flex justify-between items-center">
               <span>Current Theme:</span>
               <span className="font-mono px-2 py-1 bg-blue-100 dark:bg-blue-900 rounded">
-                {isDarkMode ? "Dark" : "Light"}
+                {isDarkMode ? 'Dark' : 'Light'}
               </span>
             </div>
 
@@ -58,9 +54,7 @@ export default function TestSystemTheme() {
             <div className="flex justify-between items-center">
               <span>Following System:</span>
               <span className="font-mono px-2 py-1 bg-yellow-100 dark:bg-yellow-900 rounded">
-                {typeof window !== "undefined" && localStorage.getItem("theme")
-                  ? "No"
-                  : "Yes"}
+                {typeof window !== 'undefined' && localStorage.getItem('theme') ? 'No' : 'Yes'}
               </span>
             </div>
           </div>

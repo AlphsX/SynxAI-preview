@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { SearchToolsDropdown } from "@/components/magicui/search-tools-dropdown";
-import { useDarkMode } from "@/hooks";
+import { useState } from 'react';
+import { SearchToolsDropdown } from '@/components/magicui/search-tools-dropdown';
+import { useDarkMode } from '@/hooks';
 
 export default function TestSearchTools() {
   const { isDarkMode } = useDarkMode();
@@ -11,10 +11,7 @@ export default function TestSearchTools() {
 
   const handleToolSelect = (toolId: string) => {
     setSelectedTool(toolId);
-    setLogs((prev) => [
-      ...prev,
-      `Selected tool: ${toolId} at ${new Date().toLocaleTimeString()}`,
-    ]);
+    setLogs(prev => [...prev, `Selected tool: ${toolId} at ${new Date().toLocaleTimeString()}`]);
   };
 
   return (
@@ -38,8 +35,7 @@ export default function TestSearchTools() {
 
           <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
             <p className="text-gray-700 dark:text-gray-300">
-              <span className="font-medium">Selected Tool:</span>{" "}
-              {selectedTool || "None"}
+              <span className="font-medium">Selected Tool:</span> {selectedTool || 'None'}
             </p>
           </div>
         </div>

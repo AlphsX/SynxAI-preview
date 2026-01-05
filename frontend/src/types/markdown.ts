@@ -30,7 +30,7 @@ export interface StreamingState {
 export interface EnhancedMessage {
   id: string;
   content: string;
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   timestamp: Date;
   renderedContent?: string;
   hasCodeBlocks?: boolean;
@@ -56,7 +56,7 @@ export interface FormattingMetadata {
 }
 
 export interface MarkdownError {
-  type: "parsing" | "rendering" | "syntax-highlighting";
+  type: 'parsing' | 'rendering' | 'syntax-highlighting';
   message: string;
   line?: number;
   column?: number;
@@ -64,10 +64,10 @@ export interface MarkdownError {
 }
 
 export interface StreamingError {
-  type: "incomplete-markdown" | "malformed-code-block" | "parsing-timeout";
+  type: 'incomplete-markdown' | 'malformed-code-block' | 'parsing-timeout';
   content: string;
   position: number;
-  recovery: "retry" | "fallback" | "skip";
+  recovery: 'retry' | 'fallback' | 'skip';
 }
 
 export interface MarkdownTheme {

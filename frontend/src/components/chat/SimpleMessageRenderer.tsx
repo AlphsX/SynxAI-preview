@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { memo, useMemo } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import React, { memo, useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface SimpleMessageRendererProps {
   content: string;
@@ -17,7 +17,7 @@ const SimpleCodeBlock: React.FC<{
   className?: string;
   inline?: boolean;
 }> = ({ children, className, inline }) => {
-  const language = className?.replace("language-", "") || "text";
+  const language = className?.replace('language-', '') || 'text';
 
   if (inline) {
     return (
@@ -41,16 +41,14 @@ const SimpleCodeBlock: React.FC<{
         </button>
       </div>
       <pre className="p-4 overflow-x-auto">
-        <code className="text-sm font-mono text-gray-800 dark:text-gray-200">
-          {children}
-        </code>
+        <code className="text-sm font-mono text-gray-800 dark:text-gray-200">{children}</code>
       </pre>
     </div>
   );
 };
 
 export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
-  ({ content, isStreaming = false, className = "", onCopyCode }) => {
+  ({ content, isStreaming = false, className = '', onCopyCode }) => {
     // Simple markdown components with Thai-friendly styling
     const components = useMemo(
       () => ({
@@ -73,9 +71,7 @@ export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
 
         // Paragraphs with better Thai line height
         p: ({ children }: any) => (
-          <p className="mb-3 text-gray-800 dark:text-gray-200 leading-relaxed">
-            {children}
-          </p>
+          <p className="mb-3 text-gray-800 dark:text-gray-200 leading-relaxed">{children}</p>
         ),
 
         // Lists
@@ -89,16 +85,12 @@ export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
             {children}
           </ol>
         ),
-        li: ({ children }: any) => (
-          <li className="leading-relaxed">{children}</li>
-        ),
+        li: ({ children }: any) => <li className="leading-relaxed">{children}</li>,
 
         // Blockquotes
         blockquote: ({ children }: any) => (
           <blockquote className="border-l-4 border-blue-400 pl-4 py-2 mb-4 bg-blue-50 dark:bg-blue-900/20 rounded-r">
-            <div className="text-gray-700 dark:text-gray-300 italic">
-              {children}
-            </div>
+            <div className="text-gray-700 dark:text-gray-300 italic">{children}</div>
           </blockquote>
         ),
 
@@ -135,24 +127,18 @@ export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
           </th>
         ),
         td: ({ children }: any) => (
-          <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-            {children}
-          </td>
+          <td className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">{children}</td>
         ),
 
         // Strong and emphasis
-        strong: ({ children }: unknown) => (
-          <strong className="font-bold text-gray-900 dark:text-gray-100">
-            {children}
-          </strong>
+        strong: ({ children }: any) => (
+          <strong className="font-bold text-gray-900 dark:text-gray-100">{children}</strong>
         ),
-        em: ({ children }: unknown) => (
-          <em className="italic text-gray-800 dark:text-gray-200">
-            {children}
-          </em>
+        em: ({ children }: any) => (
+          <em className="italic text-gray-800 dark:text-gray-200">{children}</em>
         ),
       }),
-      [],
+      []
     );
 
     // Show only loading indicator when streaming with no content
@@ -163,11 +149,11 @@ export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
             <div
               className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
-              style={{ animationDelay: "0.1s" }}
+              style={{ animationDelay: '0.1s' }}
             ></div>
             <div
               className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
-              style={{ animationDelay: "0.2s" }}
+              style={{ animationDelay: '0.2s' }}
             ></div>
           </div>
           <span>Thinking...</span>
@@ -184,19 +170,15 @@ export const SimpleMessageRenderer: React.FC<SimpleMessageRendererProps> = memo(
       <div className={`simple-message-renderer ${className}`}>
         {/* Markdown content with error boundary */}
         <div className="prose prose-sm max-w-none">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={components}
-            skipHtml={true}
-          >
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={components} skipHtml={true}>
             {content}
           </ReactMarkdown>
         </div>
       </div>
     );
-  },
+  }
 );
 
-SimpleMessageRenderer.displayName = "SimpleMessageRenderer";
+SimpleMessageRenderer.displayName = 'SimpleMessageRenderer';
 
 export default SimpleMessageRenderer;

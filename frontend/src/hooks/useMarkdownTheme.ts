@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useMemo, useEffect, useState } from "react";
-import { MarkdownTheme } from "@/types/markdown";
-import { DEFAULT_MARKDOWN_THEME } from "@/constants/markdown";
+import { useMemo, useEffect, useState } from 'react';
+import { MarkdownTheme } from '@/types/markdown';
+import { DEFAULT_MARKDOWN_THEME } from '@/constants/markdown';
 
 export interface UseMarkdownThemeOptions {
   customTheme?: Partial<MarkdownTheme>;
@@ -19,9 +19,8 @@ export function useMarkdownTheme(options: UseMarkdownThemeOptions = {}) {
 
     const updateTheme = () => {
       const isDark =
-        document.documentElement.classList.contains("dark") ||
-        (window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.contains('dark') ||
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
       setIsDarkMode(isDark);
     };
 
@@ -29,12 +28,9 @@ export function useMarkdownTheme(options: UseMarkdownThemeOptions = {}) {
     updateTheme();
 
     // Listen for class changes on document element
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "class"
-        ) {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
           updateTheme();
         }
       });
@@ -42,15 +38,15 @@ export function useMarkdownTheme(options: UseMarkdownThemeOptions = {}) {
 
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["class"],
+      attributeFilter: ['class'],
     });
 
     // Listen for system theme changes
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleMediaChange = () => updateTheme();
 
     if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener("change", handleMediaChange);
+      mediaQuery.addEventListener('change', handleMediaChange);
     } else {
       // Fallback for older browsers
       mediaQuery.addListener(handleMediaChange);
@@ -59,7 +55,7 @@ export function useMarkdownTheme(options: UseMarkdownThemeOptions = {}) {
     return () => {
       observer.disconnect();
       if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener("change", handleMediaChange);
+        mediaQuery.removeEventListener('change', handleMediaChange);
       } else {
         mediaQuery.removeListener(handleMediaChange);
       }
@@ -95,8 +91,7 @@ export function useMarkdownTheme(options: UseMarkdownThemeOptions = {}) {
 
     // Convert theme colors to CSS variables
     Object.entries(markdownTheme.colors).forEach(([key, value]) => {
-      vars[`--markdown-${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`] =
-        value;
+      vars[`--markdown-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`] = value;
     });
 
     // Convert spacing to CSS variables
@@ -116,7 +111,7 @@ export function useMarkdownTheme(options: UseMarkdownThemeOptions = {}) {
     });
 
     return () => {
-      Object.keys(cssVariables).forEach((property) => {
+      Object.keys(cssVariables).forEach(property => {
         root.style.removeProperty(property);
       });
     };
@@ -128,15 +123,14 @@ export function useMarkdownTheme(options: UseMarkdownThemeOptions = {}) {
     cssVariables,
     // Helper functions
     getHeadingClass: (level: number) => {
-      const headingKey =
-        `h${level}` as keyof typeof markdownTheme.typography.headings;
-      return markdownTheme.typography.headings[headingKey] || "";
+      const headingKey = `h${level}` as keyof typeof markdownTheme.typography.headings;
+      return markdownTheme.typography.headings[headingKey] || '';
     },
     getColorClass: (colorKey: keyof typeof markdownTheme.colors) => {
-      return markdownTheme.colors[colorKey] || "";
+      return markdownTheme.colors[colorKey] || '';
     },
     getSpacingClass: (spacingKey: keyof typeof markdownTheme.spacing) => {
-      return markdownTheme.spacing[spacingKey] || "";
+      return markdownTheme.spacing[spacingKey] || '';
     },
   };
 }
@@ -148,9 +142,8 @@ export function useSyntaxHighlightingTheme() {
   useEffect(() => {
     const updateTheme = () => {
       const isDark =
-        document.documentElement.classList.contains("dark") ||
-        (window.matchMedia &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.contains('dark') ||
+        (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
       setIsDarkMode(isDark);
     };
 
@@ -159,14 +152,14 @@ export function useSyntaxHighlightingTheme() {
     const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["class"],
+      attributeFilter: ['class'],
     });
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleMediaChange = () => updateTheme();
 
     if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener("change", handleMediaChange);
+      mediaQuery.addEventListener('change', handleMediaChange);
     } else {
       mediaQuery.addListener(handleMediaChange);
     }
@@ -174,7 +167,7 @@ export function useSyntaxHighlightingTheme() {
     return () => {
       observer.disconnect();
       if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener("change", handleMediaChange);
+        mediaQuery.removeEventListener('change', handleMediaChange);
       } else {
         mediaQuery.removeListener(handleMediaChange);
       }
@@ -184,10 +177,10 @@ export function useSyntaxHighlightingTheme() {
   return {
     isDarkMode,
     // Theme names for react-syntax-highlighter
-    themeName: isDarkMode ? "oneDark" : "oneLight",
+    themeName: isDarkMode ? 'oneDark' : 'oneLight',
     // Custom theme properties
-    backgroundColor: isDarkMode ? "#1f2937" : "#f9fafb",
-    textColor: isDarkMode ? "#e5e7eb" : "#374151",
-    borderColor: isDarkMode ? "#374151" : "#e5e7eb",
+    backgroundColor: isDarkMode ? '#1f2937' : '#f9fafb',
+    textColor: isDarkMode ? '#e5e7eb' : '#374151',
+    borderColor: isDarkMode ? '#374151' : '#e5e7eb',
   };
 }

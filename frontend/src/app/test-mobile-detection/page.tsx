@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   detectMobileOS,
   getMobilePatterns,
   checkMobileFeatures,
   getMobileRecommendations,
   type MobileInfo,
-} from "@/utils/mobileDetection";
+} from '@/utils/mobileDetection';
 
 export default function TestMobileDetection() {
   const [mobileInfo, setMobileInfo] = useState<MobileInfo | null>(null);
@@ -50,11 +50,11 @@ export default function TestMobileDetection() {
                 <span
                   className={`ml-2 px-2 py-1 rounded text-sm ${
                     mobileInfo.isMobile
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                   }`}
                 >
-                  {mobileInfo.isMobile ? "Yes" : "No"}
+                  {mobileInfo.isMobile ? 'Yes' : 'No'}
                 </span>
               </p>
               <p>
@@ -62,11 +62,11 @@ export default function TestMobileDetection() {
                 <span
                   className={`ml-2 px-2 py-1 rounded text-sm ${
                     mobileInfo.isTablet
-                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
                   }`}
                 >
-                  {mobileInfo.isTablet ? "Yes" : "No"}
+                  {mobileInfo.isTablet ? 'Yes' : 'No'}
                 </span>
               </p>
               <p>
@@ -91,11 +91,11 @@ export default function TestMobileDetection() {
                 <span
                   className={`ml-2 px-2 py-1 rounded text-sm ${
                     mobileInfo.hasTouch
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                   }`}
                 >
-                  {mobileInfo.hasTouch ? "Yes" : "No"}
+                  {mobileInfo.hasTouch ? 'Yes' : 'No'}
                 </span>
               </p>
               <p>
@@ -116,28 +116,28 @@ export default function TestMobileDetection() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               {
-                name: "Vibration",
+                name: 'Vibration',
                 supported: mobileFeatures.supportsVibration,
               },
               {
-                name: "Speech Recognition",
+                name: 'Speech Recognition',
                 supported: mobileFeatures.supportsSpeechRecognition,
               },
               {
-                name: "Geolocation",
+                name: 'Geolocation',
                 supported: mobileFeatures.supportsGeolocation,
               },
-              { name: "Camera", supported: mobileFeatures.supportsCamera },
+              { name: 'Camera', supported: mobileFeatures.supportsCamera },
               {
-                name: "Notifications",
+                name: 'Notifications',
                 supported: mobileFeatures.supportsNotifications,
               },
               {
-                name: "Service Worker",
+                name: 'Service Worker',
                 supported: mobileFeatures.supportsServiceWorker,
               },
-              { name: "WebGL", supported: mobileFeatures.supportsWebGL },
-            ].map((feature) => (
+              { name: 'WebGL', supported: mobileFeatures.supportsWebGL },
+            ].map(feature => (
               <div
                 key={feature.name}
                 className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded"
@@ -146,11 +146,11 @@ export default function TestMobileDetection() {
                 <span
                   className={`px-2 py-1 rounded text-sm ${
                     feature.supported
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                   }`}
                 >
-                  {feature.supported ? "Yes" : "No"}
+                  {feature.supported ? 'Yes' : 'No'}
                 </span>
               </div>
             ))}
@@ -189,9 +189,7 @@ export default function TestMobileDetection() {
               {recommendations.map((rec, index) => (
                 <li key={index} className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {rec}
-                  </span>
+                  <span className="text-gray-700 dark:text-gray-300">{rec}</span>
                 </li>
               ))}
             </ul>
@@ -219,17 +217,15 @@ export default function TestMobileDetection() {
                 key={key}
                 className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded"
               >
-                <span className="font-medium capitalize">
-                  {key.replace(/([A-Z])/g, " $1")}
-                </span>
+                <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}</span>
                 <span
                   className={`px-2 py-1 rounded text-sm ${
                     pattern.test(navigator.userAgent)
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                   }`}
                 >
-                  {pattern.test(navigator.userAgent) ? "Match" : "No Match"}
+                  {pattern.test(navigator.userAgent) ? 'Match' : 'No Match'}
                 </span>
               </div>
             ))}

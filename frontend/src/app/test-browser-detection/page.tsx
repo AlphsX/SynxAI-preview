@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   detectBrowser,
   getSupportedBrowsers,
   getBrowserRecommendation,
   checkSpeechRecognitionSupport,
   type BrowserInfo,
-} from "@/utils/browserDetection";
-import { BrowserCompatibilityWarning } from "@/components/ui/browser-compatibility-warning";
+} from '@/utils/browserDetection';
+import { BrowserCompatibilityWarning } from '@/components/ui/browser-compatibility-warning';
 
 export default function TestBrowserDetection() {
   const [browserInfo, setBrowserInfo] = useState<BrowserInfo | null>(null);
@@ -54,15 +54,15 @@ export default function TestBrowserDetection() {
               <span
                 className={`ml-2 px-2 py-1 rounded text-sm ${
                   browserInfo.isSupported
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                 }`}
               >
-                {browserInfo.isSupported ? "Yes" : "No"}
+                {browserInfo.isSupported ? 'Yes' : 'No'}
               </span>
             </p>
             <p>
-              <strong>User Agent:</strong>{" "}
+              <strong>User Agent:</strong>{' '}
               <code className="text-sm bg-gray-100 dark:bg-gray-700 p-1 rounded">
                 {browserInfo.userAgent}
               </code>
@@ -81,11 +81,11 @@ export default function TestBrowserDetection() {
                 <span
                   className={`ml-2 px-2 py-1 rounded text-sm ${
                     speechSupport.supported
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                      : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                   }`}
                 >
-                  {speechSupport.supported ? "Yes" : "No"}
+                  {speechSupport.supported ? 'Yes' : 'No'}
                 </span>
               </p>
               <p>
@@ -109,13 +109,13 @@ export default function TestBrowserDetection() {
             Supported Browsers
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {getSupportedBrowsers().map((browser) => (
+            {getSupportedBrowsers().map(browser => (
               <div
                 key={browser}
                 className={`p-3 rounded-lg border-2 text-center ${
                   browserInfo.name === browser
-                    ? "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200"
-                    : "border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200'
+                    : 'border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
                 }`}
               >
                 <div className="font-medium">{browser}</div>
@@ -131,14 +131,12 @@ export default function TestBrowserDetection() {
               Browser Support Status
             </h3>
             <p className="text-sm text-blue-700 dark:text-blue-300">
-              All 6 browsers are fully supported:{" "}
-              <strong>
-                Comet, Chrome, Arc Browser, Safari, Firefox, and Brave
-              </strong>
+              All 6 browsers are fully supported:{' '}
+              <strong>Comet, Chrome, Arc Browser, Safari, Firefox, and Brave</strong>
             </p>
             <p className="text-xs text-blue-600 dark:text-blue-400 mt-2">
-              Voice input works in Chrome, Safari, Brave, and Arc Browser.
-              Firefox support is limited.
+              Voice input works in Chrome, Safari, Brave, and Arc Browser. Firefox support is
+              limited.
             </p>
           </div>
         </div>
@@ -153,39 +151,39 @@ export default function TestBrowserDetection() {
               <span
                 className={`ml-2 px-2 py-1 rounded text-sm ${
                   window.SpeechRecognition || window.webkitSpeechRecognition
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                 }`}
               >
                 {window.SpeechRecognition || window.webkitSpeechRecognition
-                  ? "Available"
-                  : "Not Available"}
+                  ? 'Available'
+                  : 'Not Available'}
               </span>
             </p>
             <p>
               <strong>Navigator.vibrate:</strong>
               <span
                 className={`ml-2 px-2 py-1 rounded text-sm ${
-                  "vibrate" in navigator
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                  'vibrate' in navigator
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                 }`}
               >
-                {"vibrate" in navigator ? "Available" : "Not Available"}
+                {'vibrate' in navigator ? 'Available' : 'Not Available'}
               </span>
             </p>
             <p>
               <strong>Touch Support:</strong>
               <span
                 className={`ml-2 px-2 py-1 rounded text-sm ${
-                  "ontouchstart" in window || navigator.maxTouchPoints > 0
-                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                    : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                  'ontouchstart' in window || navigator.maxTouchPoints > 0
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
                 }`}
               >
-                {"ontouchstart" in window || navigator.maxTouchPoints > 0
-                  ? "Available"
-                  : "Not Available"}
+                {'ontouchstart' in window || navigator.maxTouchPoints > 0
+                  ? 'Available'
+                  : 'Not Available'}
               </span>
             </p>
           </div>
@@ -197,12 +195,12 @@ export default function TestBrowserDetection() {
           </h2>
           <div className="space-y-2 text-sm">
             {[
-              { name: "Comet", pattern: /comet/i },
-              { name: "Arc Browser", pattern: /arc/i },
-              { name: "Brave", pattern: /brave/i },
-              { name: "Firefox", pattern: /firefox/i },
-              { name: "Chrome", pattern: /chrome/i },
-              { name: "Safari", pattern: /safari/i },
+              { name: 'Comet', pattern: /comet/i },
+              { name: 'Arc Browser', pattern: /arc/i },
+              { name: 'Brave', pattern: /brave/i },
+              { name: 'Firefox', pattern: /firefox/i },
+              { name: 'Chrome', pattern: /chrome/i },
+              { name: 'Safari', pattern: /safari/i },
             ].map(({ name, pattern }) => (
               <div
                 key={name}
@@ -212,11 +210,11 @@ export default function TestBrowserDetection() {
                 <span
                   className={`px-2 py-1 rounded text-xs ${
                     pattern.test(navigator.userAgent)
-                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                      : "bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-200"
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                      : 'bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-200'
                   }`}
                 >
-                  {pattern.test(navigator.userAgent) ? "Match" : "No Match"}
+                  {pattern.test(navigator.userAgent) ? 'Match' : 'No Match'}
                 </span>
               </div>
             ))}

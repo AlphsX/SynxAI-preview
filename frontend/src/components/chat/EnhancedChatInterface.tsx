@@ -31,7 +31,7 @@ interface EnhancedChatInterfaceProps {
 
 export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
   selectedModel,
-  className = ''
+  className = '',
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -84,14 +84,14 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
         hasTables: false,
         hasLinks: false,
         hasBlockquotes: false,
-        estimatedReadTime: 0
+        estimatedReadTime: 0,
       },
     };
 
     setMessages(prev => [...prev, aiMessage]);
 
     try {
-      const conversationId = "default-conversation";
+      const conversationId = 'default-conversation';
 
       await chatAPI.streamChat(
         conversationId,
@@ -104,9 +104,9 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
               if (msg.id === aiMessageId) {
                 const updatedContent = msg.content + chunk;
                 const updatedFeatures = analyzeMarkdownFeatures(updatedContent);
-                return { 
-                  ...msg, 
-                  content: updatedContent, 
+                return {
+                  ...msg,
+                  content: updatedContent,
                   isStreaming: true,
                   formattingMetadata: {
                     hasHeaders: updatedFeatures.hasHeaders,
@@ -114,8 +114,8 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                     hasTables: updatedFeatures.hasTables,
                     hasLinks: updatedFeatures.hasLinks,
                     hasBlockquotes: updatedFeatures.hasBlockquotes,
-                    estimatedReadTime: updatedFeatures.estimatedReadTime
-                  }
+                    estimatedReadTime: updatedFeatures.estimatedReadTime,
+                  },
                 };
               }
               return msg;
@@ -124,13 +124,13 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
         },
         // onComplete
         (data: unknown) => {
-          console.log("Enhanced chat stream completed:", data);
+          console.log('Enhanced chat stream completed:', data);
           setMessages(prev =>
             prev.map(msg => {
               if (msg.id === aiMessageId) {
                 const finalFeatures = analyzeMarkdownFeatures(msg.content);
-                return { 
-                  ...msg, 
+                return {
+                  ...msg,
                   isStreaming: false,
                   formattingMetadata: {
                     hasHeaders: finalFeatures.hasHeaders,
@@ -138,8 +138,8 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                     hasTables: finalFeatures.hasTables,
                     hasLinks: finalFeatures.hasLinks,
                     hasBlockquotes: finalFeatures.hasBlockquotes,
-                    estimatedReadTime: finalFeatures.estimatedReadTime
-                  }
+                    estimatedReadTime: finalFeatures.estimatedReadTime,
+                  },
                 };
               }
               return msg;
@@ -149,24 +149,28 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
         },
         // onError - Enhanced error handling
         (error: string) => {
-          console.error("Enhanced chat stream error:", error);
-          
+          console.error('Enhanced chat stream error:', error);
+
           // Generate intelligent fallback response
-          const fallbackResponse = FallbackResponseGenerator.generateResponse(messageContent, error);
-          
-          let friendlyError = "Sorry, there was an error processing the data 😅 Let me try to help you in another way! 💫\n\n";
+          const fallbackResponse = FallbackResponseGenerator.generateResponse(
+            messageContent,
+            error
+          );
+
+          let friendlyError =
+            'Sorry, there was an error processing the data 😅 Let me try to help you in another way! 💫\n\n';
           friendlyError += fallbackResponse.content;
-          
+
           // Add suggestions if available
           if (fallbackResponse.suggestions && fallbackResponse.suggestions.length > 0) {
-            friendlyError += "\n\n## 💡 Suggested Questions:\n";
+            friendlyError += '\n\n## 💡 Suggested Questions:\n';
             fallbackResponse.suggestions.forEach((suggestion, index) => {
               friendlyError += `${index + 1}. ${suggestion}\n`;
             });
           }
-          
+
           friendlyError += `\n\n${FallbackResponseGenerator.getRandomEncouragement()}`;
-          
+
           setMessages(prev =>
             prev.map(msg => {
               if (msg.id === aiMessageId) {
@@ -181,7 +185,7 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                     hasTables: errorFeatures.hasTables,
                     hasLinks: errorFeatures.hasLinks,
                     hasBlockquotes: errorFeatures.hasBlockquotes,
-                    estimatedReadTime: errorFeatures.estimatedReadTime
+                    estimatedReadTime: errorFeatures.estimatedReadTime,
                   },
                 };
               }
@@ -205,8 +209,9 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
   };
 
   return (
-    <div className={`flex flex-col h-full bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950/30 ${className}`}>
-      
+    <div
+      className={`flex flex-col h-full bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 dark:from-gray-900 dark:via-slate-900 dark:to-indigo-950/30 ${className}`}
+    >
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-6 enhanced-scrollbar">
         <div className="max-w-3xl mx-auto space-y-6">
@@ -220,24 +225,22 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                 Hello! Welcome
               </h3>
               <p className="text-gray-600 dark:text-gray-300 max-w-lg mx-auto text-lg leading-relaxed">
-                I'm ready to help answer your questions and chat with you. How can I assist you today? 😊
+                I'm ready to help answer your questions and chat with you. How can I assist you
+                today? 😊
               </p>
             </div>
           ) : (
             /* Chat Messages */
-            messages.map((message) => {
+            messages.map(message => {
               // Don't render assistant messages with no content unless they're streaming
-              if (message.role === "assistant" && !message.content && !message.isStreaming) {
+              if (message.role === 'assistant' && !message.content && !message.isStreaming) {
                 return null;
               }
 
               // For assistant messages that are streaming but have no content, show just the loading indicator
-              if (message.role === "assistant" && !message.content && message.isStreaming) {
+              if (message.role === 'assistant' && !message.content && message.isStreaming) {
                 return (
-                  <div
-                    key={message.id}
-                    className="flex justify-start message-enter"
-                  >
+                  <div key={message.id} className="flex justify-start message-enter">
                     <div className="flex max-w-[85%] space-x-3">
                       {/* Avatar */}
                       <div className="flex-shrink-0">
@@ -250,8 +253,14 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                       <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400 py-2">
                         <div className="flex space-x-1">
                           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                          <div
+                            className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                            style={{ animationDelay: '0.1s' }}
+                          ></div>
+                          <div
+                            className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                            style={{ animationDelay: '0.2s' }}
+                          ></div>
                         </div>
                         <span>Thinking...</span>
                       </div>
@@ -264,13 +273,12 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                 <div
                   key={message.id}
                   className={`flex ${
-                    message.role === "user" ? "justify-end" : "justify-start"
+                    message.role === 'user' ? 'justify-end' : 'justify-start'
                   } message-enter`}
                 >
                   <div className="flex max-w-[85%] space-x-3">
-                    
                     {/* Avatar */}
-                    {message.role === "assistant" && (
+                    {message.role === 'assistant' && (
                       <div className="flex-shrink-0">
                         <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20 avatar-glow">
                           <span className="text-lg">🤖</span>
@@ -282,17 +290,17 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                     <div className="flex-1">
                       <div
                         className={`rounded-2xl px-5 py-4 shadow-lg border transition-all duration-200 hover:shadow-xl ${
-                          message.role === "user"
-                            ? "bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-br-md ml-auto"
-                            : "bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-bl-md"
+                          message.role === 'user'
+                            ? 'bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-br-md ml-auto'
+                            : 'bg-white dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 border-gray-200/50 dark:border-gray-700/50 rounded-bl-md'
                         }`}
                       >
-                        {message.role === "assistant" ? (
+                        {message.role === 'assistant' ? (
                           <SimpleStreamingRenderer
                             content={message.content}
                             isComplete={!message.isStreaming}
-                            onContentUpdate={(renderedContent) => {
-                              console.log("Content updated:", renderedContent);
+                            onContentUpdate={renderedContent => {
+                              console.log('Content updated:', renderedContent);
                             }}
                           />
                         ) : (
@@ -302,9 +310,10 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                             </p>
                           </div>
                         )}
-                      
+                      </div>
+
                       {/* Model info for assistant messages */}
-                      {message.role === "assistant" && message.model && (
+                      {message.role === 'assistant' && message.model && (
                         <div className="mt-3 pt-3 border-t border-gray-200/30 dark:border-gray-700/30">
                           <div className="flex items-center justify-between">
                             <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
@@ -313,20 +322,20 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                             <span className="text-xs text-gray-500 dark:text-gray-400">
                               {message.timestamp.toLocaleTimeString('th-TH', {
                                 hour: '2-digit',
-                                minute: '2-digit'
+                                minute: '2-digit',
                               })}
                             </span>
                           </div>
                         </div>
                       )}
-                      
+
                       {/* User message timestamp */}
-                      {message.role === "user" && (
+                      {message.role === 'user' && (
                         <div className="mt-2 text-right">
                           <span className="text-xs text-gray-500 dark:text-gray-400">
                             {message.timestamp.toLocaleTimeString('th-TH', {
                               hour: '2-digit',
-                              minute: '2-digit'
+                              minute: '2-digit',
                             })}
                           </span>
                         </div>
@@ -335,24 +344,13 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                   </div>
 
                   {/* User Avatar */}
-                  {message.role === "user" && (
+                  {message.role === 'user' && (
                     <div className="flex-shrink-0">
                       <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20 avatar-glow">
                         <span className="text-lg">👨‍💻</span>
                       </div>
                     </div>
                   )}
-                    </div>
-
-                    {/* User Avatar */}
-                    {message.role === "user" && (
-                      <div className="flex-shrink-0">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20 avatar-glow">
-                          <span className="text-lg">👨‍💻</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
               );
             })
@@ -365,13 +363,12 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
       <div className="flex-shrink-0 px-4 py-5 glass-effect border-t border-gray-200/50 dark:border-gray-700/50 shadow-lg">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-end space-x-3">
-            
             {/* Message Input */}
             <div className="flex-1 relative">
               <textarea
                 ref={inputRef}
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={e => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message here..."
                 disabled={isLoading}
@@ -390,7 +387,12 @@ export const EnhancedChatInterface: React.FC<EnhancedChatInterfaceProps> = ({
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                  />
                 </svg>
               )}
             </button>
