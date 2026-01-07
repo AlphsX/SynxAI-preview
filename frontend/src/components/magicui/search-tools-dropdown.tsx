@@ -35,6 +35,7 @@ type Props = {
   onDropdownStateChange?: (isOpen: boolean) => void;
   externalOpen?: boolean; // Allow external control
   showButton?: boolean; // Option to hide the plus button
+  onFileUpload?: (files: FileList) => void; // Callback when files are uploaded
 };
 
 const getIconForTool = (toolId: string) => {
@@ -95,6 +96,7 @@ export const SearchToolsDropdown = ({
   onDropdownStateChange,
   externalOpen,
   showButton = true,
+  onFileUpload,
 }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -437,11 +439,16 @@ export const SearchToolsDropdown = ({
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // TODO: Implement file upload functionality
                     const fileInput = document.createElement('input');
                     fileInput.type = 'file';
                     fileInput.multiple = true;
                     fileInput.accept = 'image/*,.pdf,.doc,.docx,.txt';
+                    fileInput.onchange = (event) => {
+                      const files = (event.target as HTMLInputElement).files;
+                      if (files && files.length > 0 && onFileUpload) {
+                        onFileUpload(files);
+                      }
+                    };
                     fileInput.click();
                     closeDropdown();
                   }}

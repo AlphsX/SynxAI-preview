@@ -187,6 +187,21 @@ export default function Home() {
   const [browserInfo, setBrowserInfo] = useState<ReturnType<typeof detectBrowser> | null>(null);
   const [mobileInfo, setMobileInfo] = useState<ReturnType<typeof detectMobileOS> | null>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<Array<{ file: File; preview: string; isExiting?: boolean }>>([]); // Uploaded files with preview URLs
+  const [lightboxImage, setLightboxImage] = useState<{ preview: string; name: string } | null>(null); // Lightbox modal state
+  const [isAnimating, setIsAnimating] = useState(false); // State to handle overflow visibility during animations
+
+  // Check if there are any non-exiting files to determine container state
+  const hasActiveFiles = uploadedFiles.some(f => !f.isExiting);
+
+  // Handle animation state for overflow control
+  useEffect(() => {
+    if (uploadedFiles.length > 0 || hasActiveFiles) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 600); // Slightly longer than CSS transition
+      return () => clearTimeout(timer);
+    }
+  }, [uploadedFiles, hasActiveFiles]);
 
   // Voice recognition state variables
   const [isListening, setIsListening] = useState(false);
@@ -1897,15 +1912,80 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                         </div>
                       )}
 
-                      <div className="relative bg-transparent border border-gray-900/20 dark:border-gray-100/20 rounded-[2rem] transition-all duration-300">
+                      {/* Main input container with border */}
+                      <div className={`relative bg-transparent border border-gray-900/20 dark:border-gray-100/20 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hasActiveFiles || selectedTool ? 'rounded-3xl' : 'rounded-[2rem]'}`}>
+                        {/* Uploaded files preview - inside container, above input row - Animated with Grid Grid */}
+                        <div 
+                          className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+                            hasActiveFiles 
+                              ? 'grid-rows-[1fr] opacity-100' 
+                              : 'grid-rows-[0fr] opacity-0'
+                          }`}
+                        >
+                          <div className={`${isAnimating ? 'overflow-hidden' : 'overflow-visible'}`}>
+                            <div className={`flex flex-wrap gap-2 px-4 transition-[padding] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hasActiveFiles ? 'pt-3 pb-2' : 'pt-0 pb-0'}`}>
+                              {uploadedFiles.map((item, index) => (
+                                <div key={index} className={`relative group transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${item.isExiting ? 'scale-0 opacity-0 w-0 m-0' : 'scale-100 opacity-100 w-auto'}`}>
+                                  {item.file.type.startsWith('image/') ? (
+                                    <img
+                                      src={item.preview}
+                                      alt={item.file.name}
+                                      className="object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer hover:opacity-90 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] w-16 h-16"
+                                      onClick={() => setLightboxImage({ preview: item.preview, name: item.file.name })}
+                                    />
+                                  ) : (
+                                    <div className="w-16 h-16 flex items-center justify-center rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+                                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gray-500">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      </svg>
+                                    </div>
+                                  )}
+                                {/* Remove button - light gray style */}
+                                {/* Remove button - styled like screenshot */}
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // Prevent opening lightbox
+                                    // Mark as exiting first
+                                    setUploadedFiles(prev => prev.map((f, i) => i === index ? { ...f, isExiting: true } : f));
+                                    // Remove after animation
+                                    setTimeout(() => {
+                                      URL.revokeObjectURL(item.preview);
+                                      setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+                                    }, 400);
+                                  }}
+                                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm hover:bg-gray-300 dark:hover:bg-gray-500 z-20"
+                                >
+                                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </button>
+                                {/* Filename tooltip - positioned below like screenshot */}
+                                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 bg-surface-l2/90 border border-border-l1 text-fg-secondary/90 text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-md z-30 backdrop-blur-md">
+                                  {item.file.name}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
                         {/* + Plus button - bottom left */}
                         <div className="absolute left-2 bottom-3 flex items-center justify-center w-9 h-9 z-20">
                           <SearchToolsDropdown
                             onToolSelect={handleToolSelect}
                             selectedTool={selectedTool}
                             isDarkMode={isDarkMode}
-                            className=""
+                            className={`transition-opacity duration-300 ${hasActiveFiles ? 'opacity-100' : 'opacity-100'}`}
                             onDropdownStateChange={setIsToolsDropdownOpen}
+                            onFileUpload={(files) => {
+                              const newFiles = Array.from(files).map(file => ({
+                                file,
+                                preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : '',
+                              }));
+                              setUploadedFiles(prev => [...prev, ...newFiles]);
+                            }}
                           />
                         </div>
 
@@ -2164,6 +2244,35 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             </div>
           </div>
         </div>
+
+        {/* Lightbox Modal for image preview */}
+        {lightboxImage && (
+          <div 
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            onClick={() => setLightboxImage(null)}
+          >
+            <div 
+              className="relative max-w-[90vw] max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={lightboxImage.preview}
+                alt={lightboxImage.name}
+                className="max-w-full max-h-[85vh] object-contain"
+              />
+              {/* Close button */}
+              <button
+                type="button"
+                onClick={() => setLightboxImage(null)}
+                className="absolute top-3 right-3 w-8 h-8 bg-gray-200/80 dark:bg-gray-700/80 text-gray-600 dark:text-gray-300 rounded-full flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors shadow-md backdrop-blur-sm"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Idle Meteor Animation - overlays welcome screen when user is idle */}
         <IdleMeteorAnimation showWelcome={showWelcome} />
