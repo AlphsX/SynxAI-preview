@@ -1897,7 +1897,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                         </div>
                       )}
 
-                      <div className="relative bg-transparent rounded-3xl border border-gray-900/20 dark:border-gray-100/20">
+                      <div className="relative bg-transparent border border-gray-900/20 dark:border-gray-100/20 rounded-[2rem] transition-all duration-300">
                         {/* + Plus button - bottom left */}
                         <div className="absolute left-2 bottom-3 flex items-center justify-center w-9 h-9 z-20">
                           <SearchToolsDropdown

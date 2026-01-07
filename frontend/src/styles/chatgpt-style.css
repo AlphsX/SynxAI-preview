@@ -3,6 +3,7 @@
 /* Dynamic highlight color based on selected tool */
 :root {
   --highlight-color: rgba(59, 130, 246, 0.3); /* Default blue */
+  --selection-text-color: #1f1f1f;
 
   /* Light mode colors */
   --user-message-bg: #f4f4f4;
@@ -53,6 +54,7 @@
 
 .dark {
   /* Dark mode colors */
+  --selection-text-color: #ffffff;
   --user-message-bg: #15171a;
   --user-message-text: #ffffff;
   --ai-response-text: #ececec;
@@ -118,12 +120,12 @@
 /* Apply highlight color to text selection */
 ::selection {
   background-color: var(--highlight-color);
-  color: #ffffff;
+  color: var(--selection-text-color);
 }
 
 ::-moz-selection {
   background-color: var(--highlight-color);
-  color: #ffffff;
+  color: var(--selection-text-color);
 }
 
 /* User Message Bubble - Rounded pill */
@@ -303,7 +305,7 @@
 /* Input area styling */
 .chatgpt-input-container {
   background: var(--input-container-bg);
-  border-radius: 1.5rem;
+  border-radius: 9999px;
   padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
