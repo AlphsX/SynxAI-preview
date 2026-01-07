@@ -426,39 +426,74 @@ export const SearchToolsDropdown = ({
                 <span>Failed to load search tools</span>
               </div>
             ) : (
-              searchTools.map((tool, index) => (
+              <>
+                {/* Add photos & files option */}
                 <button
-                  key={tool.id}
                   type="button"
-                  className={`w-full text-left px-4 py-3 flex items-center gap-3 group transition-all duration-200 ${
-                    tool.available
-                      ? `text-gray-700 dark:text-gray-200 hover:${tool.bgColor} dark:hover:${tool.bgColor}`
-                      : 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
-                  } ${
-                    highlightedIndex === index ? `${tool.bgColor} dark:${tool.bgColor}` : ''
-                  }`}
+                  className="w-full text-left px-4 py-3 flex items-center gap-3 group transition-all duration-200 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                   style={{
                     WebkitTapHighlightColor: 'transparent',
                   }}
                   onClick={e => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (tool.available) {
-                      handleToolSelect(tool.id);
-                    }
+                    // TODO: Implement file upload functionality
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.multiple = true;
+                    fileInput.accept = 'image/*,.pdf,.doc,.docx,.txt';
+                    fileInput.click();
+                    closeDropdown();
                   }}
-                  onMouseEnter={() => setHighlightedIndex(index)}
-                  onMouseLeave={() => setHighlightedIndex(-1)}
-                  disabled={!tool.available}
                 >
-                  <div className={`flex-shrink-0 ${tool.available ? tool.color : 'text-gray-400'} group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ease-out`}>
-                    {tool.icon}
+                  <div className="flex-shrink-0 text-gray-600 dark:text-gray-400 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ease-out">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="stroke-[2] transition-colors duration-100">
+                      <path d="M10 9V15C10 16.1046 10.8954 17 12 17V17C13.1046 17 14 16.1046 14 15V7C14 4.79086 12.2091 3 10 3V3C7.79086 3 6 4.79086 6 7V15C6 18.3137 8.68629 21 12 21V21C15.3137 21 18 18.3137 18 15V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"></path>
+                    </svg>
                   </div>
                   <span className="font-medium text-[15px] group-hover:translate-x-1 transition-transform duration-300 ease-out">
-                    {tool.name}
+                    Add photos & files
                   </span>
                 </button>
-              ))
+
+                {/* Divider - shorter with margins */}
+                <div className="my-1 mx-4 border-t border-gray-200 dark:border-gray-700"></div>
+
+                {/* Search tools */}
+                {searchTools.map((tool, index) => (
+                  <button
+                    key={tool.id}
+                    type="button"
+                    className={`w-full text-left px-4 py-3 flex items-center gap-3 group transition-all duration-200 ${
+                      tool.available
+                        ? `text-gray-700 dark:text-gray-200 hover:${tool.bgColor} dark:hover:${tool.bgColor}`
+                        : 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                    } ${
+                      highlightedIndex === index ? `${tool.bgColor} dark:${tool.bgColor}` : ''
+                    }`}
+                    style={{
+                      WebkitTapHighlightColor: 'transparent',
+                    }}
+                    onClick={e => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (tool.available) {
+                        handleToolSelect(tool.id);
+                      }
+                    }}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    onMouseLeave={() => setHighlightedIndex(-1)}
+                    disabled={!tool.available}
+                  >
+                    <div className={`flex-shrink-0 ${tool.available ? tool.color : 'text-gray-400'} group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ease-out`}>
+                      {tool.icon}
+                    </div>
+                    <span className="font-medium text-[15px] group-hover:translate-x-1 transition-transform duration-300 ease-out">
+                      {tool.name}
+                    </span>
+                  </button>
+                ))}
+              </>
             )}
           </div>
         )}
