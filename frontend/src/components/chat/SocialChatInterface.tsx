@@ -340,29 +340,21 @@ export const SocialChatInterface: React.FC<SocialChatInterfaceProps> = ({
               />
 
               {/* Search Tools Dropdown */}
-              <div
-                className="absolute bottom-full left-0 mb-2 z-[10000]"
-                style={{
-                  position: 'absolute',
-                  bottom: '100%',
-                  left: '0',
-                  marginBottom: '0.5rem',
-                  zIndex: 10000,
-                }}
-              >
+              {showSearchTools && (
                 <SearchToolsDropdown
                   onToolSelect={handleToolSelect}
                   selectedTool={selectedTool}
                   isDarkMode={isDarkMode}
                   externalOpen={showSearchTools}
                   showButton={false}
+                  className="absolute bottom-full left-0 mb-2"
                   onDropdownStateChange={isOpen => {
                     if (!isOpen) {
                       setShowSearchTools(false);
                     }
                   }}
                 />
-              </div>
+              )}
 
               {/* Character count for long messages */}
               {inputValue.length > 100 && (
