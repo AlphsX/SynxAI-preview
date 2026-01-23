@@ -1,7 +1,16 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Sparkles, Globe, TrendingUp, User, Mic, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Sparkles,
+  Globe,
+  TrendingUp,
+  User,
+  Mic,
+  ChevronLeft,
+  ChevronRight,
+  Camera,
+} from 'lucide-react';
 
 // Custom Logo Icon Component
 const LogoIcon = ({ className }: { className?: string }) => (
@@ -187,9 +196,15 @@ export default function Home() {
   const [browserInfo, setBrowserInfo] = useState<ReturnType<typeof detectBrowser> | null>(null);
   const [mobileInfo, setMobileInfo] = useState<ReturnType<typeof detectMobileOS> | null>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<Array<{ file: File; preview: string; isExiting?: boolean }>>([]); // Uploaded files with preview URLs
-  const [lightboxImage, setLightboxImage] = useState<{ preview: string; name: string } | null>(null); // Lightbox modal state
+  const [uploadedFiles, setUploadedFiles] = useState<
+    Array<{ file: File; preview: string; isExiting?: boolean }>
+  >([]); // Uploaded files with preview URLs
+  const [lightboxImage, setLightboxImage] = useState<{ preview: string; name: string } | null>(
+    null
+  ); // Lightbox modal state
   const [isAnimating, setIsAnimating] = useState(false); // State to handle overflow visibility during animations
+  const [profileImage, setProfileImage] = useState<string | null>(null); // Profile image state
+  const fileInputRef = useRef<HTMLInputElement>(null); // Ref for hidden file input
 
   // Check if there are any non-exiting files to determine container state
   const hasActiveFiles = uploadedFiles.some(f => !f.isExiting);
@@ -235,7 +250,7 @@ export default function Home() {
 
   const toggleTools = useCallback(() => {
     // This function is triggered by the global '/' shortcut when input is NOT focused
-    
+
     // Always focus input first
     inputRef.current?.focus();
 
@@ -301,7 +316,31 @@ export default function Home() {
     setMobileInfo(mobile);
 
     // Browser compatibility check (warning can be shown via BrowserCompatibilityWarning component if needed)
+
+    // Load profile image from localStorage
+    const savedProfileImage = localStorage.getItem('user_profile_image');
+    if (savedProfileImage) {
+      setProfileImage(savedProfileImage);
+    }
   }, []);
+
+  const handleProfileImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setProfileImage(base64String);
+        localStorage.setItem('user_profile_image', base64String);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerProfileImageUpload = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    fileInputRef.current?.click();
+  };
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -1275,6 +1314,14 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
         className="swipe-container flex h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-1000 dark:via-gray-950 dark:to-gray-900 text-gray-900 dark:text-gray-50 transition-all duration-500"
         data-selected-tool={selectedTool || 'none'}
       >
+        {/* Hidden file input for profile image upload */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleProfileImageUpload}
+          accept="image/*"
+          className="hidden"
+        />
         {/* Mobile Sidebar Overlay */}
         <div
           className={`md:hidden fixed inset-0 z-50 flex transition-opacity duration-300 ${
@@ -1310,7 +1357,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                     }}
                     data-sidebar-element="logo"
                   >
-                    <LogoIcon className="h-8 w-8 text-gray-800 dark:text-gray-200 mx-auto" />
+                    <LogoIcon className="h-8 w-8 text-gray-800 dark:text-[#e1e6ea] mx-auto" />
                   </div>
                 </div>
               </div>
@@ -1319,7 +1366,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             {/* Mobile New Chat Button */}
             <div className="p-4 pt-2 pb-2">
               <button
-                className="w-full flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-600 dark:hover:to-blue-800 text-white rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-105"
+                className="w-full flex items-center space-x-2 bg-black hover:bg-zinc-800 dark:bg-[#e1e6ea] dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-105"
                 onClick={e => {
                   e.stopPropagation();
                   setMessages([]);
@@ -1375,8 +1422,24 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <div className="h-9 w-9 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-full flex items-center justify-center">
-                      <User className="h-6 w-6 text-white mx-auto" />
+                    <div
+                      className={`relative group h-9 w-9 rounded-full flex items-center justify-center overflow-hidden cursor-pointer ${profileImage ? '' : 'bg-black dark:bg-[#e1e6ea]'}`}
+                      onClick={triggerProfileImageUpload}
+                    >
+                      {profileImage ? (
+                        <img
+                          src={profileImage}
+                          alt="Profile"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <User className="h-6 w-6 text-white dark:text-black mx-auto" />
+                      )}
+
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <Camera className="h-4 w-4 text-white" />
+                      </div>
                     </div>
                     <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 dark:bg-green-400 rounded-full border-2 border-white dark:border-gray-900"></div>
                   </div>
@@ -1447,7 +1510,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                     }}
                     data-sidebar-element="logo"
                   >
-                    <LogoIcon className="h-8 w-8 text-gray-800 dark:text-gray-200 mx-auto" />
+                    <LogoIcon className="h-8 w-8 text-gray-800 dark:text-[#e1e6ea] mx-auto" />
                   </div>
                 </div>
               </div>
@@ -1458,7 +1521,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
           <div className="px-4 pt-4 pb-2 flex flex-col items-center justify-center">
             {isDesktopSidebarCollapsed ? (
               <button
-                className="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-600 dark:hover:to-blue-800 text-white rounded-xl font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-105"
+                className="w-10 h-10 flex items-center justify-center bg-black hover:bg-zinc-800 dark:bg-[#e1e6ea] dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-105"
                 title="New Chat"
                 onClick={e => {
                   e.stopPropagation();
@@ -1473,7 +1536,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               </button>
             ) : (
               <button
-                className="w-full flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-600 dark:hover:to-blue-800 text-white rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-[1.02]"
+                className="w-full flex items-center space-x-3 bg-black hover:bg-zinc-800 dark:bg-[#e1e6ea] dark:hover:bg-zinc-200 text-white dark:text-black rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow hover:shadow-md transform hover:scale-[1.02]"
                 onClick={e => {
                   e.stopPropagation();
                   setMessages([]);
@@ -1563,8 +1626,24 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <div className="h-9 w-9 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-full flex items-center justify-center">
-                      <User className="h-6 w-6 text-white mx-auto" />
+                    <div
+                      className={`relative group h-9 w-9 rounded-full flex items-center justify-center overflow-hidden cursor-pointer ${profileImage ? '' : 'bg-black dark:bg-[#e1e6ea]'}`}
+                      onClick={triggerProfileImageUpload}
+                    >
+                      {profileImage ? (
+                        <img
+                          src={profileImage}
+                          alt="Profile"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <User className="h-6 w-6 text-white dark:text-black mx-auto" />
+                      )}
+
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <Camera className="h-4 w-4 text-white" />
+                      </div>
                     </div>
                     <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 dark:bg-green-400 rounded-full border-2 border-white dark:border-gray-900"></div>
                   </div>
@@ -1594,8 +1673,24 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
             ) : (
               <div className="flex flex-col items-center space-y-3">
                 <div className="relative" title="𝕏">
-                  <div className="h-9 w-9 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-full flex items-center justify-center">
-                    <User className="h-6 w-6 text-white mx-auto" />
+                  <div
+                    className={`relative group h-9 w-9 rounded-full flex items-center justify-center overflow-hidden cursor-pointer ${profileImage ? '' : 'bg-black dark:bg-[#e1e6ea]'}`}
+                    onClick={triggerProfileImageUpload}
+                  >
+                    {profileImage ? (
+                      <img
+                        src={profileImage}
+                        alt="Profile"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <User className="h-6 w-6 text-white dark:text-black mx-auto" />
+                    )}
+
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <Camera className="h-4 w-4 text-white" />
+                    </div>
                   </div>
                   <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 dark:bg-green-400 rounded-full border-2 border-white dark:border-gray-900"></div>
                 </div>
@@ -1654,7 +1749,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                     isDarkMode={isDarkMode}
                     toggleDarkMode={toggleDarkMode}
                     isUsingSystemPreference={isUsingSystemPreference}
-                    className="p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-700/40 hover:bg-white/90 dark:hover:bg-gray-700/90 transition-all duration-200 shadow hover:shadow-md flex items-center justify-center"
+                    className="p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border border-gray-200/40 dark:border-gray-700/40 hover:bg-white/90 dark:hover:bg-gray-700/90 transition-all duration-200 shadow hover:shadow-md flex items-center justify-center text-gray-700 dark:text-[#e1e6ea]"
                   />
                 </div>
               </div>
@@ -1688,7 +1783,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                   <div className="text-center max-w-2xl w-full">
                     <div className="mb-8">
                       <div className="inline-flex items-center justify-center mb-6">
-                        <LogoIcon className="h-16 w-16 text-gray-800 dark:text-gray-200 mx-auto" />
+                        <LogoIcon className="h-16 w-16 text-gray-800 dark:text-[#e1e6ea] mx-auto" />
                       </div>
                       <h1 className="text-4xl font-bold mb-4">
                         <AuroraText>Hey there, I&apos;m Synx!</AuroraText>
@@ -1913,63 +2008,114 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                       )}
 
                       {/* Main input container with border */}
-                      <div className={`relative bg-transparent border border-gray-900/20 dark:border-gray-100/20 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hasActiveFiles || selectedTool ? 'rounded-3xl' : 'rounded-[2rem]'}`}>
+                      <div
+                        className={`relative bg-transparent border border-gray-900/20 dark:border-gray-100/20 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hasActiveFiles || selectedTool ? 'rounded-3xl' : 'rounded-[2rem]'}`}
+                      >
                         {/* Uploaded files preview - inside container, above input row - Animated with Grid Grid */}
-                        <div 
+                        <div
                           className={`grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-                            hasActiveFiles 
-                              ? 'grid-rows-[1fr] opacity-100' 
+                            hasActiveFiles
+                              ? 'grid-rows-[1fr] opacity-100'
                               : 'grid-rows-[0fr] opacity-0'
                           }`}
                         >
-                          <div className={`${isAnimating ? 'overflow-hidden' : 'overflow-visible'}`}>
-                            <div className={`flex flex-wrap gap-2 px-4 transition-[padding] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hasActiveFiles ? 'pt-3 pb-2' : 'pt-0 pb-0'}`}>
+                          <div
+                            className={`${isAnimating ? 'overflow-hidden' : 'overflow-visible'}`}
+                          >
+                            <div
+                              className={`flex flex-wrap gap-2 px-4 transition-[padding] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${hasActiveFiles ? 'pt-3 pb-2' : 'pt-0 pb-0'}`}
+                            >
                               {uploadedFiles.map((item, index) => (
-                                <div key={index} className={`relative group transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${item.isExiting ? 'scale-0 opacity-0 w-0 m-0' : 'scale-100 opacity-100 w-auto'}`}>
+                                <div
+                                  key={index}
+                                  className={`relative group transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${item.isExiting ? 'scale-0 opacity-0 w-0 m-0' : 'scale-100 opacity-100 w-auto'}`}
+                                >
                                   {item.file.type.startsWith('image/') ? (
                                     <img
                                       src={item.preview}
                                       alt={item.file.name}
                                       className="object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer hover:opacity-90 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] w-16 h-16"
-                                      onClick={() => setLightboxImage({ preview: item.preview, name: item.file.name })}
+                                      onClick={() =>
+                                        setLightboxImage({
+                                          preview: item.preview,
+                                          name: item.file.name,
+                                        })
+                                      }
                                     />
                                   ) : (
                                     <div className="w-16 h-16 flex items-center justify-center rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-                                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gray-500">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                      <svg
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="text-gray-500"
+                                      >
+                                        <path
+                                          d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                          stroke="currentColor"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                        <path
+                                          d="M14 2v6h6M16 13H8M16 17H8M10 9H8"
+                                          stroke="currentColor"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
                                       </svg>
                                     </div>
                                   )}
-                                {/* Remove button - light gray style */}
-                                {/* Remove button - styled like screenshot */}
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation(); // Prevent opening lightbox
-                                    // Mark as exiting first
-                                    setUploadedFiles(prev => prev.map((f, i) => i === index ? { ...f, isExiting: true } : f));
-                                    // Remove after animation
-                                    setTimeout(() => {
-                                      URL.revokeObjectURL(item.preview);
-                                      setUploadedFiles(prev => prev.filter((_, i) => i !== index));
-                                    }, 400);
-                                  }}
-                                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm hover:bg-gray-300 dark:hover:bg-gray-500 z-20"
-                                >
-                                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                                  </svg>
-                                </button>
-                                {/* Filename tooltip - positioned below like screenshot */}
-                                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 bg-surface-l2/90 border border-border-l1 text-fg-secondary/90 text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-md z-30 backdrop-blur-md">
-                                  {item.file.name}
+                                  {/* Remove button - light gray style */}
+                                  {/* Remove button - styled like screenshot */}
+                                  <button
+                                    type="button"
+                                    onClick={e => {
+                                      e.stopPropagation(); // Prevent opening lightbox
+                                      // Mark as exiting first
+                                      setUploadedFiles(prev =>
+                                        prev.map((f, i) =>
+                                          i === index ? { ...f, isExiting: true } : f
+                                        )
+                                      );
+                                      // Remove after animation
+                                      setTimeout(() => {
+                                        URL.revokeObjectURL(item.preview);
+                                        setUploadedFiles(prev =>
+                                          prev.filter((_, i) => i !== index)
+                                        );
+                                      }, 400);
+                                    }}
+                                    className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-sm hover:bg-gray-300 dark:hover:bg-gray-500 z-20"
+                                  >
+                                    <svg
+                                      width="10"
+                                      height="10"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M18 6L6 18M6 6l12 12"
+                                        stroke="currentColor"
+                                        strokeWidth="3"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                    </svg>
+                                  </button>
+                                  {/* Filename tooltip - positioned below like screenshot */}
+                                  <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-1.5 bg-surface-l2/90 border border-border-l1 text-fg-secondary/90 text-xs font-medium rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-md z-30 backdrop-blur-md">
+                                    {item.file.name}
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
+                              ))}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
                         {/* + Plus button - bottom left */}
                         <div className="absolute left-2 bottom-3 flex items-center justify-center w-9 h-9 z-20">
@@ -1979,10 +2125,12 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             isDarkMode={isDarkMode}
                             className={`transition-opacity duration-300 ${hasActiveFiles ? 'opacity-100' : 'opacity-100'}`}
                             onDropdownStateChange={setIsToolsDropdownOpen}
-                            onFileUpload={(files) => {
+                            onFileUpload={files => {
                               const newFiles = Array.from(files).map(file => ({
                                 file,
-                                preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : '',
+                                preview: file.type.startsWith('image/')
+                                  ? URL.createObjectURL(file)
+                                  : '',
                               }));
                               setUploadedFiles(prev => [...prev, ...newFiles]);
                             }}
@@ -2095,13 +2243,15 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                             // Strict Dropdown Logic:
                             // 1. If text is exactly "/", show dropdown (unless already open)
                             // 2. If text is NOT "/", hide dropdown (unless already closed)
-                            
+
                             if (newValue === '/') {
                               if (!isToolsDropdownOpen) {
                                 console.log('Opening dropdown - input is single slash');
                                 setTimeout(() => {
                                   // Click the plus button to open
-                                  const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
+                                  const plusButton = document.querySelector(
+                                    '[data-plus-button]'
+                                  ) as HTMLButtonElement;
                                   if (plusButton) plusButton.click();
                                 }, 50);
                               }
@@ -2111,7 +2261,9 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                                 console.log('Closing dropdown - input is not single slash');
                                 setTimeout(() => {
                                   // Click the plus button to close
-                                  const plusButton = document.querySelector('[data-plus-button]') as HTMLButtonElement;
+                                  const plusButton = document.querySelector(
+                                    '[data-plus-button]'
+                                  ) as HTMLButtonElement;
                                   if (plusButton) plusButton.click();
                                 }, 50);
                               }
@@ -2247,13 +2399,13 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
 
         {/* Lightbox Modal for image preview */}
         {lightboxImage && (
-          <div 
+          <div
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm"
             onClick={() => setLightboxImage(null)}
           >
-            <div 
+            <div
               className="relative max-w-[90vw] max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <img
                 src={lightboxImage.preview}
@@ -2266,8 +2418,20 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 onClick={() => setLightboxImage(null)}
                 className="absolute top-3 right-3 w-8 h-8 bg-gray-200/80 dark:bg-gray-700/80 text-gray-600 dark:text-gray-300 rounded-full flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors shadow-md backdrop-blur-sm"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M18 6L6 18M6 6l12 12"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
             </div>

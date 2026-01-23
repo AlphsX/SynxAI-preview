@@ -305,7 +305,7 @@ export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '' }
       {/* Dropdown Button */}
       <button
         type="button"
-        className="flex items-center justify-between w-full rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/80 text-gray-900 dark:text-gray-100"
+        className="flex items-center justify-between w-full rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-700/80 text-gray-900 dark:text-[#e1e6ea]"
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -370,8 +370,8 @@ export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '' }
                       <span
                         className={`font-medium text-sm ${
                           isSelected
-                            ? 'text-gray-900 dark:text-gray-100'
-                            : 'text-gray-900 dark:text-gray-100'
+                            ? 'text-gray-900 dark:text-[#e1e6ea]'
+                            : 'text-gray-900 dark:text-[#e1e6ea]'
                         }`}
                       >
                         {model.name}
