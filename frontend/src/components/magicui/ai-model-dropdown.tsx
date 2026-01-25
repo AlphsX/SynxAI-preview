@@ -182,10 +182,56 @@ type Props = {
   selectedModel: string;
   onModelSelect: (modelId: string) => void;
   className?: string;
+  selectedTool?: string | null;
 };
 
-export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '' }: Props) => {
+export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '', selectedTool }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Dynamic color logic based on selected tool
+  const getColorClasses = (tool: string | null | undefined) => {
+    switch (tool) {
+      case 'web_search':
+        return {
+          icon: 'text-blue-600 dark:text-blue-400',
+          badgeBg: 'bg-blue-100 dark:bg-blue-900/50',
+          badgeText: 'text-blue-700 dark:text-blue-300',
+          dot: 'bg-blue-600 dark:bg-blue-400',
+        };
+      case 'news_search':
+        return {
+          icon: 'text-orange-600 dark:text-orange-400',
+          badgeBg: 'bg-orange-100 dark:bg-orange-900/50',
+          badgeText: 'text-orange-700 dark:text-orange-300',
+          dot: 'bg-orange-600 dark:bg-orange-400',
+        };
+      case 'crypto_data':
+        return {
+          icon: 'text-green-600 dark:text-green-400',
+          badgeBg: 'bg-green-100 dark:bg-green-900/50',
+          badgeText: 'text-green-700 dark:text-green-300',
+          dot: 'bg-green-600 dark:bg-green-400',
+        };
+      case 'vector_search':
+        return {
+          icon: 'text-violet-600 dark:text-violet-400',
+          badgeBg: 'bg-violet-100 dark:bg-violet-500/15',
+          badgeText: 'text-violet-700 dark:text-violet-300',
+          dot: 'bg-violet-600 dark:bg-violet-400',
+        };
+      default:
+        // Default Neutral (Premium Dark/Grey look)
+        return {
+          icon: 'text-gray-900 dark:text-gray-100',
+          badgeBg: 'bg-zinc-800 dark:bg-zinc-200', 
+          badgeText: 'text-white dark:text-zinc-900',
+          dot: 'bg-zinc-800 dark:bg-zinc-200',
+        };
+    }
+  };
+
+  const colors = getColorClasses(selectedTool);
+
   const [aiModels, setAiModels] = useState<AIModel[]>([
     {
       id: 'choose-model',
@@ -357,7 +403,7 @@ export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '' }
                   <div
                     className={`flex-shrink-0 mt-0.5 ${
                       isSelected
-                        ? 'text-blue-600 dark:text-blue-400'
+                        ? colors.icon
                         : 'text-gray-700 dark:text-gray-300'
                     }`}
                   >
@@ -377,7 +423,7 @@ export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '' }
                         {model.name}
                       </span>
                       {model.recommended && (
-                        <span className="text-xs bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-md font-medium flex-shrink-0">
+                        <span className={`text-xs ${colors.badgeBg} ${colors.badgeText} px-2 py-0.5 rounded-md font-medium flex-shrink-0`}>
                           Popular
                         </span>
                       )}
@@ -390,7 +436,7 @@ export const AIModelDropdown = ({ selectedModel, onModelSelect, className = '' }
                   {/* Selected indicator */}
                   {isSelected && (
                     <div className="flex-shrink-0 mt-1">
-                      <div className="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-400"></div>
+                      <div className={`h-2 w-2 rounded-full ${colors.dot}`}></div>
                     </div>
                   )}
                 </button>

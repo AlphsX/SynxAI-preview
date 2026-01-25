@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Camera,
+  Search,
 } from 'lucide-react';
 
 // Custom Logo Icon Component
@@ -1381,40 +1382,9 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
               </button>
             </div>
 
-            {/* Mobile Chat History */}
+            {/* Mobile Chat History - Removed */}
             <div className="flex-1 overflow-y-auto px-4 pt-2 pb-4">
-              <div className="space-y-2">
-                <button
-                  className="w-full h-10 flex items-center space-x-2 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <Globe className="h-4 w-4 text-blue-500 flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="text-sm font-medium truncate">Web search capabilities</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">2 hours ago</p>
-                  </div>
-                </button>
-                <button
-                  className="w-full h-10 flex items-center space-x-2 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <TrendingUp className="h-4 w-4 text-green-500 flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="text-sm font-medium truncate">Crypto market analysis</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Yesterday</p>
-                  </div>
-                </button>
-                <button
-                  className="w-full h-10 flex items-center space-x-2 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-2 px-3 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <Sparkles className="h-4 w-4 text-purple-500 flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="text-sm font-medium truncate">General AI conversation</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">2 days ago</p>
-                  </div>
-                </button>
-              </div>
+              {/* Chat history removed as requested */}
             </div>
 
             {/* Mobile Sidebar Footer */}
@@ -1554,70 +1524,7 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
 
           {/* Chat History */}
           <div className="flex-1 overflow-y-auto px-4 pt-2 pb-4">
-            {!isDesktopSidebarCollapsed ? (
-              <div className="space-y-2">
-                <button
-                  className="w-full h-12 flex items-center space-x-3 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={e => e.stopPropagation()}
-                  data-sidebar-element="chat-history-item"
-                >
-                  <Globe className="h-5 w-5 text-blue-500 flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="font-medium truncate">Web search capabilities</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">2 hours ago</p>
-                  </div>
-                </button>
-                <button
-                  className="w-full h-12 flex items-center space-x-3 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={e => e.stopPropagation()}
-                  data-sidebar-element="chat-history-item"
-                >
-                  <TrendingUp className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="font-medium truncate">Crypto market analysis</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Yesterday</p>
-                  </div>
-                </button>
-                <button
-                  className="w-full h-12 flex items-center space-x-3 bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 rounded-xl py-3 px-4 text-sm font-medium transition-all duration-200 shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40"
-                  onClick={e => e.stopPropagation()}
-                  data-sidebar-element="chat-history-item"
-                >
-                  <Sparkles className="h-5 w-5 text-purple-500 flex-shrink-0" />
-                  <div className="text-left">
-                    <p className="font-medium truncate">General AI conversation</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">2 days ago</p>
-                  </div>
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-3 flex flex-col items-center justify-center w-full">
-                <button
-                  className="w-10 h-10 rounded-xl bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 flex items-center justify-center shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40 transition-all duration-200 transform hover:scale-105"
-                  title="Web search capabilities"
-                  onClick={e => e.stopPropagation()}
-                  data-sidebar-element="chat-history-item"
-                >
-                  <Globe className="h-5 w-5 text-blue-500 mx-auto" />
-                </button>
-                <button
-                  className="w-10 h-10 rounded-xl bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 flex items-center justify-center shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40 transition-all duration-200 transform hover:scale-105"
-                  title="Crypto market analysis"
-                  onClick={e => e.stopPropagation()}
-                  data-sidebar-element="chat-history-item"
-                >
-                  <TrendingUp className="h-5 w-5 text-green-500 mx-auto" />
-                </button>
-                <button
-                  className="w-10 h-10 rounded-xl bg-white/80 dark:bg-gray-800/40 hover:bg-gray-100 dark:hover:bg-gray-700/40 text-gray-800 dark:text-gray-200 flex items-center justify-center shadow-sm hover:shadow border border-gray-200/40 dark:border-gray-700/40 transition-all duration-200 transform hover:scale-105"
-                  title="General AI conversation"
-                  onClick={e => e.stopPropagation()}
-                  data-sidebar-element="chat-history-item"
-                >
-                  <Sparkles className="h-5 w-5 text-purple-500 mx-auto" />
-                </button>
-              </div>
-            )}
+             {/* Chat history removed as requested by user */}
           </div>
 
           {/* Sidebar Footer */}
@@ -1744,7 +1651,11 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <AIModelDropdown selectedModel={selectedModel} onModelSelect={setSelectedModel} />
+                  <AIModelDropdown 
+                    selectedModel={selectedModel} 
+                    onModelSelect={setSelectedModel} 
+                    selectedTool={selectedTool}
+                  />
                   <AnimatedThemeToggler
                     isDarkMode={isDarkMode}
                     toggleDarkMode={toggleDarkMode}
@@ -1830,15 +1741,16 @@ Please ensure the enhanced backend service is running on http://localhost:8000 a
                       <div
                         className="p-6 rounded-2xl bg-white/80 dark:bg-gray-800/40 border border-gray-200/40 dark:border-gray-700/40 cursor-pointer hover:scale-[1.02] transition-all duration-200 group hover:shadow-md flex flex-col items-center"
                         onClick={() => {
+                          setSelectedTool('vector_search');
                           focusInput();
                         }}
                       >
-                        <Sparkles className="h-8 w-8 text-purple-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
+                        <Search className="h-8 w-8 text-purple-500 mb-3 group-hover:scale-110 group-hover:rotate-6 transition-all duration-200 mx-auto" />
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors text-center">
-                          AI Chat
+                          Knowledge Search
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                          Intelligent conversations about any topic
+                          Search your knowledge base
                         </p>
                       </div>
                     </div>
